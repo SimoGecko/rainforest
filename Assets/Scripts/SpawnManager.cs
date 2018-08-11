@@ -10,8 +10,9 @@ public class SpawnManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public float spawnRatioMultiplier = 1f;
-    public float var = .4f;
+    public float spawnRatioMultiplier = .5f; // this is a good ratio, balanced
+    public float spawnRatioMultiplierSaver = .5f; //to store the good value when experimenting
+    public float var = .6f;
     public AnimationCurve spawnRatioCurve; // how many per second
 
     // private
