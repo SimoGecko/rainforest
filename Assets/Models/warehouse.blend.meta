@@ -15,6 +15,19 @@ ModelImporter:
     100018: conveyor_size_001
     100020: Cylinder
     100022: //RootNode
+    100024: box1_001
+    100026: box2_001
+    100028: conveyor
+    100030: conveyor_corner
+    100032: conveyor_legs
+    100034: conveyor_legs_single
+    100036: conveyor_motor
+    100038: conveyor_small_size_001
+    100040: conveyor_switch
+    100042: shelf
+    100044: wood_palette
+    100046: cart_001
+    100048: Cube
     400000: box1
     400002: box1_size
     400004: box2
@@ -27,6 +40,19 @@ ModelImporter:
     400018: conveyor_size_001
     400020: Cylinder
     400022: //RootNode
+    400024: box1_001
+    400026: box2_001
+    400028: conveyor
+    400030: conveyor_corner
+    400032: conveyor_legs
+    400034: conveyor_legs_single
+    400036: conveyor_motor
+    400038: conveyor_small_size_001
+    400040: conveyor_switch
+    400042: shelf
+    400044: wood_palette
+    400046: cart_001
+    400048: Cube
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png
@@ -41,6 +67,19 @@ ModelImporter:
     2300016: conveyor_size
     2300018: conveyor_size_001
     2300020: Cylinder
+    2300022: box1_001
+    2300024: box2_001
+    2300026: conveyor
+    2300028: conveyor_corner
+    2300030: conveyor_legs
+    2300032: conveyor_legs_single
+    2300034: conveyor_motor
+    2300036: conveyor_small_size_001
+    2300038: conveyor_switch
+    2300040: shelf
+    2300042: wood_palette
+    2300044: cart_001
+    2300046: Cube
     3300000: box1
     3300002: box1_size
     3300004: box2
@@ -52,6 +91,19 @@ ModelImporter:
     3300016: conveyor_size
     3300018: conveyor_size_001
     3300020: Cylinder
+    3300022: box1_001
+    3300024: box2_001
+    3300026: conveyor
+    3300028: conveyor_corner
+    3300030: conveyor_legs
+    3300032: conveyor_legs_single
+    3300034: conveyor_motor
+    3300036: conveyor_small_size_001
+    3300038: conveyor_switch
+    3300040: shelf
+    3300042: wood_palette
+    3300044: cart_001
+    3300046: Cube
     4300000: Cylinder
     4300002: conveyor_size_001
     4300004: conveyor_size
@@ -63,6 +115,19 @@ ModelImporter:
     4300016: box1_size
     4300018: cart_size
     4300020: cart
+    4300022: box2_001
+    4300024: shelf
+    4300026: box1_001
+    4300028: wood_palette
+    4300030: conveyor_switch
+    4300032: conveyor_corner
+    4300034: conveyor_legs_single
+    4300036: conveyor_small_size_001
+    4300038: conveyor_motor
+    4300040: conveyor_legs
+    4300042: conveyor
+    4300044: cart_001
+    4300046: Cube
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}
