@@ -19,6 +19,7 @@ public class Box : MonoBehaviour {
     bool carrying;
     [HideInInspector]
     public List<int> positions;
+    bool triggered = false;
 
 
     // references
@@ -32,11 +33,19 @@ public class Box : MonoBehaviour {
 	
 	void LateUpdate () {
         if (!carrying) {
+            conveyorVelocity = conveyorVelocity.normalized * Conveyor.conveyorSpeed;
             vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime * 5);
             transform.position += vel * Time.deltaTime;
             conveyorVelocity = Vector3.zero;
         }
 	}
+
+    private void OnTriggerEnter(Collider other) {
+        if (!carrying && !triggered && other.tag == "ground") {
+            GameManager.instance.LoseLife();
+            triggered = true;
+        }
+    }
 
     private void OnMouseDown() {
         if (Player.instance.CloseEnough(this) && !carrying) {//check if close enough
@@ -75,7 +84,7 @@ public class Box : MonoBehaviour {
     }
 
     public void SetConveyorSpeed(Vector3 speed) {
-        conveyorVelocity = speed;
+        conveyorVelocity += speed;
     }
 
 

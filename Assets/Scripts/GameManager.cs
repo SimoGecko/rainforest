@@ -12,15 +12,19 @@ public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
+    public float timeScale = 1f;
 
 
     // private
     int score;
+    int lifes;
     const int scoreMaxDifficulty = 100;
 
 
     // references
     public Text scoreText;
+    public Text lifeText;
+    public Text gameOverText;
     public static GameManager instance;
 
 
@@ -30,7 +34,9 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start () {
+        Time.timeScale = timeScale;
         Playing = true;
+        lifes = 3;
         UpdateUI();
 	}
 	
@@ -48,8 +54,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void GameOver() {
-        //StartCoroutine(GameoverRoutine());
-        SceneManager.LoadScene("main");
+        StartCoroutine(GameoverRoutine());
     }
 
     public void Win() {
@@ -61,9 +66,16 @@ public class GameManager : MonoBehaviour {
     }
 
     void UpdateUI() {
-        scoreText.text = score.ToString();
+        scoreText.text = "score: " + score.ToString();
+        lifeText.text  = "lives: " + lifes.ToString();
     }
 
+    public void LoseLife() {
+        Debug.Log("called loselife");
+        //lifes--;
+        UpdateUI();
+        if (lifes == 0) GameOver();
+    }
 
 
     // queries
@@ -76,6 +88,15 @@ public class GameManager : MonoBehaviour {
 
 
     // other
-   
+    IEnumerator GameoverRoutine() {
+        gameOverText.gameObject.SetActive(true);
+        gameOverText.text = "GameOver! score:" + score.ToString();
+        Playing = false;
+        yield return new WaitForSeconds(2f);
+
+        //SceneManager.LoadScene("SampleScene");
+    }
+
+
 
 }
