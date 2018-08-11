@@ -17,6 +17,8 @@ public class Box : MonoBehaviour {
     Vector3 conveyorVelocity;
     Vector3 vel;
     bool carrying;
+    [HideInInspector]
+    public List<int> positions;
 
 
     // references
@@ -29,13 +31,15 @@ public class Box : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-        vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime*5);
-        transform.position += vel * Time.deltaTime;
-        conveyorVelocity = Vector3.zero;
+        if (!carrying) {
+            vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime * 5);
+            transform.position += vel * Time.deltaTime;
+            conveyorVelocity = Vector3.zero;
+        }
 	}
 
     private void OnMouseDown() {
-        if (true) {//check if close enough
+        if (Player.instance.CloseEnough(this) && !carrying) {//check if close enough
             if (Cart.instance.HasSpaceFor(size)) {
                 PickupBox();
                 Cart.instance.Pickup(this);
@@ -52,14 +56,21 @@ public class Box : MonoBehaviour {
     void PickupBox() {
         carrying = true;
         rb.isKinematic = true;
-        transform.parent = Cart.instance.transform;
-        transform.position = Cart.instance.TransfFromPos(size);
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
 
+        positions = Cart.instance.FreePosition(size);
+        transform.parent = Cart.instance.transform;
+        transform.position = Cart.instance.TransfFromPos(positions);
+        transform.localRotation = Quaternion.identity;
     }
 
-    void DepositBox() {
+    public void DepositBox() {
         carrying = false;
         rb.isKinematic = true;
+        //add score
+        GameManager.instance.AddScore(size);
+        Destroy(gameObject);
 
     }
 

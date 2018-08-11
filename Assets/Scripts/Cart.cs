@@ -13,13 +13,13 @@ public class Cart : MonoBehaviour {
 
 
     // private
+    List<List<int>>[] positions; // const
     bool[] free;
-    List<List<int>>[] positions;
+    List<Box> carrying;
 
 
     // references
     public static Cart instance;
-    List<Box> carrying;
     public Transform[] posTransform;
 
 
@@ -43,6 +43,17 @@ public class Cart : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         //if deposit, check & leave
+        Deposit dep = other.GetComponent<Deposit>();
+        if (dep != null) {
+            foreach(Box b in carrying) {
+                if (b != null) {
+                    if (b.size == dep.size) {
+                        Deposit(b);
+                    }
+                }
+            }
+        }
+        carrying.RemoveAll(b => b == null);
     }
 
 
@@ -55,10 +66,10 @@ public class Cart : MonoBehaviour {
         positions = new List<List<int>>[5];
         positions[1] = new List<List<int>> {
             new List<int> {0},
-            new List<int> {1},
-            new List<int> {2},
             new List<int> {3},
+            new List<int> {1},
             new List<int> {4},
+            new List<int> {2},
             new List<int> {5}
         };
         positions[2] = new List<List<int>> {
@@ -66,13 +77,13 @@ public class Cart : MonoBehaviour {
             new List<int> {1,4},
             new List<int> {2,5},
             new List<int> {0,1},
-            new List<int> {1,2},
             new List<int> {3,4},
+            new List<int> {1,2},
             new List<int> {4,5}
         };
         positions[4] = new List<List<int>> {
-            new List<int> {0,1,3,4},
-            new List<int> {1,2,4,5}
+            new List<int> {1,2,4,5},
+            new List<int> {0,1,3,4}
         };
     }
 
@@ -80,7 +91,12 @@ public class Cart : MonoBehaviour {
         List<int> positions = FreePosition(box.size);
         foreach (int p in positions) free[p] = false;
         carrying.Add(box);
+    }
 
+    void Deposit(Box box) {
+        foreach (int p in box.positions) free[p] = true;
+        //carrying.Remove(box);
+        box.DepositBox();
     }
 
 
@@ -112,9 +128,7 @@ public class Cart : MonoBehaviour {
         }*/
     }
 
-    public Vector3 TransfFromPos(int boxSize) {
-        List<int> positions = FreePosition(boxSize);
-
+    public Vector3 TransfFromPos(List<int> positions) {
         Vector3 result = Vector3.zero;
         foreach (int p in positions) result += posTransform[p].position;
         return result / positions.Count;
@@ -122,6 +136,7 @@ public class Cart : MonoBehaviour {
 
 
 
-	// other
-	
+
+    // other
+
 }

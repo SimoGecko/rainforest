@@ -7,9 +7,10 @@ using UnityEngine;
 ////////// DESCRIPTION //////////
 
 public class Deposit : MonoBehaviour {
-	// --------------------- VARIABLES ---------------------
-	
-	// public
+    // --------------------- VARIABLES ---------------------
+
+    // public
+    public int size;
 
 
 	// private

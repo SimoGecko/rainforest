@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour {
     const int scoreMaxDifficulty = 100;
 
 
-	// references
+    // references
+    public Text scoreText;
     public static GameManager instance;
 
 
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour {
 
     void Start () {
         Playing = true;
+        UpdateUI();
 	}
 	
 	void Update () {
@@ -51,6 +53,15 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Win() {
+    }
+
+    public void AddScore(int s) {
+        score += s;
+        UpdateUI();
+    }
+
+    void UpdateUI() {
+        scoreText.text = score.ToString();
     }
 
 
