@@ -6,7 +6,7 @@ using UnityEngine;
 
 ////////// DESCRIPTION //////////
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterController))]
 public class Player : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
@@ -23,7 +23,7 @@ public class Player : MonoBehaviour {
 
     // references
     public static Player instance;
-    Rigidbody rb;
+    CharacterController cc;
     public Transform cart;
 
     // --------------------- BASE METHODS ------------------
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour {
     }
 
     void Start () {
-        rb = GetComponent<Rigidbody>();
+        cc = GetComponent<CharacterController>();
 	}
 	
 	void Update () {
@@ -55,16 +55,18 @@ public class Player : MonoBehaviour {
         //rb.angularVelocity = angularVel * Mathf.Deg2Rad;
         //rb.velocity = vel;
         transform.Rotate(angularVel *  Time.deltaTime, Space.World);
-        transform.Translate(vel* Time.deltaTime, Space.World);
+        cc.Move(vel * Time.deltaTime);
+        //transform.Translate(vel* Time.deltaTime, Space.World);
     }
 
+    /*
     void Move2() {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         
         Vector3 displacement = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * input.normalized; // camera
-        /*
-        float dirZ = Vector3.Dot(transform.forward, input);
-        float dirX = Vector3.Dot(transform.right, input);*/
+        
+        //float dirZ = Vector3.Dot(transform.forward, input);
+        //float dirX = Vector3.Dot(transform.right, input);
 
         float angle = input.magnitude>0? Vector3.SignedAngle(transform.forward, displacement, Vector3.up) : 0;
         Vector3 angularVel = Vector3.up * Mathf.Clamp(-angularSpeed, angularSpeed, angle);// * angularSpeed;
@@ -86,7 +88,7 @@ public class Player : MonoBehaviour {
         transform.eulerAngles = Vector3.up * angle;
 
         transform.position += transform.forward * speed * displacement.magnitude * Time.deltaTime;
-    }
+    }*/
 
 
 

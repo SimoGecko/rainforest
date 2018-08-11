@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour {
 
     public void LoseLife() {
         Debug.Log("called loselife");
-        //lifes--;
+        lifes--;
         UpdateUI();
         if (lifes == 0) GameOver();
     }
