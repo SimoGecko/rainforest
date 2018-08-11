@@ -16,13 +16,14 @@ public class Conveyor : MonoBehaviour {
     public bool changeDir = false;
 
     // private
+    float changeDirTimer;
 
 
-	// references
-	
-	
-	// --------------------- BASE METHODS ------------------
-	void Start () {
+    // references
+
+
+    // --------------------- BASE METHODS ------------------
+    void Start () {
 		
 	}
 	
@@ -41,7 +42,10 @@ public class Conveyor : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (changeDir && Random.value <= .5f) goForward = !goForward;
+        if (changeDir && Random.value <= .5f && canChangeDir) {
+            goForward = !goForward;
+            changeDirTimer = Time.time + 1f;
+        }
     }
 
 
@@ -55,7 +59,7 @@ public class Conveyor : MonoBehaviour {
 
     // queries
     Vector3 dir { get { return (goForward ? transform.forward : transform.right) * (invert ? -1:1) ; } }
-
+    bool canChangeDir { get { return Time.time > changeDirTimer; } }
 
 
     // other

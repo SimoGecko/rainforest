@@ -27,6 +27,14 @@ public static class Utility {
         return res;
     }
 
+    public static Vector3 SmoothDampAngle(Vector3 from, Vector3 to, ref Vector3 r, float smoothTime) {
+        return new Vector3(
+            Mathf.SmoothDampAngle(from.x, to.x, ref r.x, smoothTime),
+            Mathf.SmoothDampAngle(from.y, to.y, ref r.y, smoothTime),
+            Mathf.SmoothDampAngle(from.z, to.z, ref r.z, smoothTime)
+            );
+    }
+
 
     // --------------------- MATH ---------------------
 

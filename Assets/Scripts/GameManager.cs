@@ -19,11 +19,13 @@ public class GameManager : MonoBehaviour {
     int score;
     int lifes;
     const int scoreMaxDifficulty = 100;
+    float timer;
 
 
     // references
     public Text scoreText;
     public Text lifeText;
+    public Text timerText;
     public Text gameOverText;
     public static GameManager instance;
 
@@ -41,7 +43,8 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	void Update () {
-        
+        timer += Time.deltaTime;
+        UpdateUI();
 	}
 
 
@@ -67,12 +70,13 @@ public class GameManager : MonoBehaviour {
 
     void UpdateUI() {
         scoreText.text = "score: " + score.ToString();
+        timerText.text = "timer: " + Utility.ToReadableTime(timer);// timer.ToString();
         lifeText.text  = "lives: " + lifes.ToString();
     }
 
     public void LoseLife() {
         Debug.Log("called loselife");
-        lifes--;
+        //lifes--;
         UpdateUI();
         if (lifes == 0) GameOver();
     }
