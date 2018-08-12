@@ -71,7 +71,7 @@ public class SpawnManager : MonoBehaviour {
     // other
     IEnumerator SpawnRoutine() {
         while (true) {
-            if (!GameManager.instance.Playing) {
+            if (!GameManager.Playing) {
                 yield return new WaitForSeconds(1);
             }
             else {

@@ -48,6 +48,7 @@ public class Box : MonoBehaviour {
     }
 
     private void OnMouseDown() {
+        if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(this) && !carrying) {//check if close enough
             if (Cart.instance.HasSpaceFor(size)) {
                 PickupBox();

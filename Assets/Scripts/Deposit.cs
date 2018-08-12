@@ -15,7 +15,7 @@ public class Deposit : MonoBehaviour {
 
     // private
     int currentRow, currentCol;
-    int numRows = 4;
+    int numRows = 3;
     bool full;
 
     List<Box> boxes = new List<Box>();

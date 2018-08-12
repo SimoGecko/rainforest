@@ -10,19 +10,19 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
-    public enum Difficulty { Easy, Medium, Hard}
-    public enum State { Menu, Playing, Gameover
-    }
+    public enum Difficulty { Easy, Medium, Hard }
+    public enum State { Menu, Playing, Gameover }
+
     // public
     public bool loseLifes = true;
     public float timeScale = 1f;
     public Difficulty difficulty = Difficulty.Medium;
     public State state;
+    const int scoreMaxDifficulty = 100;
 
     // private
     int score;
     int lifes;
-    const int scoreMaxDifficulty = 100;
     float timer;
 
 
@@ -43,14 +43,17 @@ public class GameManager : MonoBehaviour {
         state = State.Menu;
 
         Time.timeScale = timeScale;
-        Playing = true;
-        lifes = 3;
         UpdateUI();
 	}
 	
 	void Update () {
-        timer += Time.deltaTime;
-        UpdateUI();
+
+        if (Playing) {
+            timer += Time.deltaTime;
+            UpdateUI();
+        }else if (Menu) {
+            if (Input.GetMouseButton(0)) state = State.Playing;
+        }
 	}
 
 
@@ -60,7 +63,10 @@ public class GameManager : MonoBehaviour {
 
     // commands
     void StartRound() {
-
+        state = State.Playing;
+        score = 0;
+        lifes = 3;
+        timer = 0;
     }
 
     public void GameOver() {
@@ -94,15 +100,17 @@ public class GameManager : MonoBehaviour {
         return (float)score / scoreMaxDifficulty;
     }
 
-    public bool Playing { get; set; }
 
+    public static bool Playing { get { return instance.state == State.Playing; } }
+    public static bool Menu    { get { return instance.state == State.Menu; } }
+    public static bool Gameover{ get { return instance.state == State.Gameover; } }
 
 
     // other
     IEnumerator GameoverRoutine() {
         gameOverText.gameObject.SetActive(true);
         gameOverText.text = "GameOver! score:" + score.ToString();
-        Playing = false;
+        state = State.Gameover;
         yield return new WaitForSeconds(2f);
 
         //SceneManager.LoadScene("SampleScene");

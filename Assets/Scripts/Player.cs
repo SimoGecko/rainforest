@@ -38,7 +38,8 @@ public class Player : MonoBehaviour {
 	}
 	
 	void Update () {
-        Move1();
+        if(GameManager.Playing)
+            Move();
 	}
 
     private void FixedUpdate() {
@@ -50,7 +51,7 @@ public class Player : MonoBehaviour {
 
 
     // commands
-    void Move1() {
+    void Move() {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         Vector3 angularVel = Vector3.up * input.x * angularSpeed * Mathf.Lerp(.6f, 1f, Mathf.Abs(input.z)) *Mathf.Sign(input.z);
         Vector3 vel = transform.forward * input.z * speed;
