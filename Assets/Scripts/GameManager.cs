@@ -28,10 +28,12 @@ public class GameManager : MonoBehaviour {
 
     // references
     public Text scoreText;
-    public Text lifeText;
+    public GameObject[] lifeUI;
+    public GameObject[] lifeUIgrey;
     public Text timerText;
     public Text gameOverText;
     public static GameManager instance;
+    public GameObject gameUI;
 
 
     // --------------------- BASE METHODS ------------------
@@ -41,18 +43,17 @@ public class GameManager : MonoBehaviour {
 
     void Start () {
         state = State.Menu;
-
         Time.timeScale = timeScale;
-        UpdateUI();
 	}
 	
 	void Update () {
-
         if (Playing) {
             timer += Time.deltaTime;
             UpdateUI();
-        }else if (Menu) {
-            if (Input.GetMouseButton(0)) state = State.Playing;
+        }
+        else if (Menu) {
+            if (Input.GetMouseButton(0))
+                StartRound();
         }
 	}
 
@@ -67,6 +68,9 @@ public class GameManager : MonoBehaviour {
         score = 0;
         lifes = 3;
         timer = 0;
+        UpdateUI();
+        UpdateLifeUI();
+        gameUI.SetActive(true);
     }
 
     public void GameOver() {
@@ -78,20 +82,26 @@ public class GameManager : MonoBehaviour {
 
     public void AddScore(int s) {
         score += s;
-        UpdateUI();
     }
 
     void UpdateUI() {
-        scoreText.text = "score:    x " + score.ToString();
+        scoreText.text = score.ToString();
         timerText.text = "timer: " + Utility.ToReadableTime(timer);// timer.ToString();
-        lifeText.text  = "lives: " + lifes.ToString();
+    }
+
+    void UpdateLifeUI() {
+        for (int i = 0; i < 3; i++) {
+            bool hasIthLife = lifes>=3-i;
+            lifeUI[i].SetActive(!hasIthLife);
+            lifeUIgrey[i].SetActive(hasIthLife);
+        }
     }
 
     public void LoseLife() {
         if(loseLifes)
             lifes--;
         if (lifes == 0) GameOver();
-        UpdateUI();
+        UpdateLifeUI();
     }
 
 

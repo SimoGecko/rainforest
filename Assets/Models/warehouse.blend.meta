@@ -89,6 +89,8 @@ ModelImporter:
     100166: shelf_001
     100168: env_wall_low
     100170: env_sliding_door
+    100172: gauge
+    100174: gauge_direction
     400000: box1
     400002: box1_size
     400004: box2
@@ -175,6 +177,8 @@ ModelImporter:
     400166: shelf_001
     400168: env_wall_low
     400170: env_sliding_door
+    400172: gauge
+    400174: gauge_direction
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png
@@ -232,6 +236,8 @@ ModelImporter:
     2300102: shelf_001
     2300104: env_wall_low
     2300106: env_sliding_door
+    2300108: gauge
+    2300110: gauge_direction
     3300000: box1
     3300002: box1_size
     3300004: box2
@@ -286,6 +292,8 @@ ModelImporter:
     3300102: shelf_001
     3300104: env_wall_low
     3300106: env_sliding_door
+    3300108: gauge
+    3300110: gauge_direction
     4300000: Cylinder
     4300002: conveyor_size_001
     4300004: conveyor_size
@@ -340,6 +348,8 @@ ModelImporter:
     4300102: shelf_001
     4300104: env_wall_low
     4300106: env_sliding_door
+    4300108: gauge_direction
+    4300110: gauge
     7400000: Default Take
     7400002: ArmatureAction
     7400004: fallout

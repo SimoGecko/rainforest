@@ -71,6 +71,8 @@ public class Box : MonoBehaviour {
         transform.parent = Cart.instance.transform;
         transform.position = Cart.instance.TransfFromPos(positions);
         transform.localRotation = Quaternion.identity;
+
+        AudioManager.Play("box_drop");
     }
 
     public void DepositBox(Deposit dep) {

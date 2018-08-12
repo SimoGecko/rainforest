@@ -38,8 +38,10 @@ public class Player : MonoBehaviour {
 	}
 	
 	void Update () {
-        if(GameManager.Playing)
+        if (GameManager.Playing) {
+            SetToGround();
             Move();
+        }
 	}
 
     private void FixedUpdate() {
@@ -62,6 +64,13 @@ public class Player : MonoBehaviour {
         //transform.Translate(vel* Time.deltaTime, Space.World);
         bool running = input.magnitude > .1f;
         anim.SetBool("running", running);
+    }
+
+    void SetToGround() {
+        //to avoid bugs
+        Vector3 temp = transform.position;
+        temp.y = 0;
+        transform.position = temp;
     }
 
     /*
