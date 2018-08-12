@@ -11,10 +11,13 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
     public enum Difficulty { Easy, Medium, Hard}
+    public enum State { Menu, Playing, Gameover
+    }
     // public
     public bool loseLifes = true;
     public float timeScale = 1f;
     public Difficulty difficulty = Difficulty.Medium;
+    public State state;
 
     // private
     int score;
@@ -37,6 +40,8 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start () {
+        state = State.Menu;
+
         Time.timeScale = timeScale;
         Playing = true;
         lifes = 3;
@@ -55,6 +60,7 @@ public class GameManager : MonoBehaviour {
 
     // commands
     void StartRound() {
+
     }
 
     public void GameOver() {
