@@ -94,7 +94,9 @@ public class Player : MonoBehaviour {
 
     // queries
     public bool CloseEnough(Box b) {
-        float dist = Vector3.SqrMagnitude(cart.position - b.transform.position);
+        Vector3 vec = cart.position - b.transform.position;
+        vec.y = 0;
+        float dist = Vector3.SqrMagnitude(vec);
         return dist <= pickupArea * pickupArea;
     }
 

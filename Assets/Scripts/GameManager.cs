@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
     public enum Difficulty { Easy, Medium, Hard}
     // public
+    public bool loseLifes = true;
     public float timeScale = 1f;
     public Difficulty difficulty = Difficulty.Medium;
 
@@ -75,8 +76,10 @@ public class GameManager : MonoBehaviour {
     }
 
     public void LoseLife() {
-        UpdateUI();
+        if(loseLifes)
+            lifes--;
         if (lifes == 0) GameOver();
+        UpdateUI();
     }
 
 

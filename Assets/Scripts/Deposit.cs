@@ -18,6 +18,8 @@ public class Deposit : MonoBehaviour {
     int numRows = 4;
     bool full;
 
+    List<Box> boxes = new List<Box>();
+
 
     // references
     public Transform shelfT;
@@ -40,9 +42,10 @@ public class Deposit : MonoBehaviour {
 	// commands
     public void PositionBox(Box b) {
         if (full) return;
+        boxes.Add(b);
         b.transform.parent = transform;
         b.transform.position = shelfT.position + offsetH * currentCol + offsetV * currentRow;
-        b.transform.eulerAngles = shelfT.eulerAngles + new Vector3(0, Random.Range(-angleVar, angleVar), 0);
+        b.transform.eulerAngles =shelfT.eulerAngles + new Vector3(0, Random.Range(-angleVar, angleVar), 0);
         currentCol++;
         if (currentCol == numCols) {
             currentCol = 0;
@@ -55,14 +58,29 @@ public class Deposit : MonoBehaviour {
         return !full;
     }
 
+    public void Clear() {
+        foreach (Box b in boxes) Destroy(b.gameObject);
+        boxes.Clear();
+        full = false;
+        currentRow = currentCol = 0;
+    }
 
 
-	// queries
-    Vector3 offsetH { get { return shelfT.right * increment; } }
-    Vector3 offsetV { get { return shelfT.up * 2; } }
+
+    // queries
+    Vector3 offsetH { get { return -transform.right * increment; } }
+    Vector3 offsetV { get { return transform.up * 2; } }
     int increment { get { return size < 4 ? 1 : 2; } }
     int numCols { get { return size < 4 ? 6 : 3; } }
+    float angle { get { return size == 2 ? 90 : 0; } }
 
+    int SpacesAvailable() {
+        return numRows * numCols;
+    }
+
+    public float PercentFilled() {
+        return (float)boxes.Count / SpacesAvailable();
+    }
 
 
 	// other

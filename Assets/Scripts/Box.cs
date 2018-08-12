@@ -23,6 +23,7 @@ public class Box : MonoBehaviour {
 
     // references
     Rigidbody rb;
+    public GameObject shatterEffect;
 	
 	
 	// --------------------- BASE METHODS ------------------
@@ -41,8 +42,8 @@ public class Box : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (!carrying && !triggered && other.tag == "ground") {
-            GameManager.instance.LoseLife();
-            triggered = true;
+            Shatter();
+            
         }
     }
 
@@ -79,6 +80,13 @@ public class Box : MonoBehaviour {
         GameManager.instance.AddScore(size);
         //Destroy(gameObject);
         dep.PositionBox(this);
+    }
+
+    void Shatter() {
+        GameManager.instance.LoseLife();
+        triggered = true;
+        Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));
+        Destroy(gameObject);
     }
 
     void StopRB() {
