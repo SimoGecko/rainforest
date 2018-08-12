@@ -55,6 +55,21 @@ ModelImporter:
     100098: extinctor
     100100: kappa
     100102: kappa_tube
+    100104: Armature
+    100106: Bone
+    100108: Bone_001
+    100110: Bone_002
+    100112: Bone_003
+    100114: Bone_004
+    100116: Bone_005
+    100118: Bone_006
+    100120: Bone_008
+    100122: Bone_009
+    100124: Bone_010
+    100126: Bone_011
+    100128: Bone_012
+    100130: Bone_013
+    100132: Bone_014
     400000: box1
     400002: box1_size
     400004: box2
@@ -107,6 +122,21 @@ ModelImporter:
     400098: extinctor
     400100: kappa
     400102: kappa_tube
+    400104: Armature
+    400106: Bone
+    400108: Bone_001
+    400110: Bone_002
+    400112: Bone_003
+    400114: Bone_004
+    400116: Bone_005
+    400118: Bone_006
+    400120: Bone_008
+    400122: Bone_009
+    400124: Bone_010
+    400126: Bone_011
+    400128: Bone_012
+    400130: Bone_013
+    400132: Bone_014
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png

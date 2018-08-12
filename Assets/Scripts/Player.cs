@@ -24,6 +24,7 @@ public class Player : MonoBehaviour {
     // references
     public static Player instance;
     CharacterController cc;
+    Animator anim;
     public Transform cart;
 
     // --------------------- BASE METHODS ------------------
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour {
 
     void Start () {
         cc = GetComponent<CharacterController>();
+        anim = GetComponentInChildren<Animator>();
 	}
 	
 	void Update () {
@@ -57,6 +59,8 @@ public class Player : MonoBehaviour {
         transform.Rotate(angularVel *  Time.deltaTime, Space.World);
         cc.Move(vel * Time.deltaTime);
         //transform.Translate(vel* Time.deltaTime, Space.World);
+        bool running = input.magnitude > .1f;
+        anim.SetBool("running", running);
     }
 
     /*

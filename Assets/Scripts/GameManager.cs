@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void UpdateUI() {
-        scoreText.text = "score: " + score.ToString();
+        scoreText.text = "score:    x " + score.ToString();
         timerText.text = "timer: " + Utility.ToReadableTime(timer);// timer.ToString();
         lifeText.text  = "lives: " + lifes.ToString();
     }

@@ -11,6 +11,9 @@ public class Button : MonoBehaviour {
 
     // public
     public float percentToBeFilled = .75f;
+    public float animTime = 2f;
+    public float delay = 1f;
+    public float moveAmount = 10;
 
     // private
 
@@ -39,9 +42,9 @@ public class Button : MonoBehaviour {
 
     // commands
     private void Move() {
-        iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", 6 * deposit.transform.forward, "time", 4f, "easeType", iTween.EaseType.easeInOutSine));
-        Invoke("CleanShelf", 5);
-        iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", -6 * deposit.transform.forward, "time", 4f, "easeType", iTween.EaseType.easeInOutSine, "delay", 6f));
+        iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", -moveAmount * Vector3.forward, "time", animTime, "easeType", iTween.EaseType.easeInOutSine));
+        Invoke("CleanShelf", animTime + delay/2);
+        iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", +moveAmount * Vector3.forward, "time", animTime, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + delay));
     }
 
     void CleanShelf() {

@@ -85,7 +85,8 @@ public class Box : MonoBehaviour {
     void Shatter() {
         GameManager.instance.LoseLife();
         triggered = true;
-        Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));
+        GameObject shatter = Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));
+        Destroy(shatter, 30f);
         Destroy(gameObject);
     }
 
