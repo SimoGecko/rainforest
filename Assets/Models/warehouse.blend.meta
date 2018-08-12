@@ -70,6 +70,25 @@ ModelImporter:
     100128: Bone_012
     100130: Bone_013
     100132: Bone_014
+    100134: IK
+    100136: k
+    100138: s1
+    100140: s2
+    100142: s3
+    100144: s4
+    100146: s5
+    100148: s6
+    100150: s7
+    100152: t1
+    100154: t2
+    100156: t3
+    100158: t4
+    100160: t5
+    100162: t6
+    100164: t7
+    100166: shelf_001
+    100168: env_wall_low
+    100170: env_sliding_door
     400000: box1
     400002: box1_size
     400004: box2
@@ -137,6 +156,25 @@ ModelImporter:
     400128: Bone_012
     400130: Bone_013
     400132: Bone_014
+    400134: IK
+    400136: k
+    400138: s1
+    400140: s2
+    400142: s3
+    400144: s4
+    400146: s5
+    400148: s6
+    400150: s7
+    400152: t1
+    400154: t2
+    400156: t3
+    400158: t4
+    400160: t5
+    400162: t6
+    400164: t7
+    400166: shelf_001
+    400168: env_wall_low
+    400170: env_sliding_door
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png
@@ -191,6 +229,9 @@ ModelImporter:
     2300096: extinctor
     2300098: kappa
     2300100: kappa_tube
+    2300102: shelf_001
+    2300104: env_wall_low
+    2300106: env_sliding_door
     3300000: box1
     3300002: box1_size
     3300004: box2
@@ -242,6 +283,9 @@ ModelImporter:
     3300096: extinctor
     3300098: kappa
     3300100: kappa_tube
+    3300102: shelf_001
+    3300104: env_wall_low
+    3300106: env_sliding_door
     4300000: Cylinder
     4300002: conveyor_size_001
     4300004: conveyor_size
@@ -293,8 +337,15 @@ ModelImporter:
     4300096: env_floor
     4300098: kappa
     4300100: kappa_tube
+    4300102: shelf_001
+    4300104: env_wall_low
+    4300106: env_sliding_door
     7400000: Default Take
+    7400002: ArmatureAction
+    7400004: fallout
+    7400006: idle
     9500000: //RootNode
+    13700000: kappa_tube
   externalObjects: {}
   materials:
     importMaterials: 1
