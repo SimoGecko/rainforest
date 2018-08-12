@@ -46,6 +46,15 @@ ModelImporter:
     100080: box3_003
     100082: button
     100084: box_fracture
+    100086: env_door
+    100088: env_floor
+    100090: env_street
+    100092: env_stripe
+    100094: env_wall
+    100096: escape_plan
+    100098: extinctor
+    100100: kappa
+    100102: kappa_tube
     400000: box1
     400002: box1_size
     400004: box2
@@ -89,6 +98,15 @@ ModelImporter:
     400080: box3_003
     400082: button
     400084: box_fracture
+    400086: env_door
+    400088: env_floor
+    400090: env_street
+    400092: env_stripe
+    400094: env_wall
+    400096: escape_plan
+    400098: extinctor
+    400100: kappa
+    400102: kappa_tube
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png
@@ -134,6 +152,15 @@ ModelImporter:
     2300078: box3_003
     2300080: button
     2300082: box_fracture
+    2300084: env_door
+    2300086: env_floor
+    2300088: env_street
+    2300090: env_stripe
+    2300092: env_wall
+    2300094: escape_plan
+    2300096: extinctor
+    2300098: kappa
+    2300100: kappa_tube
     3300000: box1
     3300002: box1_size
     3300004: box2
@@ -176,6 +203,15 @@ ModelImporter:
     3300078: box3_003
     3300080: button
     3300082: box_fracture
+    3300084: env_door
+    3300086: env_floor
+    3300088: env_street
+    3300090: env_stripe
+    3300092: env_wall
+    3300094: escape_plan
+    3300096: extinctor
+    3300098: kappa
+    3300100: kappa_tube
     4300000: Cylinder
     4300002: conveyor_size_001
     4300004: conveyor_size
@@ -218,6 +254,15 @@ ModelImporter:
     4300078: box1_002
     4300080: button
     4300082: box_fracture
+    4300084: extinctor
+    4300086: escape_plan
+    4300088: env_street
+    4300090: env_door
+    4300092: env_wall
+    4300094: env_stripe
+    4300096: env_floor
+    4300098: kappa
+    4300100: kappa_tube
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}
