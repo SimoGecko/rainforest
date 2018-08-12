@@ -13,10 +13,11 @@ public class Conveyor : MonoBehaviour {
     public const float conveyorSpeed = 1f;
     public bool isSwitch = false;
     public bool flipX, flipZ;// = false;
+    public float forwardProbability = .5f;
 
     // private
     float changeDirTimer;
-    bool switchDirection = true;
+    bool goForward = true;
 
 
     // references
@@ -40,8 +41,8 @@ public class Conveyor : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (isSwitch && Random.value <= .5f && CanSwitch) {
-            switchDirection = !switchDirection;
+        if (isSwitch && CanSwitch && RandomSwitch) {
+            goForward = !goForward;
             changeDirTimer = Time.time + 1f;
         }
     }
@@ -56,10 +57,10 @@ public class Conveyor : MonoBehaviour {
 
 
     // queries
-    Vector3 dir  { get { return switchDirection  ? transform.forward * (flipZ ? -1 : 1) : transform.right * (flipX ? -1 : 1); } }
-    Vector3 dir2 { get { return !switchDirection ? transform.forward * (flipZ ? -1 : 1) : transform.right * (flipX ? -1 : 1); } }
+    Vector3 dir  { get { return goForward  ? transform.forward * (flipZ ? -1 : 1) : transform.right * (flipX ? -1 : 1); } }
+    Vector3 dir2 { get { return !goForward ? transform.forward * (flipZ ? -1 : 1) : transform.right * (flipX ? -1 : 1); } }
     bool CanSwitch { get { return Time.time > changeDirTimer; } }
-
+    bool RandomSwitch { get { return Random.value <= (goForward ? 1 - forwardProbability : forwardProbability); } }
 
     // other
     private void OnDrawGizmos() {
@@ -67,6 +68,7 @@ public class Conveyor : MonoBehaviour {
         Gizmos.DrawLine(transform.position, transform.position + dir * 1);
         Gizmos.DrawCube(transform.position + dir * 1, Vector3.one*.1f);
         if (isSwitch) {
+            Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, transform.position + dir2 * 1);
             Gizmos.DrawCube(transform.position + dir2 * 1, Vector3.one * .1f);
         }

@@ -10,10 +10,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
-
+    public enum Difficulty { Easy, Medium, Hard}
     // public
     public float timeScale = 1f;
-
+    public Difficulty difficulty = Difficulty.Medium;
 
     // private
     int score;
@@ -75,8 +75,6 @@ public class GameManager : MonoBehaviour {
     }
 
     public void LoseLife() {
-        Debug.Log("called loselife");
-        //lifes--;
         UpdateUI();
         if (lifes == 0) GameOver();
     }

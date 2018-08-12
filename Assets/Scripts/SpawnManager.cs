@@ -14,6 +14,7 @@ public class SpawnManager : MonoBehaviour {
     public float spawnRatioMultiplierSaver = .5f; //to store the good value when experimenting
     public float var = .6f;
     public AnimationCurve spawnRatioCurve; // how many per second
+    public float[] difficultyMultipliers = new float[] { .65f, 1f, 1.35f };
 
     // private
 
@@ -52,7 +53,8 @@ public class SpawnManager : MonoBehaviour {
 
     // queries
     float WaitTime() {
-        float avg = spawnRatioCurve.Evaluate(GameManager.instance.ProgressPercent()) * spawnRatioMultiplier; // how many per second
+        float difficultyMultiplier = difficultyMultipliers[(int)GameManager.instance.difficulty];
+        float avg = spawnRatioCurve.Evaluate(GameManager.instance.ProgressPercent()) * spawnRatioMultiplier * difficultyMultiplier; // how many per second
         float val = Utility.NormalFromTo(1 - var, 1 + var) * avg; // how many per second with some variance
         float result = 1f / val; // how many seconds waittime
         //Debug.Log("waittime=" + result);

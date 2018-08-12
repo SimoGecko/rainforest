@@ -48,12 +48,12 @@ public class Cart : MonoBehaviour {
             foreach(Box b in carrying) {
                 if (b != null) {
                     if (b.size == dep.size) {
-                        Deposit(b);
+                        Deposit(b, dep);
                     }
                 }
             }
         }
-        carrying.RemoveAll(b => b == null);
+        carrying.RemoveAll(b => b.Deposited);
     }
 
 
@@ -93,10 +93,10 @@ public class Cart : MonoBehaviour {
         carrying.Add(box);
     }
 
-    void Deposit(Box box) {
+    void Deposit(Box box, Deposit dep) {
         foreach (int p in box.positions) free[p] = true;
         //carrying.Remove(box);
-        box.DepositBox();
+        box.DepositBox(dep);
     }
 
 

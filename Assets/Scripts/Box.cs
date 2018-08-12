@@ -21,7 +21,6 @@ public class Box : MonoBehaviour {
     public List<int> positions;
     bool triggered = false;
 
-
     // references
     Rigidbody rb;
 	
@@ -32,7 +31,7 @@ public class Box : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-        if (!carrying) {
+        if (!carrying && !Deposited) {
             conveyorVelocity = conveyorVelocity.normalized * Conveyor.conveyorSpeed;
             vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime * 5);
             transform.position += vel * Time.deltaTime;
@@ -64,9 +63,7 @@ public class Box : MonoBehaviour {
     // commands
     void PickupBox() {
         carrying = true;
-        rb.isKinematic = true;
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        StopRB();
 
         positions = Cart.instance.FreePosition(size);
         transform.parent = Cart.instance.transform;
@@ -74,13 +71,23 @@ public class Box : MonoBehaviour {
         transform.localRotation = Quaternion.identity;
     }
 
-    public void DepositBox() {
+    public void DepositBox(Deposit dep) {
         carrying = false;
-        rb.isKinematic = true;
+        StopRB();
         //add score
+        Deposited = true;
         GameManager.instance.AddScore(size);
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        dep.PositionBox(this);
+    }
 
+    void StopRB() {
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        conveyorVelocity = Vector3.zero;
+        vel = Vector3.zero;
     }
 
     public void SetConveyorSpeed(Vector3 speed) {
@@ -90,6 +97,7 @@ public class Box : MonoBehaviour {
 
 
 	// queries
+    public bool Deposited { get; set; }
 
 
 

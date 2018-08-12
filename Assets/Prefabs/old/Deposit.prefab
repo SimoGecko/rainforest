@@ -198,3 +198,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: 1
+  angleVar: 10
+  shelfT: {fileID: 0}
