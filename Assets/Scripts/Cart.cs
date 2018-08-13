@@ -44,13 +44,24 @@ public class Cart : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         //if deposit, check & leave
         Deposit dep = other.GetComponent<Deposit>();
+        bool atLeastOneFits = false;
+        int numBoxes = carrying.Count;
         if (dep != null) {
             foreach(Box b in carrying) {
-                if (b != null) {
-                    if (b.size == dep.size) {
+                if (b != null && b.size == dep.size) {
+                    atLeastOneFits = true;
+                    if (dep.CanAcceptBox()) {
                         Deposit(b, dep);
+                        ComicBubble.instance.Speak(SpeechType.BoxDeposit);
+                        //AudioManager.Play("box_drop");
+                    }
+                    else {
+                        ComicBubble.instance.Speak(SpeechType.ShelfFull);
                     }
                 }
+            }
+            if (!atLeastOneFits && numBoxes>0){
+                ComicBubble.instance.Speak(SpeechType.NotRightFit);
             }
         }
         carrying.RemoveAll(b => b.Deposited);

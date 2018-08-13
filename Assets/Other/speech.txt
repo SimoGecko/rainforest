@@ -1,0 +1,63 @@
+-FARAWAY
+	it's too far away!
+	I can't reach it!
+	I should get closer!
+	maybe if I get closer...
+	my arm is not long enough
+-CARTFULL
+	out of space!
+	my cart is full!
+	no space on the cart!
+	I run out of space on my cart!
+	run out of space!
+-SHELFFULL
+	shelf run out of space!
+	the shelf is full!
+	shelf out of space!
+	I must push that button!
+	push the button!
+	maybe that button should be pushed
+-BOXLOST
+	on no! I lost a box!
+	I broke one! :(
+	damn! I will get fired!
+	BOX-DOWN!
+-GAMEOVER
+	what a failure...
+	I got fired!
+	next time I will be more careful
+	I didn't last long on this job
+-RANDOM
+	what a beautiful day!
+	I will get this done!
+	I am the best employee ever!
+	...
+-BEGIN
+	let's get this done!
+	let's go!
+	come on!
+-BUTTONNOTFULL
+	i should wait until the shelf is full..
+	not the time yet!
+	let's fill it up first!
+	shelf not full yet!
+-BOXPICKUP
+	I got a box!
+	another one!
+	let's go deposit this one!
+	it fits nicely on my cart!
+	I picked up a box!
+	let's deliver this box!
+-BOXDEPOSIT
+	yay!
+	more points for me!
+	I'm doing a good job!
+	well done!
+	deposit complete!
+-NOTRIGHTFIT
+	this box doesn't go here...
+	no box fits here
+	maybe another shelf?
+	I should put this in the appropriate shelf
+	where could this box go?
+	let's look at the numbers

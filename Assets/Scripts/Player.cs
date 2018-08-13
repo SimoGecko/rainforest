@@ -25,7 +25,7 @@ public class Player : MonoBehaviour {
     public static Player instance;
     CharacterController cc;
     Animator anim;
-    public Transform cart;
+    public Transform pickupCenter;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -107,8 +107,8 @@ public class Player : MonoBehaviour {
 
 
     // queries
-    public bool CloseEnough(Box b) {
-        Vector3 vec = cart.position - b.transform.position;
+    public bool CloseEnough(Transform t) {
+        Vector3 vec = pickupCenter.position - t.transform.position;
         vec.y = 0;
         float dist = Vector3.SqrMagnitude(vec);
         return dist <= pickupArea * pickupArea;
@@ -117,7 +117,7 @@ public class Player : MonoBehaviour {
 
     // other
     private void OnDrawGizmos() {
-        Gizmos.DrawWireSphere(cart.position, pickupArea);
+        Gizmos.DrawWireSphere(pickupCenter.position, pickupArea);
     }
 
 }

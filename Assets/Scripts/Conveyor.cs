@@ -10,10 +10,10 @@ public class Conveyor : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public const float conveyorSpeed = 1f;
     public bool isSwitch = false;
     public bool flipX, flipZ;// = false;
     public float forwardProbability = .5f;
+
 
     // private
     float changeDirTimer;
@@ -57,6 +57,11 @@ public class Conveyor : MonoBehaviour {
 
 
     // queries
+    public static float GetSpeed() {
+        return SpawnManager.instance.GetConveyorSpeed();
+    }
+    
+
     Vector3 dir  { get { return goForward  ? transform.forward * (flipZ ? -1 : 1) : transform.right * (flipX ? -1 : 1); } }
     Vector3 dir2 { get { return !goForward ? transform.forward * (flipZ ? -1 : 1) : transform.right * (flipX ? -1 : 1); } }
     bool CanSwitch { get { return Time.time > changeDirTimer; } }

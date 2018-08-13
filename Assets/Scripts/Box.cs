@@ -16,7 +16,7 @@ public class Box : MonoBehaviour {
     // private
     Vector3 conveyorVelocity;
     Vector3 vel;
-    bool carrying;
+    bool pickedUp;
     [HideInInspector]
     public List<int> positions;
     bool triggered = false;
@@ -32,8 +32,8 @@ public class Box : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-        if (!carrying && !Deposited) {
-            conveyorVelocity = conveyorVelocity.normalized * Conveyor.conveyorSpeed;
+        if (!pickedUp && !Deposited) {
+            conveyorVelocity = conveyorVelocity.normalized * Conveyor.GetSpeed();
             vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime * 5);
             transform.position += vel * Time.deltaTime;
             conveyorVelocity = Vector3.zero;
@@ -41,7 +41,7 @@ public class Box : MonoBehaviour {
 	}
 
     private void OnTriggerEnter(Collider other) {
-        if (!carrying && !triggered && other.tag == "ground") {
+        if (!pickedUp && !triggered && other.tag == "ground") {
             Shatter();
             
         }
@@ -49,11 +49,17 @@ public class Box : MonoBehaviour {
 
     private void OnMouseDown() {
         if (!GameManager.Playing) return;
-        if (Player.instance.CloseEnough(this) && !carrying) {//check if close enough
+        if (Player.instance.CloseEnough(transform) && !pickedUp) {//check if close enough
             if (Cart.instance.HasSpaceFor(size)) {
                 PickupBox();
                 Cart.instance.Pickup(this);
             }
+            else {
+                ComicBubble.instance.Speak(SpeechType.CartFull);
+            }
+        }
+        else {
+            ComicBubble.instance.Speak(SpeechType.FarAway);
         }
     }
 
@@ -64,7 +70,7 @@ public class Box : MonoBehaviour {
 
     // commands
     void PickupBox() {
-        carrying = true;
+        pickedUp = true;
         StopRB();
 
         positions = Cart.instance.FreePosition(size);
@@ -72,11 +78,12 @@ public class Box : MonoBehaviour {
         transform.position = Cart.instance.TransfFromPos(positions);
         transform.localRotation = Quaternion.identity;
 
+        ComicBubble.instance.Speak(SpeechType.BoxPickup);
         AudioManager.Play("box_drop");
     }
 
     public void DepositBox(Deposit dep) {
-        carrying = false;
+        pickedUp = false;
         StopRB();
         //add score
         Deposited = true;
@@ -86,6 +93,7 @@ public class Box : MonoBehaviour {
     }
 
     void Shatter() {
+        ComicBubble.instance.Speak(SpeechType.BoxLost);
         GameManager.instance.LoseLife();
         triggered = true;
         GameObject shatter = Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));

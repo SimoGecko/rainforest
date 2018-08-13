@@ -10,17 +10,24 @@ public class SpawnManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
+    [Header("Box Spawn Ratio")]
     public float spawnRatioMultiplier = .5f; // this is a good ratio, balanced
-    public float spawnRatioMultiplierSaver = .5f; //to store the good value when experimenting
     public float var = .6f;
+    //public float spawnRatioMultiplierSaver = .5f; //to store the good value when experimenting
     public AnimationCurve spawnRatioCurve; // how many per second
-    public float[] difficultyMultipliers = new float[] { .65f, 1f, 1.35f };
+    public float[] spawnDifficultyMultipliers = new float[] { .65f, 1f, 1.35f };
+
+    [Header("Conveyor speed")]
+    public float conveyorBaseSpeed = 1f;
+    public AnimationCurve conveyorSpeedCurve; // multiplier increase
+    public float[] conveyorDifficultyMultipliers = new float[] { .65f, 1f, 1.35f };
 
     // private
 
 
     // references
     public static SpawnManager instance;
+    [Header("Prefabs")]
     public Box[] boxesPrefab;
     public Kappa[] kappas;
 
@@ -45,16 +52,13 @@ public class SpawnManager : MonoBehaviour {
     // commands
     void SpawnOne() {
         int k = Random.Range(0, kappas.Length);
-        //Transform t = spawnPoints[lane];
         kappas[k].StartFalling();
-        //Box box = Instantiate(boxesPrefab[Random.Range(0, boxesPrefab.Length)], t.position, Quaternion.Euler(0, Random.value*380, 0)) as Box;
-        //set it up
     }
 
 
     // queries
     float WaitTime() {
-        float difficultyMultiplier = difficultyMultipliers[(int)GameManager.instance.difficulty];
+        float difficultyMultiplier = spawnDifficultyMultipliers[(int)GameManager.instance.difficulty];
         float avg = spawnRatioCurve.Evaluate(GameManager.instance.ProgressPercent()) * spawnRatioMultiplier * difficultyMultiplier; // how many per second
         float val = Utility.NormalFromTo(1 - var, 1 + var) * avg; // how many per second with some variance
         float result = 1f / val; // how many seconds waittime
@@ -64,6 +68,11 @@ public class SpawnManager : MonoBehaviour {
 
     public Box GetBoxPrefab() {
         return boxesPrefab[Random.Range(0, boxesPrefab.Length)];
+    }
+
+    public float GetConveyorSpeed() {
+        float difficultyMultiplier = conveyorDifficultyMultipliers[(int)GameManager.instance.difficulty];
+        return  conveyorSpeedCurve.Evaluate(GameManager.instance.ProgressPercent()) * conveyorBaseSpeed * difficultyMultiplier; // how many per second
     }
 
 

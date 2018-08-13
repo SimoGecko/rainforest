@@ -17,6 +17,7 @@ public class Button : MonoBehaviour {
 
     // private
     bool animatedEntrance;
+    bool alreadyPushed;
 
 
     // references
@@ -37,9 +38,24 @@ public class Button : MonoBehaviour {
 
     private void OnMouseDown() {
         if (!GameManager.Playing) return;
-        if (CanMove() || true) {
-            Move();
+        if (Player.instance.CloseEnough(transform)) {
+            if (CanMove() || GameManager.instance.DEBUG) {
+                if (!alreadyPushed)
+                    Move();
+            }
+            else {
+                ComicBubble.instance.Speak(SpeechType.ButtonNotFull);
+            }
         }
+        else {
+            ComicBubble.instance.Speak(SpeechType.FarAway);
+
+        }
+
+
+
+        //TOO FAR AWAY
+
     }
 
 
@@ -48,9 +64,11 @@ public class Button : MonoBehaviour {
 
     // commands
     private void Move() {
+        alreadyPushed = true;
         AnimateShelf();
         AnimateSlidingDoor();
         Invoke("CleanShelf", animTime + delay/2);
+        Invoke("AlreadyPushedOff", 2 * animTime + delay);
     }
 
     void CleanShelf() {
@@ -74,6 +92,8 @@ public class Button : MonoBehaviour {
         iTween.MoveBy(slidingDoor, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + delay));
         iTween.MoveBy(slidingDoor, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + delay + animTime / 2));
     }
+
+    void AlreadyPushedOff() { alreadyPushed = false; }
 
 
     // queries
