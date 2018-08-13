@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour {
 	
 	void Update () {
         if (DEBUG && Input.GetKeyDown(KeyCode.G)) GameOver();
+        if(DEBUG) Time.timeScale = timeScale;
 
         if (Playing) {
             timer += Time.deltaTime;
@@ -128,10 +129,11 @@ public class GameManager : MonoBehaviour {
     }
 
     public void LoseLife() {
-        if(!DEBUG)
+        if (!DEBUG) {
             lifes--;
-        if (lifes == 0) GameOver();
-        UpdateLifeUI();
+            if (lifes == 0) GameOver();
+            UpdateLifeUI();
+        }
     }
 
 

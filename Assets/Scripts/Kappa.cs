@@ -23,7 +23,7 @@ public class Kappa : MonoBehaviour {
 	
 	
 	// --------------------- BASE METHODS ------------------
-	void Start () {
+	void Awake () {
         anim = GetComponent<Animator>();
 
     }
