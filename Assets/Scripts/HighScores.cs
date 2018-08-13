@@ -27,7 +27,12 @@ public class HighScores : MonoBehaviour {
     public InputField inputUsername;
 
     // --------------------- BASE METHODS ------------------
+    private void Awake() {
+        instance = this;
+    }
+
     void Start () {
+
         //UploadHighscore("Simone", 90, 35);
         //UploadHighscore("Mary", 80, 155);
 
@@ -49,6 +54,10 @@ public class HighScores : MonoBehaviour {
             UploadHighscore(inputUsername.text, GameManager.instance.Score, GameManager.instance.Timer);
             alreadySubmitted = true;
         }
+    }
+
+    public void SubmitRandomUsername() {
+        UploadHighscore("user_"+ Random.Range(0, 2048), GameManager.instance.Score, GameManager.instance.Timer);
     }
 
 

@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 ////////// DESCRIPTION //////////
 
@@ -10,7 +11,10 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
+    public enum ControlType { PlayerRelative, CameraRelative }
+
     // public
+    public ControlType controlType = ControlType.PlayerRelative;
     public float speed = 5;
     public float angularSpeed = 180;
     public float pickupArea = 3f;
@@ -18,9 +22,12 @@ public class Player : MonoBehaviour {
 
     // private
     float ref1;
-    Vector3 input;
+    Vector3 inp;
     bool animStart, animEnd;
     float animHelloTime;
+    Vector3 moveDirection;
+    Vector3 lastDir;
+    Vector3 inputRotated;
 
 
 
@@ -30,6 +37,7 @@ public class Player : MonoBehaviour {
     Animator anim;
     public Transform pickupCenter;
     AudioSource feet;
+    public Text controlText;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -46,14 +54,23 @@ public class Player : MonoBehaviour {
 	void Update () {
         if (GameManager.Playing) {
             SetToGround();
-            Move();
+
+            if (Input.GetKeyDown(KeyCode.Tab)){
+                controlType = (ControlType)(1 - (int)controlType); // switch it
+            }
+            if (controlType == ControlType.PlayerRelative)
+                MovePlayerRelative();
+            else if (controlType == ControlType.CameraRelative)
+                MoveCameraRelative();
         }
         else {
-            input = Vector3.zero;
+            inp = Vector3.zero;
         }
         DealWithAnimations();
-        feet.volume = input.normalized.magnitude/40;
+        feet.volume = inp.normalized.magnitude/20;
         feet.pitch = Mathf.Lerp(feet.pitch, Random.Range(.8f, 1.2f), Time.deltaTime * 2);
+
+        UpdateControlUI();
 
 	}
 
@@ -66,16 +83,36 @@ public class Player : MonoBehaviour {
 
 
     // commands
-    void Move() {
-        input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        Vector3 angularVel = Vector3.up * input.x * angularSpeed * Mathf.Lerp(.6f, 1f, Mathf.Abs(input.z)) *Mathf.Sign(input.z);
-        Vector3 vel = transform.forward * input.z * speed;
-        //rb.angularVelocity = angularVel * Mathf.Deg2Rad;
-        //rb.velocity = vel;
+    void MovePlayerRelative() {
+        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 angularVel = Vector3.up * inp.x * angularSpeed * Mathf.Lerp(.6f, 1f, Mathf.Abs(inp.z)) * Mathf.Sign(inp.z);
+        Vector3 vel = transform.forward * inp.z * speed;
         transform.Rotate(angularVel *  Time.deltaTime, Space.World);
         cc.Move(vel * Time.deltaTime);
-        //transform.Translate(vel* Time.deltaTime, Space.World);
-        
+    }
+
+   
+
+    void MoveCameraRelative() {
+        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
+        inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp.normalized;
+
+        if (inputRotated.magnitude > 0.05f) {
+            lastDir = inputRotated;
+        }
+        else {
+            lastDir = transform.forward;
+        }
+
+        Quaternion a = transform.rotation;
+        transform.LookAt(transform.position + lastDir);
+        Quaternion b = transform.rotation;
+        transform.rotation = Quaternion.Lerp(a, b, Time.deltaTime * 4);
+
+        //moveDirection = Vector3.Lerp(moveDirection, lastDir, Time.deltaTime * 4);
+        //moveDirection.Normalize();
+        cc.Move(transform.forward * speed * inp.magnitude * Time.deltaTime);
+
     }
 
     void SetToGround() {
@@ -97,7 +134,7 @@ public class Player : MonoBehaviour {
             animStart = true;
             anim.SetTrigger("start");
         }
-        bool running = input.magnitude > .1f;
+        bool running = inp.magnitude > .1f;
         anim.SetBool("running", running);
 
         //end
@@ -110,6 +147,11 @@ public class Player : MonoBehaviour {
     public void PushButtonAnim() {
         anim.SetTrigger("button");
 
+    }
+
+    void UpdateControlUI() {
+        string ct = controlType == ControlType.PlayerRelative ? "player" : "camera";
+        controlText.text = "control: " + ct + "-relative\nTAB to change";
     }
 
     /*
@@ -143,6 +185,25 @@ public class Player : MonoBehaviour {
         transform.position += transform.forward * speed * displacement.magnitude * Time.deltaTime;
     }*/
 
+    /*
+    void Move4() {
+       input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
+       inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * input.normalized;
+
+       if (inputRotated.magnitude>0) {
+           lastDir = inputRotated;
+       }
+       //else {
+       //    inputRotated += lastDir * .01f;
+       //}
+       //Vector3 smoothTo = inputRotated.magnitude > 0 ? inputRotated : lastDir;
+
+       moveDirection = Vector3.Lerp(moveDirection, lastDir, Time.deltaTime * 6);
+       moveDirection.Normalize();
+       transform.LookAt(transform.position + moveDirection);
+       cc.Move(moveDirection * speed * input.magnitude * Time.deltaTime);
+}*/
+
 
 
     // queries
@@ -156,7 +217,12 @@ public class Player : MonoBehaviour {
 
     // other
     private void OnDrawGizmos() {
-        Gizmos.DrawWireSphere(pickupCenter.position, pickupArea);
+        //Gizmos.DrawWireSphere(pickupCenter.position, pickupArea);
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position + Vector3.up, inputRotated*3);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position+Vector3.up, moveDirection*3);
     }
 
 }

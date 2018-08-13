@@ -90,6 +90,8 @@ public class GameManager : MonoBehaviour {
         ComicBubble.instance.Speak(SpeechType.BoxLost);
         state = State.Gameover;
 
+
+        HighScores.instance.SubmitRandomUsername();
         Invoke("GameOverDelay", 3f);
         //trigger animation...
        
