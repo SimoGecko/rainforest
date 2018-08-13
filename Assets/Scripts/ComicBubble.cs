@@ -20,7 +20,7 @@ public class ComicBubble : MonoBehaviour {
     public Vector2 speechDurationMinMax = new Vector2(4, 6);
     float[] probOfSpeech = new float[] {
         .5f, .6f, 1f, 1f, 1f,
-        .2f, .3f, .6f, .1f, .2f,
+        .2f, .3f, .6f, .1f, .1f,
         .8f };
 
 

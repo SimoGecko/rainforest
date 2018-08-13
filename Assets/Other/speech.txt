@@ -3,13 +3,14 @@
 	I can't reach it!
 	I should get closer!
 	maybe if I get closer...
-	my arm is not long enough
+	my arms aren't long enough
 -CARTFULL
 	out of space!
 	my cart is full!
 	no space on the cart!
 	I run out of space on my cart!
 	run out of space!
+	that box doesn't fit here!
 -SHELFFULL
 	shelf run out of space!
 	the shelf is full!
@@ -37,7 +38,7 @@
 	let's go!
 	come on!
 -BUTTONNOTFULL
-	i should wait until the shelf is full..
+	i should wait until it's full..
 	not the time yet!
 	let's fill it up first!
 	shelf not full yet!
@@ -58,6 +59,6 @@
 	this box doesn't go here...
 	no box fits here
 	maybe another shelf?
-	I should put this in the appropriate shelf
+	this isn't the right shelf
 	where could this box go?
 	let's look at the numbers

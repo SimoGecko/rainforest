@@ -14,15 +14,18 @@ public class Button : MonoBehaviour {
     public float animTime = 2f;
     public float delay = 1f;
     public float moveAmount = 10;
+    public float introDelay;
 
     // private
     bool animatedEntrance;
     bool alreadyPushed;
+    bool blinking;
 
 
     // references
     public Deposit deposit;
     public GameObject slidingDoor;
+    public GameObject buttonLight;
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
@@ -32,14 +35,16 @@ public class Button : MonoBehaviour {
 	void Update () {
         if(GameManager.Playing && !animatedEntrance) {
             animatedEntrance = true;
-            AnimateEntrance();
+            Invoke("AnimateEntrance", 2f + introDelay);
         }
+        CheckBlinking();
+        
 	}
 
     private void OnMouseDown() {
         if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(transform)) {
-            if (CanMove() || GameManager.instance.DEBUG) {
+            if (FilledEnough() || GameManager.instance.DEBUG) {
                 if (!alreadyPushed)
                     Move();
             }
@@ -71,6 +76,17 @@ public class Button : MonoBehaviour {
         Invoke("AlreadyPushedOff", 2 * animTime + delay);
     }
 
+    void CheckBlinking() {
+        blinking = FilledEnough();
+        if (blinking) {
+            bool currentlyOn = Mathf.RoundToInt(Time.time) % 2 == 0;
+            buttonLight.SetActive(currentlyOn);
+        }
+        else {
+            buttonLight.SetActive(false);
+        }
+    }
+
     void CleanShelf() {
         deposit.Clear();
     }
@@ -97,7 +113,7 @@ public class Button : MonoBehaviour {
 
 
     // queries
-    bool CanMove() {
+    bool FilledEnough() {
         return deposit.PercentFilled() >= percentToBeFilled;
     }
 

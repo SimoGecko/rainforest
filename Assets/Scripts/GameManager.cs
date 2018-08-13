@@ -61,8 +61,7 @@ public class GameManager : MonoBehaviour {
             UpdateUI();
         }
         else if (Menu) {
-            if (Input.GetMouseButton(0))
-                StartRound();
+            //if (Input.GetMouseButton(0)) StartRound();
         }
 	}
 
@@ -72,15 +71,12 @@ public class GameManager : MonoBehaviour {
 
 
     // commands
-    public void SetDifficulty(int d) {
-        difficulty = (Difficulty)d;
-    }
-
-    void StartRound() {
+    public void StartRound(int d) { // called from gauge
         state = State.Playing;
         score = 0;
         lifes = 3;
         timer = 0;
+        difficulty = (Difficulty)d;
         UpdateUI();
         UpdateLifeUI();
         gameUI.SetActive(true);

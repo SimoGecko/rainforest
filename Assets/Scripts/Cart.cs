@@ -16,6 +16,7 @@ public class Cart : MonoBehaviour {
     List<List<int>>[] positions; // const
     bool[] free;
     List<Box> carrying;
+    float lastDepositTimestamp;
 
 
     // references
@@ -52,6 +53,7 @@ public class Cart : MonoBehaviour {
                     atLeastOneFits = true;
                     if (dep.CanAcceptBox()) {
                         Deposit(b, dep);
+                        lastDepositTimestamp = Time.time;
                         ComicBubble.instance.Speak(SpeechType.BoxDeposit);
                         //AudioManager.Play("box_drop");
                     }
@@ -60,7 +62,7 @@ public class Cart : MonoBehaviour {
                     }
                 }
             }
-            if (!atLeastOneFits && numBoxes>0){
+            if (!atLeastOneFits && numBoxes>0 && Time.time-lastDepositTimestamp>2f){
                 ComicBubble.instance.Speak(SpeechType.NotRightFit);
             }
         }
