@@ -28,8 +28,8 @@ public class HighScores : MonoBehaviour {
 
     // --------------------- BASE METHODS ------------------
     void Start () {
-        UploadHighscore("Simone", 90, 35);
-        UploadHighscore("Mary", 80, 155);
+        //UploadHighscore("Simone", 90, 35);
+        //UploadHighscore("Mary", 80, 155);
 
         DownloadHighscores();
     }
