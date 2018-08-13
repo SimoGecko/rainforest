@@ -50,6 +50,8 @@ public class Kappa : MonoBehaviour {
         Box boxPrefab = SpawnManager.instance.GetBoxPrefab();
         Box box = Instantiate(boxPrefab, transform.position, Quaternion.Euler(0, Random.value * 380, 0)) as Box;
         spawning = false;
+        AudioManager.Play("box_fall");
+
     }
 
 

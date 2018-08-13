@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.ImageEffects;
 
 ////////// DESCRIPTION //////////
 
@@ -39,7 +40,9 @@ public class GameManager : MonoBehaviour {
     public GameObject gameoverUI;
     public Text scoreOverText;
     public Text timerOverText;
+    public BlurOptimized blur;
     //blur
+    
 
     public static GameManager instance;
 
@@ -84,16 +87,22 @@ public class GameManager : MonoBehaviour {
 
     void GameOver() {
         ComicBubble.instance.Speak(SpeechType.BoxLost);
-        //trigger animation...
-
         state = State.Gameover;
+
+        Invoke("GameOverDelay", 3f);
+        //trigger animation...
+       
+        //iTween.FadeFrom(gameoverUI, iTween.Hash("alpha", 0f, "time", 2f, "delay", 2f));
+        //blur
+        //StartCoroutine(FadeRoutine());
+    }
+
+    void GameOverDelay() {
+        blur.enabled = true;
         gameUI.SetActive(false);
         gameoverUI.SetActive(true);
-
         scoreOverText.text = score.ToString();
         timerOverText.text = Utility.ToReadableTime(timer);
-
-        //StartCoroutine(GameoverRoutine());
     }
 
     public void Restart() { //called from button
@@ -140,11 +149,16 @@ public class GameManager : MonoBehaviour {
     public int Timer { get { return Mathf.RoundToInt(timer); } }
 
     // other
-    IEnumerator GameoverRoutine() {
-        
-        yield return new WaitForSeconds(2f);
-
-        //SceneManager.LoadScene("SampleScene");
+    IEnumerator FadeRoutine() {
+        blur.enabled = true;
+        float percent = 0;
+        float speed = .5f;
+        while (percent < 1) {
+            percent += Time.deltaTime * speed;
+            blur.blurSize = Mathf.Lerp(0, 3, percent);
+            //blur.blurIterations = Mathf.RoundToInt(Mathf.Lerp(0, 3, percent));
+            yield return null;
+        }
     }
 
 

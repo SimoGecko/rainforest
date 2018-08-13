@@ -55,7 +55,7 @@ public class Cart : MonoBehaviour {
                         Deposit(b, dep);
                         lastDepositTimestamp = Time.time;
                         ComicBubble.instance.Speak(SpeechType.BoxDeposit);
-                        //AudioManager.Play("box_drop");
+                        AudioManager.Play("box_drop");
                     }
                     else {
                         ComicBubble.instance.Speak(SpeechType.ShelfFull);

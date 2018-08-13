@@ -39,11 +39,11 @@ public class Gauge : MonoBehaviour {
     // commands
     public void GetClicked(int d) {
         if (alreadyClicked) return;
-        Debug.Log("difficulty=" + d);
         alreadyClicked = true;
         GameManager.instance.StartRound(d);
         iTween.ScaleTo(gameObject, iTween.Hash("scale", Vector3.zero, "time", 1f, "easeType", iTween.EaseType.easeInOutSine));
         Destroy(gameObject, 3f);
+        AudioManager.Play("button_push");
     }
 
     public void SetNeedle(int d) {

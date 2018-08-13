@@ -18,6 +18,9 @@ public class Player : MonoBehaviour {
 
     // private
     float ref1;
+    Vector3 input;
+    bool animStart, animEnd;
+    float animHelloTime;
 
 
 
@@ -26,6 +29,7 @@ public class Player : MonoBehaviour {
     CharacterController cc;
     Animator anim;
     public Transform pickupCenter;
+    AudioSource feet;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -33,8 +37,10 @@ public class Player : MonoBehaviour {
     }
 
     void Start () {
+        animHelloTime = Time.time + Random.Range(2f, 4f);
         cc = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
+        feet = GetComponent<AudioSource>();
 	}
 	
 	void Update () {
@@ -42,6 +48,13 @@ public class Player : MonoBehaviour {
             SetToGround();
             Move();
         }
+        else {
+            input = Vector3.zero;
+        }
+        DealWithAnimations();
+        feet.volume = input.normalized.magnitude/40;
+        feet.pitch = Mathf.Lerp(feet.pitch, Random.Range(.8f, 1.2f), Time.deltaTime * 2);
+
 	}
 
     private void FixedUpdate() {
@@ -54,7 +67,7 @@ public class Player : MonoBehaviour {
 
     // commands
     void Move() {
-        Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         Vector3 angularVel = Vector3.up * input.x * angularSpeed * Mathf.Lerp(.6f, 1f, Mathf.Abs(input.z)) *Mathf.Sign(input.z);
         Vector3 vel = transform.forward * input.z * speed;
         //rb.angularVelocity = angularVel * Mathf.Deg2Rad;
@@ -62,8 +75,7 @@ public class Player : MonoBehaviour {
         transform.Rotate(angularVel *  Time.deltaTime, Space.World);
         cc.Move(vel * Time.deltaTime);
         //transform.Translate(vel* Time.deltaTime, Space.World);
-        bool running = input.magnitude > .1f;
-        anim.SetBool("running", running);
+        
     }
 
     void SetToGround() {
@@ -71,6 +83,33 @@ public class Player : MonoBehaviour {
         Vector3 temp = transform.position;
         temp.y = 0;
         transform.position = temp;
+    }
+
+    void DealWithAnimations() {
+        //start
+        if (Time.time > animHelloTime) {
+            anim.SetTrigger("hello");
+            animHelloTime = Time.time + Random.Range(4f, 8f);
+        }
+
+        //play
+        if (GameManager.Playing && !animStart) {
+            animStart = true;
+            anim.SetTrigger("start");
+        }
+        bool running = input.magnitude > .1f;
+        anim.SetBool("running", running);
+
+        //end
+        if (GameManager.Gameover && !animEnd) {
+            animEnd = true;
+            anim.SetTrigger("end");
+        }
+    }
+
+    public void PushButtonAnim() {
+        anim.SetTrigger("button");
+
     }
 
     /*

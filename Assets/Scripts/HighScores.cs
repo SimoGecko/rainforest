@@ -12,7 +12,7 @@ public class HighScores : MonoBehaviour {
 
     // public
     public Highscore[] highscores;
-    public int numLeadToDisplay = 10;
+    public int numLeadToDisplay = 20;
 
     // private
     const string privateCode = "TYeLGz9gOUy4ejx_Dy7ACA_FHLzK6VyUyMbCRH2ShcZg";
@@ -23,13 +23,14 @@ public class HighScores : MonoBehaviour {
 
     // references
     public static HighScores instance;
-    public Text leadUserText, leadScoreText;
+    public Text leadUserText, leadScoreText, leadTimeText;
     public InputField inputUsername;
 
     // --------------------- BASE METHODS ------------------
     void Start () {
-        //UploadHighscore("Simone", 90);
-        //UploadHighscore("Mary", 80);
+        UploadHighscore("Simone", 90, 35);
+        UploadHighscore("Mary", 80, 155);
+
         DownloadHighscores();
     }
 	
@@ -45,14 +46,14 @@ public class HighScores : MonoBehaviour {
 	// commands
     public void Submit() { // called from button
         if (!alreadySubmitted) {
-            UploadHighscore(inputUsername.text, GameManager.instance.Score);
+            UploadHighscore(inputUsername.text, GameManager.instance.Score, GameManager.instance.Timer);
             alreadySubmitted = true;
         }
     }
 
 
-    void UploadHighscore(string username, int score) {
-        StartCoroutine(UploadNewHighscore(username, score));
+    void UploadHighscore(string username, int score, int time) {
+        StartCoroutine(UploadNewHighscore(username, score, time));
     }
 
     void DownloadHighscores() {
@@ -65,13 +66,14 @@ public class HighScores : MonoBehaviour {
 
         for (int i = 0; i < entries.Length; i++) {
             string[] entryInfo = entries[i].Split(new char[] {'|'});
-            highscores[i] = new Highscore(entryInfo[0], int.Parse(entryInfo[1]));
+            highscores[i] = new Highscore(entryInfo[0], int.Parse(entryInfo[1]), int.Parse(entryInfo[2]));
             //Debug.Log(highscores[i].username + "," + highscores[i].score);
         }
 
         //apply them
         leadUserText.text = UserString(numLeadToDisplay);
         leadScoreText.text = ScoreString(numLeadToDisplay);
+        leadTimeText.text = TimeString(numLeadToDisplay);
     }
 
 
@@ -93,15 +95,22 @@ public class HighScores : MonoBehaviour {
         }
         return result;
     }
+    string TimeString(int num) {
+        string result = "";
+        for (int i = 0; i < Mathf.Min(num, highscores.Length); i++) {
+            result += Utility.ToReadableTime(highscores[i].time) + "\n";
+        }
+        return result;
+    }
 
 
     // other
-    IEnumerator UploadNewHighscore(string username, int score) {
-        WWW www = new WWW(webURL + privateCode + "/add/" + WWW.EscapeURL(username) + "/" + score);
+    IEnumerator UploadNewHighscore(string username, int score, int time) {
+        WWW www = new WWW(webURL + privateCode + "/add/" + WWW.EscapeURL(username) + "/" + score + "/" + time);
         yield return www;
 
         if (string.IsNullOrEmpty(www.error)) {
-            Debug.Log("upload successful");
+            //Debug.Log("upload successful");
             //DOWNLOAD TO SYNC
             DownloadHighscores();
         }
@@ -127,6 +136,7 @@ public class HighScores : MonoBehaviour {
 public struct Highscore {
     public string username;
     public int score;
+    public int time;
 
-    public Highscore(string u, int s) { username = u; score = s; }
+    public Highscore(string u, int s, int t) { username = u; score = s; time = t; }
 }

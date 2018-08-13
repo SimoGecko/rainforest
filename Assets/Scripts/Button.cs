@@ -45,8 +45,12 @@ public class Button : MonoBehaviour {
         if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(transform)) {
             if (FilledEnough() || GameManager.instance.DEBUG) {
-                if (!alreadyPushed)
+                if (!alreadyPushed) {
+                    Player.instance.PushButtonAnim();
                     Move();
+                    AudioManager.Play("button_push");
+                    AudioManager.Play("shelf_moving");
+                }
             }
             else {
                 ComicBubble.instance.Speak(SpeechType.ButtonNotFull);

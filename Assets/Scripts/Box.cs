@@ -80,6 +80,7 @@ public class Box : MonoBehaviour {
 
         ComicBubble.instance.Speak(SpeechType.BoxPickup);
         AudioManager.Play("box_drop");
+        Player.instance.PushButtonAnim();
     }
 
     public void DepositBox(Deposit dep) {
@@ -94,6 +95,7 @@ public class Box : MonoBehaviour {
 
     void Shatter() {
         ComicBubble.instance.Speak(SpeechType.BoxLost);
+        AudioManager.Play("box_crash");
         GameManager.instance.LoseLife();
         triggered = true;
         GameObject shatter = Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));

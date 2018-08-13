@@ -19,9 +19,11 @@ public class AudioManager : MonoBehaviour {
     [Range(0, 1)]
     public float sfxVolume = 1;
     [Range(0, 1)]
+    public float speechVolume = 1;
+    [Range(0, 1)]
     public float musicVolume = 1;
 
-    AudioSource effectSource, musicSource;
+    AudioSource effectSource, musicSource, speechSource;
     Dictionary<string, AudioClip> groupDictionary = new Dictionary<string, AudioClip>();
 
     // references
@@ -45,8 +47,8 @@ public class AudioManager : MonoBehaviour {
     }
 	
 	void Update () {
-        if (playerT != null)
-            audioListener.position = playerT.position;
+        //if (playerT != null)
+            //audioListener.position = playerT.position;
     }
 
 
@@ -65,6 +67,12 @@ public class AudioManager : MonoBehaviour {
         GameObject newEffectsSource = new GameObject("Effects source");
         effectSource = newEffectsSource.AddComponent<AudioSource>();
         newEffectsSource.transform.parent = transform;
+
+        //speech
+        GameObject newSpeechSource = new GameObject("Speech source");
+        speechSource = newSpeechSource.AddComponent<AudioSource>();
+        newSpeechSource.transform.parent = transform;
+        speechSource.pitch = 1.2f;
     }
 
     void CreateDictionary() {
@@ -74,11 +82,17 @@ public class AudioManager : MonoBehaviour {
     }
 
     void PlaySound2D(string clipName) {
+        float pitchVar = .3f;
+        effectSource.pitch = Random.Range(1 - pitchVar, 1 + pitchVar);
         effectSource.PlayOneShot(GetClipFromName(clipName), sfxVolume * masterVolume);
     }
 
     public static void Play(string clipName) {
         instance.PlaySound2D(clipName);
+    }
+
+    public void PlaySpeech(string clipName) {
+        speechSource.PlayOneShot(GetClipFromName(clipName), speechVolume * masterVolume);
     }
 
 

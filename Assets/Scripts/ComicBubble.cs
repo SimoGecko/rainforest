@@ -94,6 +94,7 @@ public class ComicBubble : MonoBehaviour {
             bubbleText.text = GetSpeech(speechType);
             bubble.SetActive(true);
             Invoke("EndSpeak", Random.Range(speechDurationMinMax.x, speechDurationMinMax.y));
+            AudioManager.instance.PlaySpeech("speech" + Random.Range(1, 9));
         }
     }
 
