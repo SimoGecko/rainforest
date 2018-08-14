@@ -67,17 +67,17 @@ public class PlayerPickup : MonoBehaviour {
         Button closestButton = ClosestButton();
 
         if (closestBox != null && closestButton == null) {
-            closestBox.OnMouseDown();
+            closestBox.Tap();
         }
         else if(closestBox == null && closestButton != null) {
-            closestButton.OnMouseDown();
+            closestButton.Tap();
         }
         else if(closestBox != null && closestButton != null) {
             //must chose closest
             if (DistToMe(closestBox.transform) < DistToMe(closestButton.transform))
-                closestBox.OnMouseDown();
+                closestBox.Tap();
             else
-                closestButton.OnMouseDown();
+                closestButton.Tap();
         }
     }
 

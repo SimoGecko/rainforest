@@ -41,7 +41,17 @@ public class Button : MonoBehaviour {
         
 	}
 
-    public void OnMouseDown() {
+    private void OnMouseDown() {
+        Tap();
+
+    }
+
+
+    // --------------------- CUSTOM METHODS ----------------
+
+
+    // commands
+    public void Tap() {
         if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(transform)) {
             if (FilledEnough() || GameManager.instance.DEBUG) {
@@ -57,19 +67,12 @@ public class Button : MonoBehaviour {
             }
         }
         else {
+            //TOO FAR AWAY
             ComicBubble.instance.Speak(SpeechType.FarAway);
 
         }
-
-        //TOO FAR AWAY
-
     }
 
-
-    // --------------------- CUSTOM METHODS ----------------
-
-
-    // commands
     private void Move() {
         alreadyPushed = true;
         AnimateShelf();

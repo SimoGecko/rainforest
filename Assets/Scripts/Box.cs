@@ -47,7 +47,18 @@ public class Box : MonoBehaviour {
         }
     }
 
-    public void OnMouseDown() {
+    private void OnMouseDown() {
+        Debug.Log("md");
+        Tap();
+    }
+
+
+
+    // --------------------- CUSTOM METHODS ----------------
+
+
+    // commands
+    public void Tap() {
         if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(transform) && !pickedUp) {//check if close enough
             if (Cart.instance.HasSpaceFor(size)) {
@@ -63,12 +74,6 @@ public class Box : MonoBehaviour {
         }
     }
 
-
-
-    // --------------------- CUSTOM METHODS ----------------
-
-
-    // commands
     void PickupBox() {
         pickedUp = true;
         StopRB();
