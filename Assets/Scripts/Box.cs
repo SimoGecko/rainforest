@@ -48,7 +48,6 @@ public class Box : MonoBehaviour {
     }
 
     private void OnMouseDown() {
-        Debug.Log("md");
         Tap();
     }
 
