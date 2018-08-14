@@ -20,6 +20,7 @@ public class Player : MonoBehaviour {
     public float pickupArea = 3f;
 
 
+
     // private
     float ref1;
     Vector3 inp;
@@ -58,10 +59,13 @@ public class Player : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.Tab)){
                 controlType = (ControlType)(1 - (int)controlType); // switch it
             }
+            /*
             if (controlType == ControlType.PlayerRelative)
                 MovePlayerRelative();
             else if (controlType == ControlType.CameraRelative)
                 MoveCameraRelative();
+            */
+            MoveOvercooked();
         }
         else {
             inp = Vector3.zero;
@@ -112,8 +116,28 @@ public class Player : MonoBehaviour {
         //moveDirection = Vector3.Lerp(moveDirection, lastDir, Time.deltaTime * 4);
         //moveDirection.Normalize();
         cc.Move(transform.forward * speed * inp.magnitude * Time.deltaTime);
-
     }
+
+    void MoveOvercooked() {
+        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        inp.Normalize();
+        inp = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp;
+
+        float signedAngle = Vector3.SignedAngle(transform.forward, inp, Vector3.up);
+        float rotAmount = angularSpeed * Time.deltaTime;
+        rotAmount = Mathf.Min(rotAmount, Mathf.Abs(signedAngle)); // clamp it if it's smaller
+        transform.Rotate(Vector3.up * rotAmount * Mathf.Sign(signedAngle));
+
+        float angle = Vector3.Angle(transform.forward, inp);
+        //project movement onto direction
+        if (angle <= 90) {
+            float dot = Vector3.Dot(transform.forward, inp); // projection for smooth results
+            cc.Move(transform.forward * speed * inp.magnitude * dot* Time.deltaTime);
+        }
+        
+    }
+
+    //-------------------------------------------------------------------------
 
     void SetToGround() {
         //to avoid bugs

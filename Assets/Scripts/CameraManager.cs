@@ -77,5 +77,10 @@ public class CameraManager : MonoBehaviour {
 
 
     // other
+    private void OnDrawGizmos() {
+        if (!Application.isPlaying) {
+            //edit mode
+        }
+    }
 
 }
