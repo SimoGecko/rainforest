@@ -23,6 +23,7 @@ public class SpawnManager : MonoBehaviour {
     public float[] conveyorDifficultyMultipliers = new float[] { .65f, 1f, 1.35f };
 
     // private
+    bool spawnedPreboxes = false;
 
 
     // references
@@ -30,6 +31,7 @@ public class SpawnManager : MonoBehaviour {
     [Header("Prefabs")]
     public Box[] boxesPrefab;
     public Kappa[] kappas;
+    public Transform preboxParent;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -75,6 +77,12 @@ public class SpawnManager : MonoBehaviour {
         return  conveyorSpeedCurve.Evaluate(GameManager.instance.ProgressPercent()) * conveyorBaseSpeed * difficultyMultiplier; // how many per second
     }
 
+    void SpawnPreboxes() {
+        spawnedPreboxes = true;
+        for (int i = 0; i < preboxParent.childCount; i++) {
+            Instantiate(GetBoxPrefab(), preboxParent.GetChild(i).position, Quaternion.Euler(0, Random.value * 360, 0));
+        }
+    }
 
 
     // other
@@ -84,6 +92,8 @@ public class SpawnManager : MonoBehaviour {
                 yield return new WaitForSeconds(1);
             }
             else {
+                if (!spawnedPreboxes)
+                    SpawnPreboxes();
                 SpawnOne();
                 yield return new WaitForSeconds(WaitTime());
             }

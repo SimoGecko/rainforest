@@ -18,6 +18,7 @@ public class HighScores : MonoBehaviour {
     const string privateCode = "TYeLGz9gOUy4ejx_Dy7ACA_FHLzK6VyUyMbCRH2ShcZg";
     const string publicCode = "5b70851c191a8b0bccbf6efc";
     const string webURL = "http://dreamlo.com/lb/";
+    string username;
 
     bool alreadySubmitted;
 
@@ -32,6 +33,8 @@ public class HighScores : MonoBehaviour {
     }
 
     void Start () {
+        string randomUser = "user_" + Random.Range(0, 2048);
+        username = PlayerPrefs.GetString("user", randomUser);
 
         //UploadHighscore("Simone", 90, 35);
         //UploadHighscore("Mary", 80, 155);
@@ -51,13 +54,19 @@ public class HighScores : MonoBehaviour {
 	// commands
     public void Submit() { // called from button
         if (!alreadySubmitted) {
-            UploadHighscore(inputUsername.text, GameManager.instance.Score, GameManager.instance.Timer);
+            /*if(username!=inputUsername.text) // delete old
+                RemoveHighscore(username);*/
+
+            username = inputUsername.text;
+            PlayerPrefs.SetString("user", username);
+
+            UploadHighscore(username, GameManager.instance.Score, GameManager.instance.Timer);
             alreadySubmitted = true;
         }
     }
 
-    public void SubmitRandomUsername() {
-        UploadHighscore("user_"+ Random.Range(0, 2048), GameManager.instance.Score, GameManager.instance.Timer);
+    public void SubmitRandomUsername() { // called at end by default
+        UploadHighscore(username, GameManager.instance.Score, GameManager.instance.Timer);
     }
 
 
@@ -67,6 +76,10 @@ public class HighScores : MonoBehaviour {
 
     void DownloadHighscores() {
         StartCoroutine(DownloadHighscoresFromDatabase());
+    }
+
+    void RemoveHighscore(string username) {
+        StartCoroutine(RemoveSingleHighscore(username));
     }
 
     void FormatHighscores(string textStream) {
@@ -125,6 +138,18 @@ public class HighScores : MonoBehaviour {
         }
         else {
             Debug.LogError("Error uploading: " + www.error);
+        }
+    }
+
+    IEnumerator RemoveSingleHighscore(string username) {
+        WWW www = new WWW(webURL + privateCode + "/delete/" + WWW.EscapeURL(username));
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error)) {
+            //Debug.Log("remove successful");
+        }
+        else {
+            Debug.LogError("Error removing score: " + www.error);
         }
     }
 
