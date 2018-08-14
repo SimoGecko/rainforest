@@ -47,7 +47,7 @@ public class Box : MonoBehaviour {
         }
     }
 
-    private void OnMouseDown() {
+    public void OnMouseDown() {
         if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(transform) && !pickedUp) {//check if close enough
             if (Cart.instance.HasSpaceFor(size)) {
@@ -119,6 +119,7 @@ public class Box : MonoBehaviour {
 
 
 	// queries
+    public bool OnCart { get { return pickedUp; } }
     public bool Deposited { get; set; }
 
 

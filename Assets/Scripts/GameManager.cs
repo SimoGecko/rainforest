@@ -12,9 +12,11 @@ using UnityStandardAssets.ImageEffects;
 public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
     public bool DEBUG = false;
+    public bool mobile = false;
 
     public enum Difficulty { Easy, Medium, Hard }
     public enum State { Menu, Playing, Gameover }
+
 
     // public
     public float timeScale = 1f;
@@ -31,6 +33,7 @@ public class GameManager : MonoBehaviour {
     // references
     [Header("game")]
     public GameObject gameUI;
+    public GameObject mobileUI;
     public Text scoreText;
     public Text timerText;
     public GameObject[] lifeUI;
@@ -84,6 +87,7 @@ public class GameManager : MonoBehaviour {
         UpdateUI();
         UpdateLifeUI();
         gameUI.SetActive(true);
+        if(mobile) mobileUI.SetActive(true);
     }
 
     void GameOver() {
@@ -103,6 +107,7 @@ public class GameManager : MonoBehaviour {
     void GameOverDelay() {
         blur.enabled = true;
         gameUI.SetActive(false);
+        if (mobile) mobileUI.SetActive(false);
         gameoverUI.SetActive(true);
         scoreOverText.text = score.ToString();
         timerOverText.text = Utility.ToReadableTime(timer);

@@ -22,7 +22,7 @@ public class CameraManager : MonoBehaviour {
 
     // references
     public Transform target;
-    public Transform gameView;
+    public Transform gameView, titleView;
 
 
     // --------------------- BASE METHODS ------------------
@@ -34,6 +34,8 @@ public class CameraManager : MonoBehaviour {
         post.position = transform.position;
         post.rotation = transform.rotation;
         post.parent = target;*/
+        transform.position = titleView.position;
+        transform.rotation = titleView.rotation;
 
     }
 

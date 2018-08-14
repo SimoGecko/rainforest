@@ -41,7 +41,7 @@ public class Button : MonoBehaviour {
         
 	}
 
-    private void OnMouseDown() {
+    public void OnMouseDown() {
         if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(transform)) {
             if (FilledEnough() || GameManager.instance.DEBUG) {
@@ -60,8 +60,6 @@ public class Button : MonoBehaviour {
             ComicBubble.instance.Speak(SpeechType.FarAway);
 
         }
-
-
 
         //TOO FAR AWAY
 

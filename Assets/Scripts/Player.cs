@@ -17,7 +17,7 @@ public class Player : MonoBehaviour {
     public ControlType controlType = ControlType.PlayerRelative;
     public float speed = 5;
     public float angularSpeed = 180;
-    public float pickupArea = 3f;
+    public float pickupArea = 8f;
 
 
 
@@ -39,6 +39,7 @@ public class Player : MonoBehaviour {
     public Transform pickupCenter;
     AudioSource feet;
     public Text controlText;
+    public VirtualJoystick joystick;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -53,22 +54,22 @@ public class Player : MonoBehaviour {
 	}
 	
 	void Update () {
+        GetInput();
+
         if (GameManager.Playing) {
+            MoveOvercooked();
             SetToGround();
 
+            /*
             if (Input.GetKeyDown(KeyCode.Tab)){
                 controlType = (ControlType)(1 - (int)controlType); // switch it
             }
-            /*
+            
             if (controlType == ControlType.PlayerRelative)
                 MovePlayerRelative();
             else if (controlType == ControlType.CameraRelative)
                 MoveCameraRelative();
             */
-            MoveOvercooked();
-        }
-        else {
-            inp = Vector3.zero;
         }
         DealWithAnimations();
         feet.volume = inp.normalized.magnitude/20;
@@ -87,6 +88,26 @@ public class Player : MonoBehaviour {
 
 
     // commands
+    void GetInput() {
+        if (GameManager.Playing) {
+            /*
+            if (GameManager.instance.mobile) {
+                inp = joystick.InputValue.To3();
+            }
+            else {
+                inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            }*/
+            Vector3 inpKeyboard = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Vector3 inpJoystick = joystick.InputValue.To3();
+            inp = inpKeyboard + inpJoystick;
+        }
+        else {
+            inp = Vector3.zero;
+        }
+    }
+
+    //-------------------------------------------------------------------------
+
     void MovePlayerRelative() {
         inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         Vector3 angularVel = Vector3.up * inp.x * angularSpeed * Mathf.Lerp(.6f, 1f, Mathf.Abs(inp.z)) * Mathf.Sign(inp.z);
@@ -94,7 +115,6 @@ public class Player : MonoBehaviour {
         transform.Rotate(angularVel *  Time.deltaTime, Space.World);
         cc.Move(vel * Time.deltaTime);
     }
-
    
 
     void MoveCameraRelative() {
@@ -119,7 +139,7 @@ public class Player : MonoBehaviour {
     }
 
     void MoveOvercooked() {
-        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        //inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         inp.Normalize();
         inp = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp;
 
