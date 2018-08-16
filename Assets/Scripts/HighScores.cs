@@ -36,7 +36,7 @@ public class HighScores : MonoBehaviour {
     void Start () {
         string randomUser = "user_" + Random.Range(0, 2048);
         username = PlayerPrefs.GetString("user", randomUser);
-        Debug.Log("user="+username);
+        //Debug.Log("user="+username);
         if (!HasRandomUsername()) {
             inputUsername.text = username;
         }
