@@ -92,6 +92,9 @@ ModelImporter:
     100172: gauge
     100174: gauge_direction
     100176: average_box
+    100178: medal_bronze
+    100180: medal_gold
+    100182: medal_silver
     400000: box1
     400002: box1_size
     400004: box2
@@ -181,6 +184,9 @@ ModelImporter:
     400172: gauge
     400174: gauge_direction
     400176: average_box
+    400178: medal_bronze
+    400180: medal_gold
+    400182: medal_silver
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png
@@ -241,6 +247,9 @@ ModelImporter:
     2300108: gauge
     2300110: gauge_direction
     2300112: average_box
+    2300114: medal_bronze
+    2300116: medal_gold
+    2300118: medal_silver
     3300000: box1
     3300002: box1_size
     3300004: box2
@@ -298,6 +307,9 @@ ModelImporter:
     3300108: gauge
     3300110: gauge_direction
     3300112: average_box
+    3300114: medal_bronze
+    3300116: medal_gold
+    3300118: medal_silver
     4300000: Cylinder
     4300002: conveyor_size_001
     4300004: conveyor_size
@@ -355,6 +367,9 @@ ModelImporter:
     4300108: gauge_direction
     4300110: gauge
     4300112: average_box
+    4300114: medal_bronze
+    4300116: medal_silver
+    4300118: medal_gold
     7400000: Default Take
     7400002: ArmatureAction
     7400004: fallout

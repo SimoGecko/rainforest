@@ -6451,6 +6451,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1424576733}
+        m_MethodName: ChangeTextToDone
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &411082913
@@ -21557,6 +21568,7 @@ MonoBehaviour:
   leadScoreText: {fileID: 1896817443}
   leadTimeText: {fileID: 2008781883}
   inputUsername: {fileID: 1198974305}
+  submit: {fileID: 305430155}
 --- !u!114 &1424576734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21985,7 +21997,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1471404882}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -32, y: 24.1, z: -1}
+  m_LocalPosition: {x: -32, y: 24.1, z: 16.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1187867253}
@@ -35116,7 +35128,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2088756180}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 24.1, z: -20}
+  m_LocalPosition: {x: 21.5, y: 24.1, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1187867253}

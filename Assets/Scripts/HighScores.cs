@@ -17,7 +17,7 @@ public class HighScores : MonoBehaviour {
     // private
     const string privateCode = "TYeLGz9gOUy4ejx_Dy7ACA_FHLzK6VyUyMbCRH2ShcZg";
     const string publicCode = "5b70851c191a8b0bccbf6efc";
-    const string webURL = "http://dreamlo.com/lb/";
+    const string webURL = "https://www.dreamlo.com/lb/";
     string username;
 
     bool alreadySubmitted;
@@ -26,6 +26,7 @@ public class HighScores : MonoBehaviour {
     public static HighScores instance;
     public Text leadUserText, leadScoreText, leadTimeText;
     public InputField inputUsername;
+    public Text submit;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -35,6 +36,10 @@ public class HighScores : MonoBehaviour {
     void Start () {
         string randomUser = "user_" + Random.Range(0, 2048);
         username = PlayerPrefs.GetString("user", randomUser);
+        Debug.Log("user="+username);
+        if (!HasRandomUsername()) {
+            inputUsername.text = username;
+        }
 
         //UploadHighscore("Simone", 90, 35);
         //UploadHighscore("Mary", 80, 155);
@@ -54,8 +59,8 @@ public class HighScores : MonoBehaviour {
 	// commands
     public void Submit() { // called from button
         if (!alreadySubmitted) {
-            /*if(username!=inputUsername.text) // delete old
-                RemoveHighscore(username);*/
+            if(HasRandomUsername()) // delete random old
+                RemoveHighscore(username);
 
             username = inputUsername.text;
             PlayerPrefs.SetString("user", username);
@@ -63,6 +68,10 @@ public class HighScores : MonoBehaviour {
             UploadHighscore(username, GameManager.instance.Score, GameManager.instance.Timer);
             alreadySubmitted = true;
         }
+    }
+
+    public void ChangeTextToDone() {
+        submit.text = "done!";
     }
 
     public void SubmitRandomUsername() { // called at end by default
@@ -102,6 +111,10 @@ public class HighScores : MonoBehaviour {
 
 
     // queries
+    bool HasRandomUsername() {
+        return username.Substring(0, 5).Equals("user_");
+    }
+
     string UserString(int num) {
         string result = "";
         for (int i = 0; i < Mathf.Min(num, highscores.Length); i++) {
