@@ -27,7 +27,8 @@ public class Button : MonoBehaviour {
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
-        GameManager.instance.OnPlay += OnPlay;
+        GameManager.instance.OnPlay += PlayEntranceAnimation;
+        Debug.Log("added call");
 	}
 	
 	void Update () {
@@ -45,8 +46,9 @@ public class Button : MonoBehaviour {
 
 
     // commands
-    void OnPlay() {
-        Invoke("AnimateEntrance", 2f + introDelay);
+    void PlayEntranceAnimation() {
+        Debug.Log("butcal");
+        //Invoke("AnimateEntrance", 2f + introDelay);
     }
 
     public void Tap() {

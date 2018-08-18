@@ -81,10 +81,10 @@ public class Cart : MonoBehaviour {
     }
 
     public void Pickup(Box box) {
+        box.PickupBox();
         List<int> positions = FreePosition(box.packSize);
         foreach (int p in positions) free[p] = false;
         carrying.Add(box);
-        box.PickupBox();
     }
 
     void TryDepositAll(Deposit dep) {
