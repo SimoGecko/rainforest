@@ -48,7 +48,6 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerUpHandler, I
 
         //To get InputDirection
         RectTransformUtility.ScreenPointToLocalPointInRectangle(container.rectTransform, ped.position, ped.pressEventCamera, out touchPosition);
-        //if(debugForThis) Debug.Log("position: " + touchPosition);
 
         inputValue.x = (touchPosition.x / containerRadius.x);
         inputValue.y = (touchPosition.y / containerRadius.y);

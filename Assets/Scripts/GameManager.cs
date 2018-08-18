@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour {
     // commands
     public void StartRound(int diff) { // called from gauge
         if(OnPlay!=null) OnPlay();
-        Debug.Log("onplay called");
         state = State.Playing;
 
         score = 0;

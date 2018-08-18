@@ -55,8 +55,8 @@ public class HighScores : MonoBehaviour {
 	// commands
     public void Submit() { // called from button
         if (!alreadySubmitted) {
-            if(HasRandomUsername()) // delete random old
-                RemoveHighscore(username);
+            //if(HasRandomUsername()) // delete random old
+                //RemoveHighscore(username);
 
             username = inputUsername.text;
             PlayerPrefs.SetString("user", username);
@@ -68,7 +68,7 @@ public class HighScores : MonoBehaviour {
     
 
     public void SubmitRandomUsername() { // called at end by default
-        UploadHighscore(username, GameManager.instance.Score, GameManager.instance.Timer);
+        //UploadHighscore(username, GameManager.instance.Score, GameManager.instance.Timer);
     }
 
     //---------------------------
@@ -92,7 +92,6 @@ public class HighScores : MonoBehaviour {
         for (int i = 0; i < entries.Length; i++) {
             string[] entryInfo = entries[i].Split(new char[] {'|'});
             highscores[i] = new Highscore(entryInfo[0], int.Parse(entryInfo[1]), int.Parse(entryInfo[2]));
-            //Debug.Log(highscores[i].username + "," + highscores[i].score);
         }
 
         if (OnDownloadedScores != null) OnDownloadedScores();

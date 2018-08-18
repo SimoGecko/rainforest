@@ -10,7 +10,7 @@ public class Button : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public float percentToBeFilled = .75f; // do I leave this in the game?
+    public float percentToBeFilled = .75f;
     public float animTime = 2f;
     public float animDelay = 1f;
     public float moveAmount = 10;
@@ -18,6 +18,7 @@ public class Button : MonoBehaviour {
 
     // private
     bool alreadyPushed;
+    bool GameManagerPlay;
 
 
     // references
@@ -27,13 +28,17 @@ public class Button : MonoBehaviour {
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
-        GameManager.instance.OnPlay += PlayEntranceAnimation;
-        Debug.Log("added call");
+        //GameManager.instance.OnPlay += PlayEntranceAnimation;
 	}
 	
 	void Update () {
-        if(GameManager.Playing)
+        if (GameManager.Playing) {
             CheckBlinking();
+            if (!GameManagerPlay) { // for some reason action doesn't work
+                GameManagerPlay = true;
+                PlayEntranceAnimation();
+            }
+        }
 	}
 
     private void OnMouseDown() {
@@ -47,15 +52,14 @@ public class Button : MonoBehaviour {
 
     // commands
     void PlayEntranceAnimation() {
-        Debug.Log("butcal");
-        //Invoke("AnimateEntrance", 2f + introDelay);
+        Invoke("AnimateEntrance", 2f + introDelay);
     }
 
     public void Tap() {
         if (Player.instance.CloseEnough(transform)) {
             if (FilledEnough() || GameManager.instance.DEBUG) {
                 if (!alreadyPushed) {
-                    Move();
+                    EmptyShelfWithAnimation();
                     Player.instance.AnimButton();
                     AudioManager.Play("button_push");
                     AudioManager.Play("shelf_moving");
@@ -70,7 +74,7 @@ public class Button : MonoBehaviour {
         }
     }
 
-    private void Move() {
+    private void EmptyShelfWithAnimation() {
         alreadyPushed = true;
         AnimateShelf();
         AnimateSlidingDoor();
