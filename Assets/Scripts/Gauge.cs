@@ -14,8 +14,7 @@ public class Gauge : MonoBehaviour {
 
     // private
     bool alreadyClicked;
-    float goalAngle;
-    float angle;
+    float needleAngle, needleGoalAngle;
 
     // references
     public GameObject needle;
@@ -23,9 +22,7 @@ public class Gauge : MonoBehaviour {
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
-        //iTween.ScaleFrom(gameObject, iTween.Hash("scale", Vector3.zero, "time", 2f, "delay", 3f, "easeType", iTween.EaseType.easeInOutSine));
-        iTween.MoveFrom(gameObject, iTween.Hash("position", transform.position-Vector3.up*6, "time", 1f, "delay", 3f, "easeType", iTween.EaseType.easeInOutSine));
-
+        iTween.MoveFrom(gameObject, iTween.Hash("position", transform.position - 6 * Vector3.up, "time", 1f, "delay", 3f, "easeType", iTween.EaseType.easeInOutSine));
     }
 
     void Update () {
@@ -39,20 +36,21 @@ public class Gauge : MonoBehaviour {
     // commands
     public void GetClicked(int d) {
         if (alreadyClicked) return;
+
         alreadyClicked = true;
         GameManager.instance.StartRound(d);
         iTween.ScaleTo(gameObject, iTween.Hash("scale", Vector3.zero, "time", 1f, "easeType", iTween.EaseType.easeInOutSine));
-        Destroy(gameObject, 3f);
         AudioManager.Play("button_push");
+        Destroy(gameObject, 3f);
     }
 
     public void SetNeedle(int d) {
-        goalAngle = 70 * (d - 1);
+        needleGoalAngle = 70 * (d - 1);
     }
 
     void ShakeNeedle() {
-        angle = Mathf.Lerp(angle, goalAngle + Random.Range(-10, 10), Time.deltaTime*9);
-        needle.transform.localEulerAngles = new Vector3(0, 0, angle);
+        needleAngle = Mathf.Lerp(needleAngle, needleGoalAngle + Random.Range(-10, 10), Time.deltaTime * 9);
+        needle.transform.localEulerAngles = new Vector3(0, 0, needleAngle);
     }
 
 

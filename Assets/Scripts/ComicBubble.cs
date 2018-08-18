@@ -6,17 +6,18 @@ using TMPro;
 using UnityEngine;
 
 ////////// DESCRIPTION //////////
+
 public enum SpeechType {
     FarAway, CartFull, ShelfFull, BoxLost, GameOver,
     Random, Begin, ButtonNotFull, BoxPickup, BoxDeposit,
-    NotRightFit }; // missing: random, begin
+    NotRightFit }; // missing: random
 
 public class ComicBubble : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
     const int numSpeechType = 11;
-    //public Speech[] speech;
+
     public Vector2 speechDurationMinMax = new Vector2(4, 6);
     float[] probOfSpeech = new float[] {
         .5f, .6f, 1f, 1f, 1f,
@@ -41,11 +42,12 @@ public class ComicBubble : MonoBehaviour {
     }
 
     void Start () {
-        //CreateDictionary();
         ParseSpeechText();
-	}
+        GameManager.instance.OnPlay = SpeakBegin;
+    }
 	
 	void Update () {
+        //not late update as this gives some cool stop-motion effect
         transform.LookAt(Camera.main.transform);
 	}
 
@@ -55,15 +57,6 @@ public class ComicBubble : MonoBehaviour {
 	
 	
 	// commands
-    /*
-    void CreateDictionary() {
-        speechDic = new Dictionary<SpeechType, string[]>();
-        
-        foreach (var s in speech) {
-            speechDic.Add(s.speechType, s.text);
-        }
-    }*/
-
     void ParseSpeechText() {
         List<string>[] result = new List<string>[numSpeechType];
 
@@ -77,11 +70,11 @@ public class ComicBubble : MonoBehaviour {
                 result[index] = new List<string>();
             }
             else {
-                result[index].Add(lines[i].Substring(1));
+                result[index].Add(lines[i].Substring(1)); // cut away tab
             }
         }
 
-        //insert
+        //insert in dictionary
         speechDic = new Dictionary<SpeechType, string[]>();
         for (int i = 0; i < numSpeechType; i++) {
             speechDic.Add((SpeechType)i, result[i].ToArray());
@@ -103,6 +96,7 @@ public class ComicBubble : MonoBehaviour {
         bubble.SetActive(false);
     }
 
+    void SpeakBegin() { Speak(SpeechType.Begin); }
 
 
 	// queries

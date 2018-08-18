@@ -11,7 +11,7 @@ public class Kappa : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public float spawnDelay = .3f;
+    public float spawnDelay = .1f;
 
 
     // private
@@ -25,7 +25,6 @@ public class Kappa : MonoBehaviour {
 	// --------------------- BASE METHODS ------------------
 	void Awake () {
         anim = GetComponent<Animator>();
-
     }
 	
 	void Update () {
@@ -40,18 +39,17 @@ public class Kappa : MonoBehaviour {
     // commands
     public void StartFalling() {
         if (spawning) return;
-        anim.SetTrigger("fallout");
         spawning = true;
+        anim.SetTrigger("fallout");
         Invoke("SpawnBox", spawnDelay);
     }
 
     public void SpawnBox() {
         //actual spawn code
         Box boxPrefab = SpawnManager.instance.GetBoxPrefab();
-        Box box = Instantiate(boxPrefab, transform.position, Quaternion.Euler(0, Random.value * 380, 0)) as Box;
-        spawning = false;
+        Box box = Instantiate(boxPrefab, transform.position, Quaternion.Euler(0, Random.value * 360, 0)) as Box;
         AudioManager.Play("box_fall");
-
+        spawning = false;
     }
 
 

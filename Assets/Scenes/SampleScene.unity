@@ -3410,7 +3410,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1862018760}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3449,7 +3449,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 53
+  m_Text: '0
+
+'
 --- !u!222 &216056097
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6076,7 +6078,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &392299557
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6090,7 +6092,7 @@ RectTransform:
   - {fileID: 365737595}
   - {fileID: 1469137429}
   m_Father: {fileID: 1862018760}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -6199,7 +6201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 400194335}
   m_Layer: 5
-  m_Name: androidUI
+  m_Name: mobileUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6451,7 +6453,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1424576733}
+      - m_Target: {fileID: 1424576734}
         m_MethodName: ChangeTextToDone
         m_Mode: 1
         m_Arguments:
@@ -7028,7 +7030,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &430635695
 BoxCollider:
@@ -8635,6 +8637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smoothTime: 0.1
   transitionTime: 2
+  followPlayerWeight: 0.5
   target: {fileID: 1263309301}
   gameView: {fileID: 707960007}
   titleView: {fileID: 620905277}
@@ -9223,7 +9226,7 @@ RectTransform:
   - {fileID: 857977907}
   - {fileID: 2146542981}
   m_Father: {fileID: 1862018760}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -12005,6 +12008,11 @@ Prefab:
       propertyPath: m_LocalPosition.x
       value: 0.08
       objectReference: {fileID: 0}
+    - target: {fileID: 114988119701577420, guid: 9cdf98ffeb8f4fd4e8ae809cba19c36c,
+        type: 2}
+      propertyPath: packSize
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9cdf98ffeb8f4fd4e8ae809cba19c36c, type: 2}
   m_IsPrefabAsset: 0
@@ -13355,7 +13363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &843859357
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17302,6 +17310,11 @@ Prefab:
       propertyPath: m_LocalPosition.x
       value: 0.08
       objectReference: {fileID: 0}
+    - target: {fileID: 114910356561822560, guid: bf59dbcc6cf91bb43a7280ac757e293c,
+        type: 2}
+      propertyPath: packSize
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf59dbcc6cf91bb43a7280ac757e293c, type: 2}
   m_IsPrefabAsset: 0
@@ -18432,7 +18445,7 @@ GameObject:
   - component: {fileID: 1232942632}
   - component: {fileID: 1232942631}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18926,12 +18939,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fd6fc7c47139fd4e993f534926840e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlType: 0
   speed: 18
   angularSpeed: 500
-  pickupArea: 8
+  pickupDist: 8
   pickupCenter: {fileID: 1398388680}
-  controlText: {fileID: 829151859}
   joystick: {fileID: 1372432961}
 --- !u!114 &1263309304
 MonoBehaviour:
@@ -21389,7 +21400,6 @@ GameObject:
   - component: {fileID: 1424576729}
   - component: {fileID: 1424576731}
   - component: {fileID: 1424576730}
-  - component: {fileID: 1424576732}
   - component: {fileID: 1424576733}
   - component: {fileID: 1424576734}
   - component: {fileID: 1424576735}
@@ -21522,36 +21532,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DEBUG: 0
-  mobile: 0
+  Mobile: 0
   timeScale: 1
   difficulty: 1
-  gameUI: {fileID: 1862018759}
-  mobileUI: {fileID: 400194334}
-  scoreText: {fileID: 216056096}
-  timerText: {fileID: 520936822}
-  lifeUI:
-  - {fileID: 392299556}
-  - {fileID: 843859356}
-  - {fileID: 1583370651}
-  lifeUIgrey:
-  - {fileID: 670752275}
-  - {fileID: 1554058622}
-  - {fileID: 412225290}
-  gameoverUI: {fileID: 1697716652}
-  scoreOverText: {fileID: 1736719336}
-  timerOverText: {fileID: 1860414122}
-  blur: {fileID: 534669903}
---- !u!114 &1424576732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1424576728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45c970b46ffa6014388a80135cb66997, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1424576733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21564,11 +21547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numLeadToDisplay: 20
-  leadUserText: {fileID: 1926382074}
-  leadScoreText: {fileID: 1896817443}
-  leadTimeText: {fileID: 2008781883}
   inputUsername: {fileID: 1198974305}
-  submit: {fileID: 305430155}
 --- !u!114 &1424576734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21583,6 +21562,24 @@ MonoBehaviour:
   animTime: 2
   title: {fileID: 917309989}
   subtitle: {fileID: 497242348}
+  gameUI: {fileID: 1862018759}
+  mobileUI: {fileID: 400194334}
+  scoreText: {fileID: 216056096}
+  lifeUI:
+  - {fileID: 392299556}
+  - {fileID: 843859356}
+  - {fileID: 1583370651}
+  lifeUIgrey:
+  - {fileID: 670752275}
+  - {fileID: 1554058622}
+  - {fileID: 412225290}
+  gameoverUI: {fileID: 1697716652}
+  scoreOverText: {fileID: 1736719336}
+  timerOverText: {fileID: 1860414122}
+  leadUserText: {fileID: 1926382074}
+  leadScoreText: {fileID: 1896817443}
+  leadTimeText: {fileID: 2008781883}
+  submit: {fileID: 305430155}
 --- !u!114 &1424576735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23239,7 +23236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1583370652
 RectTransform:
   m_ObjectHideFlags: 0
@@ -31803,9 +31800,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 216056095}
   - {fileID: 573430157}
   - {fileID: 392299557}
-  - {fileID: 216056095}
   - {fileID: 843859357}
   - {fileID: 1583370652}
   - {fileID: 670752276}
@@ -35647,6 +35644,11 @@ Prefab:
     - target: {fileID: 4557042590825784, guid: 80b9b5b5de15be34984b7f5b5697d83e, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 114899940816663730, guid: 80b9b5b5de15be34984b7f5b5697d83e,
+        type: 2}
+      propertyPath: packSize
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80b9b5b5de15be34984b7f5b5697d83e, type: 2}

@@ -11,15 +11,16 @@ public class Box : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public int size; // either 1, 2, 4
+    public int packSize; // either 1, 2, 4
 
     // private
     Vector3 conveyorVelocity;
     Vector3 vel;
-    bool pickedUp;
-    [HideInInspector]
-    public List<int> positions;
-    bool triggered = false;
+    bool pickedup;
+    bool deposited;
+    bool shattered;
+
+    List<int> positions;//which positions it's taking up on the cart
 
     // references
     Rigidbody rb;
@@ -32,18 +33,14 @@ public class Box : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-        if (!pickedUp && !Deposited) {
-            conveyorVelocity = conveyorVelocity.normalized * Conveyor.GetSpeed();
-            vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime * 5);
-            transform.position += vel * Time.deltaTime;
-            conveyorVelocity = Vector3.zero;
+        if (!pickedup && !deposited) {
+            MoveOnConveyor();
         }
 	}
 
     private void OnTriggerEnter(Collider other) {
-        if (!pickedUp && !triggered && other.tag == "ground") {
+        if (!pickedup && !shattered && other.tag == "ground") {
             Shatter();
-            
         }
     }
 
@@ -57,12 +54,20 @@ public class Box : MonoBehaviour {
 
 
     // commands
+    void MoveOnConveyor() {
+        conveyorVelocity = conveyorVelocity.normalized * Conveyor.GetSpeed();
+        vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime * 5);
+        transform.position += vel * Time.deltaTime;
+        conveyorVelocity = Vector3.zero;
+    }
+
     public void Tap() {
-        if (!GameManager.Playing) return;
-        if (Player.instance.CloseEnough(transform) && !pickedUp) {//check if close enough
-            if (Cart.instance.HasSpaceFor(size)) {
-                PickupBox();
-                Cart.instance.Pickup(this);
+        if (!GameManager.Playing || pickedup || deposited) return;
+
+        if (Player.instance.CloseEnough(transform)) {//check if close enough
+            if (Cart.instance.HasSpaceFor(packSize)) {
+                //PickupBox();
+                Cart.instance.Pickup(this); // TODO refactor
             }
             else {
                 ComicBubble.instance.Speak(SpeechType.CartFull);
@@ -73,27 +78,28 @@ public class Box : MonoBehaviour {
         }
     }
 
-    void PickupBox() {
-        pickedUp = true;
+    public void PickupBox() { // TODO add which cart is pickedup to
+        pickedup = true;
         StopRB();
 
-        positions = Cart.instance.FreePosition(size);
-        transform.parent = Cart.instance.transform;
-        transform.position = Cart.instance.TransfFromPos(positions);
+        Cart cart = Cart.instance;
+
+        positions = cart.FreePosition(packSize);
+        transform.parent = cart.transform;
+        transform.position = cart.TransfFromPos(positions);
         transform.localRotation = Quaternion.identity;
 
         ComicBubble.instance.Speak(SpeechType.BoxPickup);
-        AudioManager.Play("box_drop");
-        Player.instance.PushButtonAnim();
+        AudioManager.Play("box_drop"); // TODO audio pickup
+        Player.instance.AnimButton();
     }
 
     public void DepositBox(Deposit dep) {
-        pickedUp = false;
+        pickedup = false;
+        deposited = true;
         StopRB();
         //add score
-        Deposited = true;
-        GameManager.instance.AddScore(size);
-        //Destroy(gameObject);
+        GameManager.instance.AddScore(packSize);
         dep.PositionBox(this);
     }
 
@@ -101,7 +107,8 @@ public class Box : MonoBehaviour {
         ComicBubble.instance.Speak(SpeechType.BoxLost);
         AudioManager.Play("box_crash");
         GameManager.instance.LoseLife();
-        triggered = true;
+
+        shattered = true;
         GameObject shatter = Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));
         Destroy(shatter, 30f);
         Destroy(gameObject);
@@ -123,9 +130,9 @@ public class Box : MonoBehaviour {
 
 
 	// queries
-    public bool OnCart { get { return pickedUp; } }
-    public bool Deposited { get; set; }
-
+    public bool OnCart { get { return pickedup; } }
+    public bool Deposited { get { return deposited; } }
+    public List<int> Positions { get { return positions; } }
 
 
 	// other

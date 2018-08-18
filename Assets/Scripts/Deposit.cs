@@ -10,14 +10,14 @@ public class Deposit : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public int size;
-    public float angleVar = 10;
+    public int packSize;
 
     // private
-    int currentRow, currentCol;
-    int numRows = 3;
-    bool full;
+    const float angleVar = 10;
+    const int numRows = 3; // make sure this is updated
 
+    int currentRow, currentCol;
+    bool full;
     List<Box> boxes = new List<Box>();
 
 
@@ -43,20 +43,25 @@ public class Deposit : MonoBehaviour {
     public void PositionBox(Box b) {
         if (full) return;
         boxes.Add(b);
+
         b.transform.parent = transform;
-        b.transform.position = shelfT.position + offsetH * currentCol + offsetV * currentRow;
+        b.transform.position = shelfT.position + OffsetH * currentCol + OffsetV * currentRow;
         b.transform.eulerAngles =shelfT.eulerAngles + new Vector3(0, Random.Range(-angleVar, angleVar), 0);
+
+        IncreaseIndex();
+        
+    }
+
+    void IncreaseIndex() {
         currentCol++;
-        if (currentCol == numCols) {
+        if (currentCol == NumCols) {
             currentCol = 0;
             currentRow++;
             if (currentRow == numRows) full = true;
         }
     }
 
-    public bool CanAcceptBox() {
-        return !full;
-    }
+    
 
     public void Clear() {
         foreach (Box b in boxes) Destroy(b.gameObject);
@@ -68,19 +73,19 @@ public class Deposit : MonoBehaviour {
 
 
     // queries
-    Vector3 offsetH { get { return -transform.right * increment; } }
-    Vector3 offsetV { get { return transform.up * 2; } }
-    int increment { get { return size < 4 ? 1 : 2; } }
-    int numCols { get { return size < 4 ? 6 : 3; } }
-    float angle { get { return size == 2 ? 90 : 0; } }
-
-    int SpacesAvailable() {
-        return numRows * numCols;
+    public bool HasSpace() {
+        return !full;
     }
 
     public float PercentFilled() {
-        return (float)boxes.Count / SpacesAvailable();
+        return (float) boxes.Count / (numRows * NumCols);
     }
+
+    Vector3 OffsetH { get { return -transform.right * Increment; } }
+    Vector3 OffsetV { get { return transform.up * 2; } }
+    int Increment { get { return packSize < 4 ? 1 : 2; } }
+    int NumCols { get { return packSize < 4 ? 6 : 3; } }
+    
 
 
 	// other

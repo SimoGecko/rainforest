@@ -1,34 +1,46 @@
-﻿using UnityEngine;
+﻿// (c) Simone Guggiari 2018
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
+
+////////// DESCRIPTION //////////
 
 public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler {
+    // --------------------- VARIABLES ---------------------
 
-    private Vector2 inputValue;
-    public Vector2 InputValue { // use this to access VJ values
-        get { return inputValue; }
-    }
-    private bool isdown;
-    private bool released;
-    public bool IsDown { get { return isdown; } }
-    public bool Released { get { return released; } }
-
-
+    // public
     public float maxStickDisplacementPercent = 0.7f; // factor to limit stick movement
 
+
+    // private
+    Vector2 inputValue;
+    bool isdown;
+    bool released;
+
+    // references
     private Image container;
     private Image stick;
 
-
+    // --------------------- BASE METHODS ------------------
     void Start() {
         container = GetComponent<Image>();
         stick = transform.GetChild(0).GetComponent<Image>(); //this command is used because there is only one child in hierarchy
         inputValue = Vector3.zero;
     }
 
+    void Update() {
+
+    }
 
 
+
+    // --------------------- CUSTOM METHODS ----------------
+
+
+    // commands
     // most important function
     public void OnDrag(PointerEventData ped) {
         Vector2 touchPosition = Vector2.zero;
@@ -58,6 +70,17 @@ public class VirtualJoystick : MonoBehaviour, IDragHandler, IPointerUpHandler, I
         stick.rectTransform.anchoredPosition = Vector3.zero;
         StartCoroutine("OnRelease");
     }
+    
+
+
+
+    // queries
+    public bool IsDown { get { return isdown; } }
+    public bool Released { get { return released; } }
+    public Vector2 InputValue { get { return inputValue; } } // use this to access VJ values
+
+
+    // other
     IEnumerator OnRelease() {
         released = true;
         yield return null;

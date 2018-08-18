@@ -13,7 +13,6 @@ public class SpawnManager : MonoBehaviour {
     [Header("Box Spawn Ratio")]
     public float spawnRatioMultiplier = .5f; // this is a good ratio, balanced
     public float var = .6f;
-    //public float spawnRatioMultiplierSaver = .5f; //to store the good value when experimenting
     public AnimationCurve spawnRatioCurve; // how many per second
     public float[] spawnDifficultyMultipliers = new float[] { .65f, 1f, 1.35f };
 
@@ -23,7 +22,6 @@ public class SpawnManager : MonoBehaviour {
     public float[] conveyorDifficultyMultipliers = new float[] { .65f, 1f, 1.35f };
 
     // private
-    bool spawnedPreboxes = false;
 
 
     // references
@@ -40,6 +38,7 @@ public class SpawnManager : MonoBehaviour {
 
     void Start () {
         StartCoroutine("SpawnRoutine");
+        GameManager.instance.OnPlay += SpawnPreboxes;
     }
 
     void Update () {
@@ -57,6 +56,11 @@ public class SpawnManager : MonoBehaviour {
         kappas[k].StartFalling();
     }
 
+    void SpawnPreboxes() {
+        for (int i = 0; i < preboxParent.childCount; i++) {
+            Instantiate(GetBoxPrefab(), preboxParent.GetChild(i).position, Quaternion.Euler(0, Random.value * 360, 0));
+        }
+    }
 
     // queries
     float WaitTime() {
@@ -77,12 +81,7 @@ public class SpawnManager : MonoBehaviour {
         return  conveyorSpeedCurve.Evaluate(GameManager.instance.ProgressPercent()) * conveyorBaseSpeed * difficultyMultiplier; // how many per second
     }
 
-    void SpawnPreboxes() {
-        spawnedPreboxes = true;
-        for (int i = 0; i < preboxParent.childCount; i++) {
-            Instantiate(GetBoxPrefab(), preboxParent.GetChild(i).position, Quaternion.Euler(0, Random.value * 360, 0));
-        }
-    }
+    
 
 
     // other
@@ -92,8 +91,6 @@ public class SpawnManager : MonoBehaviour {
                 yield return new WaitForSeconds(1);
             }
             else {
-                if (!spawnedPreboxes)
-                    SpawnPreboxes();
                 SpawnOne();
                 yield return new WaitForSeconds(WaitTime());
             }

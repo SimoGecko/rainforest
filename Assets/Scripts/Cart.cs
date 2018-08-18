@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 ////////// DESCRIPTION //////////
@@ -10,7 +11,7 @@ public class Cart : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-
+    const int numPos = 6;
 
     // private
     List<List<int>>[] positions; // const
@@ -30,13 +31,10 @@ public class Cart : MonoBehaviour {
     }
 
     void Start () {
-        carrying = new List<Box>();
         SetupPositions();
-        free = new bool[6];
-        for (int i = 0; i < 6; i++) {
-            free[i] = true;
-        }
-	}
+        carrying = new List<Box>();
+        free = Enumerable.Repeat(true, numPos).ToArray(); // 6 times free
+    }
 	
 	void Update () {
         
@@ -45,28 +43,9 @@ public class Cart : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         //if deposit, check & leave
         Deposit dep = other.GetComponent<Deposit>();
-        bool atLeastOneFits = false;
-        int numBoxes = carrying.Count;
         if (dep != null) {
-            foreach(Box b in carrying) {
-                if (b != null && b.size == dep.size) {
-                    atLeastOneFits = true;
-                    if (dep.CanAcceptBox()) {
-                        Deposit(b, dep);
-                        lastDepositTimestamp = Time.time;
-                        ComicBubble.instance.Speak(SpeechType.BoxDeposit);
-                        AudioManager.Play("box_drop");
-                    }
-                    else {
-                        ComicBubble.instance.Speak(SpeechType.ShelfFull);
-                    }
-                }
-            }
-            if (!atLeastOneFits && numBoxes>0 && Time.time-lastDepositTimestamp>2f){
-                ComicBubble.instance.Speak(SpeechType.NotRightFit);
-            }
+            TryDepositAll(dep);
         }
-        carrying.RemoveAll(b => b.Deposited);
     }
 
 
@@ -76,6 +55,7 @@ public class Cart : MonoBehaviour {
 
     // commands
     void SetupPositions() {
+        //tuples of where different sized boxes fit
         positions = new List<List<int>>[5];
         positions[1] = new List<List<int>> {
             new List<int> {0},
@@ -101,15 +81,41 @@ public class Cart : MonoBehaviour {
     }
 
     public void Pickup(Box box) {
-        List<int> positions = FreePosition(box.size);
+        List<int> positions = FreePosition(box.packSize);
         foreach (int p in positions) free[p] = false;
         carrying.Add(box);
+        box.PickupBox();
+    }
+
+    void TryDepositAll(Deposit dep) {
+        //TODO cleanup
+        bool atLeastOneFits = false;
+        int numBoxes = carrying.Count;
+
+        foreach (Box b in carrying) {
+            if (b != null && b.packSize == dep.packSize) {
+                atLeastOneFits = true;
+                if (dep.HasSpace()) {
+                    //actual deposit
+                    Deposit(b, dep);
+                }
+                else {
+                    ComicBubble.instance.Speak(SpeechType.ShelfFull);
+                }
+            }
+        }
+        if (!atLeastOneFits && numBoxes > 0 && Time.time - lastDepositTimestamp > 2f) {
+            ComicBubble.instance.Speak(SpeechType.NotRightFit);
+        }
+        carrying.RemoveAll(b => b.Deposited);
     }
 
     void Deposit(Box box, Deposit dep) {
-        foreach (int p in box.positions) free[p] = true;
-        //carrying.Remove(box);
+        foreach (int p in box.Positions) free[p] = true;
         box.DepositBox(dep);
+        lastDepositTimestamp = Time.time;
+        ComicBubble.instance.Speak(SpeechType.BoxDeposit);
+        AudioManager.Play("box_drop");
     }
 
 
@@ -125,23 +131,11 @@ public class Cart : MonoBehaviour {
     }
 
     public bool HasSpaceFor(int box) {
-        //box is either 1, 2, 4
         return FreePosition(box) != null;
-        /*
-        switch (box) {
-            case 1: return free[0, 0] || free[0, 1] || free[0, 2] || free[1, 0] || free[1,1] || free[1,2];
-            case 2: return (free[0, 0] && free[1, 0]) || (free[0, 1] && free[1, 1]) || (free[0, 2] && free[1, 2]) || // vertical (3)
-                    (free[0, 0] && free[0, 1]) || (free[1, 0] && free[1, 1]) || (free[0, 1] && free[0, 2]) || (free[1, 1] && free[1, 2]); // horizontal (4)
-            case 4: return (free[0, 0] && free[0, 1] && free[1, 0] && free[1, 1]) || (free[0, 1] && free[0, 2] && free[1, 1] && free[1, 2]);
-            default: return false;
-            case 1: return free[0] || free[1] || free[2] || free[3] || free[4] || free[5];
-            case 2: return (free[] && free[]) || (free[] && free[]) || (free[] && free[]) ||
-                    (free[] && free[]) || (free[] && free[]) || (free[] && free[]) || (free[] && free[]);
-            case 4: return (free[0] && free[1] && free[3] && free[4]) || (free[1] && free[2] && free[4] && free[5]);
-        }*/
     }
 
     public Vector3 TransfFromPos(List<int> positions) {
+        //simple average
         Vector3 result = Vector3.zero;
         foreach (int p in positions) result += posTransform[p].position;
         return result / positions.Count;

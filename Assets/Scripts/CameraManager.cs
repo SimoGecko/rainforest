@@ -12,11 +12,11 @@ public class CameraManager : MonoBehaviour {
     // public
     public float smoothTime = 1f;
     public float transitionTime = 2f;
+    public float followPlayerWeight = .5f;
 
     // private
     Vector3 offset;
     Vector3 ref1;
-    bool inGameView;
     bool follow;
     //Vector3 eulerOffset;
 
@@ -28,15 +28,10 @@ public class CameraManager : MonoBehaviour {
     // --------------------- BASE METHODS ------------------
     void Start () {
         offset = gameView.position - target.position;
-        //eulerOffset = gameView.eulerAngles;
-        /*
-        post = new GameObject().transform;
-        post.position = transform.position;
-        post.rotation = transform.rotation;
-        post.parent = target;*/
         transform.position = titleView.position;
         transform.rotation = titleView.rotation;
 
+        GameManager.instance.OnPlay += TransitionToGameView;
     }
 
     void Update () {
@@ -44,10 +39,8 @@ public class CameraManager : MonoBehaviour {
 	}
 
     void LateUpdate() {
-        if (GameManager.Playing) {
-            if (!inGameView) TransitionToGameView();
-            if(follow)
-                FollowTarget();
+        if (GameManager.Playing && follow) {
+            FollowTarget();
         }
     }
 
@@ -56,22 +49,22 @@ public class CameraManager : MonoBehaviour {
 
 
     // commands
-    void FollowTarget() {
-        Vector3 targetPos = Vector3.Lerp(Vector3.zero, target.position, 0.5f) + offset;
-        //Vector3 targetPos2 = target.localToWorldMatrix * offset;
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref ref1, smoothTime);
-        //transform.eulerAngles = Utility.SmoothDampAngle(transform.eulerAngles, post.eulerAngles, ref ref2, smoothTime);
-        //transform.LookAt(target);
-    }
-
-    void FollowTrue() { follow = true; }
-
     void TransitionToGameView() {
-        inGameView = true;
         iTween.MoveTo  (gameObject, iTween.Hash("position", gameView, "time", transitionTime, "easeType", iTween.EaseType.easeInOutSine));
         iTween.RotateTo(gameObject, iTween.Hash("rotation", gameView, "time", transitionTime, "easeType", iTween.EaseType.easeInOutSine));
         Invoke("FollowTrue", transitionTime);
     }
+
+    void FollowTarget() {
+        Vector3 targetPos = Vector3.Lerp(Vector3.zero, target.position, followPlayerWeight) + offset;
+        //TODO add multiple targets each with a weight and blend them
+
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref ref1, smoothTime);
+    }
+
+    void FollowTrue() { follow = true; }
+
+    
 
 
     // queries
@@ -79,10 +72,6 @@ public class CameraManager : MonoBehaviour {
 
 
     // other
-    private void OnDrawGizmos() {
-        if (!Application.isPlaying) {
-            //edit mode
-        }
-    }
+    
 
 }

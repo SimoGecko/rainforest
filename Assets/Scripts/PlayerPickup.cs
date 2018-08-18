@@ -11,8 +11,6 @@ public class PlayerPickup : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    //public Box[] boxesin;
-    //public Button[] buttonsin;
 
 
     // private
@@ -29,11 +27,9 @@ public class PlayerPickup : MonoBehaviour {
 	}
 	
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (GameManager.Playing && Input.GetKeyDown(KeyCode.Space)) {
             Tap();
         }
-        //boxesin = boxesInRange.ToArray();
-        //buttonsin = buttonsInRange.ToArray();
 	}
 
     private void OnTriggerEnter(Collider other) {
@@ -66,6 +62,7 @@ public class PlayerPickup : MonoBehaviour {
         Box closestBox = ClosestBox();
         Button closestButton = ClosestButton();
 
+        //select closest not null to push
         if (closestBox != null && closestButton == null) {
             closestBox.Tap();
         }

@@ -12,14 +12,12 @@ public class Button : MonoBehaviour {
     // public
     public float percentToBeFilled = .75f; // do I leave this in the game?
     public float animTime = 2f;
-    public float delay = 1f;
+    public float animDelay = 1f;
     public float moveAmount = 10;
     public float introDelay;
 
     // private
-    bool animatedEntrance;
     bool alreadyPushed;
-    bool blinking;
 
 
     // references
@@ -29,21 +27,17 @@ public class Button : MonoBehaviour {
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
-		
+        GameManager.instance.OnPlay += OnPlay;
 	}
 	
 	void Update () {
-        if(GameManager.Playing && !animatedEntrance) {
-            animatedEntrance = true;
-            Invoke("AnimateEntrance", 2f + introDelay);
-        }
-        CheckBlinking();
-        
+        if(GameManager.Playing)
+            CheckBlinking();
 	}
 
     private void OnMouseDown() {
-        Tap();
-
+        if(GameManager.Playing)
+            Tap();
     }
 
 
@@ -51,13 +45,16 @@ public class Button : MonoBehaviour {
 
 
     // commands
+    void OnPlay() {
+        Invoke("AnimateEntrance", 2f + introDelay);
+    }
+
     public void Tap() {
-        if (!GameManager.Playing) return;
         if (Player.instance.CloseEnough(transform)) {
             if (FilledEnough() || GameManager.instance.DEBUG) {
                 if (!alreadyPushed) {
-                    Player.instance.PushButtonAnim();
                     Move();
+                    Player.instance.AnimButton();
                     AudioManager.Play("button_push");
                     AudioManager.Play("shelf_moving");
                 }
@@ -67,9 +64,7 @@ public class Button : MonoBehaviour {
             }
         }
         else {
-            //TOO FAR AWAY
             ComicBubble.instance.Speak(SpeechType.FarAway);
-
         }
     }
 
@@ -77,12 +72,12 @@ public class Button : MonoBehaviour {
         alreadyPushed = true;
         AnimateShelf();
         AnimateSlidingDoor();
-        Invoke("CleanShelf", animTime + delay/2);
-        Invoke("AlreadyPushedOff", 2 * animTime + delay);
+        Invoke("CleanShelf", animTime + animDelay/2);
+        Invoke("AlreadyPushedOff", 2 * animTime + animDelay);
     }
 
     void CheckBlinking() {
-        blinking = FilledEnough();
+        bool blinking = FilledEnough();
         if (blinking) {
             bool currentlyOn = Mathf.RoundToInt(Time.time) % 2 == 0;
             buttonLight.SetActive(currentlyOn);
@@ -104,14 +99,14 @@ public class Button : MonoBehaviour {
 
     void AnimateShelf() {
         iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", -moveAmount * Vector3.forward, "time", animTime, "easeType", iTween.EaseType.easeInOutSine));
-        iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", +moveAmount * Vector3.forward, "time", animTime, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + delay));
+        iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", +moveAmount * Vector3.forward, "time", animTime, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + animDelay));
     }
 
     void AnimateSlidingDoor() {
         iTween.MoveBy(slidingDoor, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine));
         iTween.MoveBy(slidingDoor, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime/2));
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + delay));
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + delay + animTime / 2));
+        iTween.MoveBy(slidingDoor, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + animDelay));
+        iTween.MoveBy(slidingDoor, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + animDelay + animTime / 2));
     }
 
     void AlreadyPushedOff() { alreadyPushed = false; }

@@ -252,6 +252,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb7557d311e762b47807ecb183cef472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 1
-  angleVar: 10
+  packSize: 1
   shelfT: {fileID: 4216970150331412}

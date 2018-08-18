@@ -23,32 +23,26 @@ public class AudioManager : MonoBehaviour {
     [Range(0, 1)]
     public float musicVolume = 1;
 
+    float pitchVar = .3f; // how much to variate when playing random sound
+
     AudioSource effectSource, musicSource, speechSource;
-    Dictionary<string, AudioClip> groupDictionary = new Dictionary<string, AudioClip>();
+    Dictionary<string, AudioClip> clipsDictionary = new Dictionary<string, AudioClip>();
 
     // references
     public static AudioManager instance;
-    Transform audioListener;
-    Transform playerT;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
-            instance = this;
+        instance = this;
     }
 
     void Start () {
-        audioListener = FindObjectOfType<AudioListener>().transform;
-        playerT = FindObjectOfType<Player>().transform;
-
         CreateSources();
         CreateDictionary();
-
-        //playmusic
     }
 	
 	void Update () {
-        //if (playerT != null)
-            //audioListener.position = playerT.position;
+
     }
 
 
@@ -77,18 +71,17 @@ public class AudioManager : MonoBehaviour {
 
     void CreateDictionary() {
         foreach (var a in audioClips) {
-            groupDictionary.Add(a.name, a);
+            clipsDictionary.Add(a.name, a);
         }
-    }
-
-    void PlaySound2D(string clipName) {
-        float pitchVar = .3f;
-        effectSource.pitch = Random.Range(1 - pitchVar, 1 + pitchVar);
-        effectSource.PlayOneShot(GetClipFromName(clipName), sfxVolume * masterVolume);
     }
 
     public static void Play(string clipName) {
         instance.PlaySound2D(clipName);
+    }
+
+    void PlaySound2D(string clipName) {
+        effectSource.pitch = Random.Range(1 - pitchVar, 1 + pitchVar);
+        effectSource.PlayOneShot(GetClipFromName(clipName), sfxVolume * masterVolume);
     }
 
     public void PlaySpeech(string clipName) {
@@ -96,27 +89,15 @@ public class AudioManager : MonoBehaviour {
     }
 
 
-
     // queries
     AudioClip GetClipFromName(string name) {
-        if (groupDictionary.ContainsKey(name)) {
-            return groupDictionary[name];
-            //return clips[Random.Range(0, clips.Length)];
+        if (clipsDictionary.ContainsKey(name)) {
+            return clipsDictionary[name];
         }
         else {
             Debug.LogError("no sound named " + name);
             return null;
         }
     }
-
-
-
-    // other
-    /*
-    [System.Serializable]
-    public class NamedClip {
-        public string name;
-        public AudioClip clip;
-    }*/
 
 }

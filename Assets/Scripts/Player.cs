@@ -11,35 +11,27 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
-    public enum ControlType { PlayerRelative, CameraRelative }
-
     // public
-    public ControlType controlType = ControlType.PlayerRelative;
     public float speed = 5;
     public float angularSpeed = 180;
-    public float pickupArea = 8f;
-
+    public float pickupDist = 8f;
 
 
     // private
-    float ref1;
     Vector3 inp;
-    bool animStart, animEnd;
-    float animHelloTime;
-    Vector3 moveDirection;
-    Vector3 lastDir;
     Vector3 inputRotated;
 
+    float animHelloTime;
 
 
     // references
-    public static Player instance;
     CharacterController cc;
     Animator anim;
+    AudioSource feetSound;
+
     public Transform pickupCenter;
-    AudioSource feet;
-    public Text controlText;
-    public VirtualJoystick joystick;
+    public VirtualJoystick joystick; // move in gamemanger?
+    public static Player instance; // TODO remove instance
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -47,39 +39,29 @@ public class Player : MonoBehaviour {
     }
 
     void Start () {
-        animHelloTime = Time.time + Random.Range(2f, 4f);
         cc = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
-        feet = GetComponent<AudioSource>();
-	}
+        feetSound = GetComponent<AudioSource>();
+
+        GameManager.instance.OnPlay += AnimStart;
+        GameManager.instance.OnGameover += AnimEnd;
+        animHelloTime = Time.time + Random.Range(2f, 4f);
+    }
 	
 	void Update () {
         GetInput();
 
         if (GameManager.Playing) {
-            MoveOvercooked();
+            Move();
             SetToGround();
-
-            /*
-            if (Input.GetKeyDown(KeyCode.Tab)){
-                controlType = (ControlType)(1 - (int)controlType); // switch it
-            }
-            
-            if (controlType == ControlType.PlayerRelative)
-                MovePlayerRelative();
-            else if (controlType == ControlType.CameraRelative)
-                MoveCameraRelative();
-            */
         }
+
         DealWithAnimations();
-        feet.volume = inp.normalized.magnitude/20;
-        feet.pitch = Mathf.Lerp(feet.pitch, Random.Range(.8f, 1.2f), Time.deltaTime * 2);
-
-        UpdateControlUI();
-
+        DealWithSound();
 	}
 
     private void FixedUpdate() {
+
     }
 
 
@@ -104,60 +86,26 @@ public class Player : MonoBehaviour {
         else {
             inp = Vector3.zero;
         }
+        inp.Normalize(); // sure?
     }
 
-    //-------------------------------------------------------------------------
 
-    void MovePlayerRelative() {
-        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        Vector3 angularVel = Vector3.up * inp.x * angularSpeed * Mathf.Lerp(.6f, 1f, Mathf.Abs(inp.z)) * Mathf.Sign(inp.z);
-        Vector3 vel = transform.forward * inp.z * speed;
-        transform.Rotate(angularVel *  Time.deltaTime, Space.World);
-        cc.Move(vel * Time.deltaTime);
-    }
-   
+    void Move() {
+        // Overcooked style
+        inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp;
 
-    void MoveCameraRelative() {
-        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
-        inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp.normalized;
-
-        if (inputRotated.magnitude > 0.05f) {
-            lastDir = inputRotated;
-        }
-        else {
-            lastDir = transform.forward;
-        }
-
-        Quaternion a = transform.rotation;
-        transform.LookAt(transform.position + lastDir);
-        Quaternion b = transform.rotation;
-        transform.rotation = Quaternion.Lerp(a, b, Time.deltaTime * 4);
-
-        //moveDirection = Vector3.Lerp(moveDirection, lastDir, Time.deltaTime * 4);
-        //moveDirection.Normalize();
-        cc.Move(transform.forward * speed * inp.magnitude * Time.deltaTime);
-    }
-
-    void MoveOvercooked() {
-        //inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        inp.Normalize();
-        inp = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp;
-
-        float signedAngle = Vector3.SignedAngle(transform.forward, inp, Vector3.up);
+        float signedAngle = Vector3.SignedAngle(transform.forward, inputRotated, Vector3.up);
         float rotAmount = angularSpeed * Time.deltaTime;
         rotAmount = Mathf.Min(rotAmount, Mathf.Abs(signedAngle)); // clamp it if it's smaller
         transform.Rotate(Vector3.up * rotAmount * Mathf.Sign(signedAngle));
 
-        float angle = Vector3.Angle(transform.forward, inp);
+        float angle = Vector3.Angle(transform.forward, inputRotated);
         //project movement onto direction
         if (angle <= 90) {
-            float dot = Vector3.Dot(transform.forward, inp); // projection for smooth results
-            cc.Move(transform.forward * speed * inp.magnitude * dot* Time.deltaTime);
+            float dot = Vector3.Dot(transform.forward, inputRotated); // projection for smooth results
+            cc.Move(transform.forward * speed * inputRotated.magnitude * dot * Time.deltaTime);
         }
-        
     }
-
-    //-------------------------------------------------------------------------
 
     void SetToGround() {
         //to avoid bugs
@@ -167,37 +115,52 @@ public class Player : MonoBehaviour {
     }
 
     void DealWithAnimations() {
-        //start
-        if (Time.time > animHelloTime) {
+        if (GameManager.Menu && Time.time > animHelloTime) {
             anim.SetTrigger("hello");
             animHelloTime = Time.time + Random.Range(4f, 8f);
         }
-
-        //play
-        if (GameManager.Playing && !animStart) {
-            animStart = true;
-            anim.SetTrigger("start");
-        }
-        bool running = inp.magnitude > .1f;
-        anim.SetBool("running", running);
-
-        //end
-        if (GameManager.Gameover && !animEnd) {
-            animEnd = true;
-            anim.SetTrigger("end");
+        if (GameManager.Playing) {
+            bool running = inp.magnitude > .1f;
+            anim.SetBool("running", running);
         }
     }
 
-    public void PushButtonAnim() {
-        anim.SetTrigger("button");
+    void AnimStart() { anim.SetTrigger("start"); }
+    void AnimEnd()   { anim.SetTrigger("end"); }
+    public void AnimButton() { anim.SetTrigger("button"); }
 
+
+    void DealWithSound() {
+        feetSound.volume = inp.magnitude / 20;
+        feetSound.pitch = Mathf.Lerp(feetSound.pitch, Random.Range(.8f, 1.2f), Time.deltaTime / 2);
     }
 
-    void UpdateControlUI() {
-        string ct = controlType == ControlType.PlayerRelative ? "player" : "camera";
-        controlText.text = "control: " + ct + "-relative\nTAB to change";
+
+
+    // queries
+    public bool CloseEnough(Transform t) {
+        Vector3 v = pickupCenter.position - t.transform.position;
+        v.y = 0;
+        return Vector3.SqrMagnitude(v) <= pickupDist * pickupDist;
     }
 
+
+    // other
+    private void OnDrawGizmos() {
+        /*
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position + Vector3.up, inputRotated*3);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position + Vector3.up, moveDirection*3);
+        */
+    }
+
+
+
+
+
+    //------------------------------------------------- OLD MOVEMENT METHODS -----------------------------------------------------------------
     /*
     void Move2() {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -227,46 +190,59 @@ public class Player : MonoBehaviour {
         transform.eulerAngles = Vector3.up * angle;
 
         transform.position += transform.forward * speed * displacement.magnitude * Time.deltaTime;
-    }*/
+    }
 
-    /*
+
     void Move4() {
-       input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
-       inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * input.normalized;
+      input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
+      inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * input.normalized;
 
-       if (inputRotated.magnitude>0) {
-           lastDir = inputRotated;
-       }
-       //else {
-       //    inputRotated += lastDir * .01f;
-       //}
-       //Vector3 smoothTo = inputRotated.magnitude > 0 ? inputRotated : lastDir;
+      if (inputRotated.magnitude>0) {
+          lastDir = inputRotated;
+      }
+      //else {
+      //    inputRotated += lastDir * .01f;
+      //}
+      //Vector3 smoothTo = inputRotated.magnitude > 0 ? inputRotated : lastDir;
 
-       moveDirection = Vector3.Lerp(moveDirection, lastDir, Time.deltaTime * 6);
-       moveDirection.Normalize();
-       transform.LookAt(transform.position + moveDirection);
-       cc.Move(moveDirection * speed * input.magnitude * Time.deltaTime);
-}*/
+      moveDirection = Vector3.Lerp(moveDirection, lastDir, Time.deltaTime * 6);
+      moveDirection.Normalize();
+      transform.LookAt(transform.position + moveDirection);
+      cc.Move(moveDirection * speed * input.magnitude * Time.deltaTime);
+   }
+   
 
 
-
-    // queries
-    public bool CloseEnough(Transform t) {
-        Vector3 vec = pickupCenter.position - t.transform.position;
-        vec.y = 0;
-        float dist = Vector3.SqrMagnitude(vec);
-        return dist <= pickupArea * pickupArea;
+   void MovePlayerRelative() {
+        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 angularVel = Vector3.up * inp.x * angularSpeed * Mathf.Lerp(.6f, 1f, Mathf.Abs(inp.z)) * Mathf.Sign(inp.z);
+        Vector3 vel = transform.forward * inp.z * speed;
+        transform.Rotate(angularVel *  Time.deltaTime, Space.World);
+        cc.Move(vel * Time.deltaTime);
     }
+   
 
+    void MoveCameraRelative() {
+        inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
+        inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp.normalized;
 
-    // other
-    private void OnDrawGizmos() {
-        //Gizmos.DrawWireSphere(pickupCenter.position, pickupArea);
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position + Vector3.up, inputRotated*3);
+        if (inputRotated.magnitude > 0.05f) {
+            lastDir = inputRotated;
+        }
+        else {
+            lastDir = transform.forward;
+        }
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawRay(transform.position+Vector3.up, moveDirection*3);
-    }
+        Quaternion a = transform.rotation;
+        transform.LookAt(transform.position + lastDir);
+        Quaternion b = transform.rotation;
+        transform.rotation = Quaternion.Lerp(a, b, Time.deltaTime * 4);
+
+        //moveDirection = Vector3.Lerp(moveDirection, lastDir, Time.deltaTime * 4);
+        //moveDirection.Normalize();
+        cc.Move(transform.forward * speed * inp.magnitude * Time.deltaTime);
+    } 
+     
+    */
 
 }
