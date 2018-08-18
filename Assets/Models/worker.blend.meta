@@ -40,6 +40,9 @@ ModelImporter:
     100068: //RootNode
     100070: cart
     100072: worker
+    100074: cart_othercolors
+    100076: worker_othercolors
+    100078: worker_pepakura
     400000: arm_L
     400002: arm_R
     400004: Armature
@@ -77,21 +80,32 @@ ModelImporter:
     400068: //RootNode
     400070: cart
     400072: worker
+    400074: cart_othercolors
+    400076: worker_othercolors
+    400078: worker_pepakura
     2100000: None__gradient_png
     2300000: Cube_001
     2300002: cart
+    2300004: cart_othercolors
+    2300006: worker_pepakura
     3300000: Cube_001
     3300002: cart
+    3300004: cart_othercolors
+    3300006: worker_pepakura
     4300000: Cube_001
     4300002: Cube
     4300004: cart
     4300006: worker
+    4300008: cart_othercolors
+    4300010: worker_othercolors
+    4300012: worker_pepakura
     7400000: Default Take
     7400002: idle
     7400004: run
     9500000: //RootNode
     13700000: Cube
     13700002: worker
+    13700004: worker_othercolors
   externalObjects: {}
   materials:
     importMaterials: 1
