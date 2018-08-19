@@ -64,10 +64,13 @@ public class Box : MonoBehaviour {
     public void Tap() {
         if (!GameManager.Playing || pickedup || deposited) return;
 
-        if (Player.instance.CloseEnough(transform)) {//check if close enough
-            if (Cart.instance.HasSpaceFor(packSize)) {
+        Player player = GameManager.instance.GetPlayer(0); // TODO must be closest
+        Cart cart = player.GetCart();
+
+        if (player.CloseEnough(transform)) {//check if close enough
+            if (cart.HasSpaceFor(packSize)) {
                 //PickupBox();
-                Cart.instance.Pickup(this); // TODO refactor
+                cart.Pickup(this); // TODO refactor
             }
             else {
                 ComicBubble.instance.Speak(SpeechType.CartFull);
@@ -78,11 +81,11 @@ public class Box : MonoBehaviour {
         }
     }
 
-    public void PickupBox() { // TODO add which cart is pickedup to
+    public void PickupBox(Cart cart) { // TODO add which cart is pickedup to
         pickedup = true;
         StopRB();
 
-        Cart cart = Cart.instance;
+        //Cart cart = Cart.instance;
 
         positions = cart.FreePosition(packSize);
         transform.parent = cart.transform;
@@ -91,7 +94,7 @@ public class Box : MonoBehaviour {
 
         ComicBubble.instance.Speak(SpeechType.BoxPickup);
         AudioManager.Play("box_drop"); // TODO audio pickup
-        Player.instance.AnimButton();
+        cart.Owner.AnimButton();
     }
 
     public void DepositBox(Deposit dep) {

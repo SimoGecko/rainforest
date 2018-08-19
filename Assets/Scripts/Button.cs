@@ -56,11 +56,12 @@ public class Button : MonoBehaviour {
     }
 
     public void Tap() {
-        if (Player.instance.CloseEnough(transform)) {
+        Player p = GameManager.instance.GetPlayer(0);// TODO must be closest
+        if (p.CloseEnough(transform)) {
             if (FilledEnough() || GameManager.instance.DEBUG) {
                 if (!alreadyPushed) {
                     EmptyShelfWithAnimation();
-                    Player.instance.AnimButton();
+                    p.AnimButton();
                     AudioManager.Play("button_push");
                     AudioManager.Play("shelf_moving");
                 }

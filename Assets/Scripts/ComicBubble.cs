@@ -19,21 +19,23 @@ public class ComicBubble : MonoBehaviour {
     const int numSpeechType = 11;
 
     public Vector2 speechDurationMinMax = new Vector2(4, 6);
-    float[] probOfSpeech = new float[] {
+    readonly float[] probOfSpeech = new float[] {
         .5f, .6f, 1f, 1f, 1f,
         .2f, .3f, .6f, .1f, .1f,
         .8f };
 
 
     // private
-    Dictionary<SpeechType, string[]> speechDic;
+    static Dictionary<SpeechType, string[]> speechDic;
+    static bool createdDic = false;
+
     bool speaking;
 
     // references
     public TextMeshPro bubbleText;
     public GameObject bubble;
     public TextAsset speechText;
-    public static ComicBubble instance;
+    public static ComicBubble instance; // TODO remove, leave for now
 
 
     // --------------------- BASE METHODS ------------------
@@ -42,7 +44,7 @@ public class ComicBubble : MonoBehaviour {
     }
 
     void Start () {
-        ParseSpeechText();
+        if(!createdDic) ParseSpeechText();
         GameManager.instance.OnPlay = SpeakBegin;
     }
 	
@@ -58,6 +60,7 @@ public class ComicBubble : MonoBehaviour {
 	
 	// commands
     void ParseSpeechText() {
+        createdDic = true;
         List<string>[] result = new List<string>[numSpeechType];
 
         string text = speechText.text;

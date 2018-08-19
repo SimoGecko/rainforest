@@ -21,16 +21,14 @@ public class Cart : MonoBehaviour {
 
 
     // references
-    public static Cart instance;
+    public Player Owner { get; private set; }
     public Transform[] posTransform;
 
 
     // --------------------- BASE METHODS ------------------
-    private void Awake() {
-        instance = this;
-    }
 
     void Start () {
+        Owner = transform.root.GetComponent<Player>();
         SetupPositions();
         carrying = new List<Box>();
         free = Enumerable.Repeat(true, numPos).ToArray(); // 6 times free
@@ -81,7 +79,7 @@ public class Cart : MonoBehaviour {
     }
 
     public void Pickup(Box box) {
-        box.PickupBox();
+        box.PickupBox(this);
         List<int> positions = FreePosition(box.packSize);
         foreach (int p in positions) free[p] = false;
         carrying.Add(box);

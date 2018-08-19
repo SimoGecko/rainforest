@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
     public float speed = 5;
     public float angularSpeed = 180;
     public float pickupDist = 8f;
+    public int id;
 
 
     // private
@@ -29,14 +30,12 @@ public class Player : MonoBehaviour {
     Animator anim;
     AudioSource feetSound;
 
+    Cart cart;
+
     public Transform pickupCenter;
-    public VirtualJoystick joystick; // move in gamemanger?
-    public static Player instance; // TODO remove instance
+    //public VirtualJoystick joystick; // move in gamemanger?
 
     // --------------------- BASE METHODS ------------------
-    private void Awake() {
-        instance = this;
-    }
 
     void Start () {
         cc = GetComponent<CharacterController>();
@@ -46,10 +45,13 @@ public class Player : MonoBehaviour {
         GameManager.instance.OnPlay += AnimStart;
         GameManager.instance.OnGameover += AnimEnd;
         animHelloTime = Time.time + Random.Range(2f, 4f);
+
+        cart = GetComponentInChildren<Cart>();
     }
 	
 	void Update () {
-        GetInput();
+        //GetInput();
+        inp = InputManager.instance.GetInput(id).To3();
 
         if (GameManager.Playing) {
             Move();
@@ -70,15 +72,9 @@ public class Player : MonoBehaviour {
 
 
     // commands
+    /*
     void GetInput() {
         if (GameManager.Playing) {
-            /*
-            if (GameManager.instance.mobile) {
-                inp = joystick.InputValue.To3();
-            }
-            else {
-                inp = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            }*/
             Vector3 inpKeyboard = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             Vector3 inpJoystick = joystick.InputValue.To3();
             inp = inpKeyboard + inpJoystick;
@@ -87,7 +83,7 @@ public class Player : MonoBehaviour {
             inp = Vector3.zero;
         }
         inp.Normalize(); // sure?
-    }
+    }*/
 
 
     void Move() {
@@ -143,6 +139,8 @@ public class Player : MonoBehaviour {
         v.y = 0;
         return Vector3.SqrMagnitude(v) <= pickupDist * pickupDist;
     }
+
+    public Cart GetCart() { return cart; }
 
 
     // other

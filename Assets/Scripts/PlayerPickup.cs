@@ -19,17 +19,18 @@ public class PlayerPickup : MonoBehaviour {
 
 
     // references
+    Player p;
 
 
     // --------------------- BASE METHODS ------------------
     void Start () {
-		
+        p = GetComponent<Player>();
 	}
 	
 	void Update () {
-        if (GameManager.Playing && Input.GetKeyDown(KeyCode.Space)) {
-            Tap();
-        }
+        if (!GameManager.Playing) return;
+        if(InputManager.instance.GetInteractInput(p.id))
+        Tap();
 	}
 
     private void OnTriggerEnter(Collider other) {

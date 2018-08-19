@@ -4,22 +4,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 ////////// DESCRIPTION //////////
 
 public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
-    public enum Difficulty { Easy, Medium, Hard }
     public enum State { Menu, Playing, Gameover }
     public enum Platform { Pc, Mobile, Console}
+    public enum Difficulty { Easy, Medium, Hard }
+
 
 
     // public
+    public Platform platform = Platform.Pc;
+
+    public bool AutoStart = false;
     public bool DEBUG = false;
-    public bool Mobile = false;
+    public bool Coop = false;
+
     public float timeScale = 1f;
 
-    public Difficulty difficulty = Difficulty.Medium;
     const int scoreMaxDifficulty = 100;
 
     public System.Action OnPlay;
@@ -27,6 +32,9 @@ public class GameManager : MonoBehaviour {
 
     // private
     State state;
+    [HideInInspector]
+    public Difficulty difficulty = Difficulty.Medium;
+    Player[] players;
 
     int score;
     int lifes;
@@ -44,6 +52,8 @@ public class GameManager : MonoBehaviour {
 
     void Start () {
         state = State.Menu;
+        FindPlayers();
+        if (AutoStart) Invoke("StartDebug", .4f);
 	}
 	
 	void Update () {
@@ -63,6 +73,13 @@ public class GameManager : MonoBehaviour {
 
 
     // commands
+    void FindPlayers() {
+        Player[] p = FindObjectsOfType<Player>();
+        players = p.OrderBy(c => c.id).ToArray();
+    }
+
+    void StartDebug() { StartRound(0); }
+
     public void StartRound(int diff) { // called from gauge
         if(OnPlay!=null) OnPlay();
         state = State.Playing;
@@ -109,6 +126,13 @@ public class GameManager : MonoBehaviour {
     public float ProgressPercent() {
         return (float)score / scoreMaxDifficulty;
     }
+
+    public Player GetPlayer(int id) {
+        return players[id];
+    }
+
+    public bool Mobile { get { return platform == Platform.Mobile; } }
+
 
     public static bool Playing { get { return instance.state == State.Playing; } }
     public static bool Menu    { get { return instance.state == State.Menu; } }
