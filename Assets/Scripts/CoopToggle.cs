@@ -24,10 +24,9 @@ public class CoopToggle : MonoBehaviour {
     }
 
     void Update() {
-        /*
-        if (Input.GetButtonDown("joystick button 0"))
+        if (GameManager.instance.Console && Input.GetKeyDown("joystick button 0"))
             ToggleCoop();
-        */
+        
     }
 
     private void OnMouseDown() {

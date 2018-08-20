@@ -139,6 +139,8 @@ public class GameManager : MonoBehaviour {
     }
 
     public bool Mobile { get { return platform == Platform.Mobile; } }
+    public bool Console { get { return platform == Platform.Console; } }
+    public bool Pc { get { return platform == Platform.Pc; } }
 
     public float DifficultyMult() {
         return difficultyMultipliers[(int)difficulty] * (Coop ? coopDifficultyMultiplier : 1);

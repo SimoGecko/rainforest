@@ -28,8 +28,8 @@ public class CameraManager : MonoBehaviour {
     // --------------------- BASE METHODS ------------------
     void Start () {
         target = GameManager.instance.GetPlayer(0).transform;
-        if(GameManager.instance.Coop)
-            target1 = GameManager.instance.GetPlayer(1).transform;
+        //if(GameManager.instance.Coop)
+        target1 = GameManager.instance.GetPlayer(1).transform;
 
         offset = gameView.position - target.position;
         transform.position = titleView.position;
