@@ -19,17 +19,17 @@ public class PlayerPickup : MonoBehaviour {
 
 
     // references
-    Player p;
+    Player player;
 
 
     // --------------------- BASE METHODS ------------------
     void Start () {
-        p = GetComponent<Player>();
+        player = GetComponent<Player>();
 	}
 	
 	void Update () {
         if (!GameManager.Playing) return;
-        if(InputManager.instance.GetInteractInput(p.id))
+        if(InputManager.instance.GetInteractInput(player.id))
         Tap();
 	}
 
@@ -65,17 +65,17 @@ public class PlayerPickup : MonoBehaviour {
 
         //select closest not null to push
         if (closestBox != null && closestButton == null) {
-            closestBox.Tap();
+            closestBox.Tap(player);
         }
         else if(closestBox == null && closestButton != null) {
-            closestButton.Tap();
+            closestButton.Tap(player);
         }
         else if(closestBox != null && closestButton != null) {
             //must chose closest
             if (DistToMe(closestBox.transform) < DistToMe(closestButton.transform))
-                closestBox.Tap();
+                closestBox.Tap(player);
             else
-                closestButton.Tap();
+                closestButton.Tap(player);
         }
     }
 

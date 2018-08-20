@@ -21,12 +21,16 @@ public class CameraManager : MonoBehaviour {
     //Vector3 eulerOffset;
 
     // references
-    public Transform target;
+    public Transform target, target1;
     public Transform gameView, titleView;
 
 
     // --------------------- BASE METHODS ------------------
     void Start () {
+        target = GameManager.instance.GetPlayer(0).transform;
+        if(GameManager.instance.Coop)
+            target1 = GameManager.instance.GetPlayer(1).transform;
+
         offset = gameView.position - target.position;
         transform.position = titleView.position;
         transform.rotation = titleView.rotation;
@@ -56,7 +60,7 @@ public class CameraManager : MonoBehaviour {
     }
 
     void FollowTarget() {
-        Vector3 targetPos = Vector3.Lerp(Vector3.zero, target.position, followPlayerWeight) + offset;
+        Vector3 targetPos = TargetPos() + offset;
         //TODO add multiple targets each with a weight and blend them
 
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref ref1, smoothTime);
@@ -68,6 +72,13 @@ public class CameraManager : MonoBehaviour {
 
 
     // queries
+    Vector3 TargetPos() {
+        if (!GameManager.instance.Coop) {
+            return target.position * followPlayerWeight;//Vector3.Lerp(Vector3.zero, target.position, followPlayerWeight);
+        } else {
+            return (target.position + target1.position) * followPlayerWeight/2;
+        }
+    }
 
 
 

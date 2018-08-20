@@ -8131,6 +8131,7 @@ MonoBehaviour:
   transitionTime: 2
   followPlayerWeight: 0.5
   target: {fileID: 1263309301}
+  target1: {fileID: 0}
   gameView: {fileID: 707960007}
   titleView: {fileID: 620905277}
 --- !u!114 &534669907
@@ -19724,7 +19725,7 @@ MonoBehaviour:
   platform: 2
   AutoStart: 1
   DEBUG: 0
-  Coop: 0
+  Coop: 1
   timeScale: 1
   difficulty: 1
 --- !u!114 &1424576732

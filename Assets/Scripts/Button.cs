@@ -43,7 +43,7 @@ public class Button : MonoBehaviour {
 
     private void OnMouseDown() {
         if(GameManager.Playing)
-            Tap();
+            Tap(GameManager.instance.GetPlayer(0));
     }
 
 
@@ -55,8 +55,7 @@ public class Button : MonoBehaviour {
         Invoke("AnimateEntrance", 2f + introDelay);
     }
 
-    public void Tap() {
-        Player p = GameManager.instance.GetPlayer(0);// TODO must be closest
+    public void Tap(Player p) {
         if (p.CloseEnough(transform)) {
             if (FilledEnough() || GameManager.instance.DEBUG) {
                 if (!alreadyPushed) {

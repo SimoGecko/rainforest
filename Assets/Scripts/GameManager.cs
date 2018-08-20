@@ -48,11 +48,12 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         instance = this;
         //RuntimePlatform platform = Application.platform;
+        FindPlayers();
+        if (!Coop) players[1].gameObject.SetActive(false);
     }
 
     void Start () {
         state = State.Menu;
-        FindPlayers();
         if (AutoStart) Invoke("StartDebug", .4f);
 	}
 	

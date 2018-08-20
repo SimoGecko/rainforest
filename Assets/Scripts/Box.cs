@@ -45,7 +45,7 @@ public class Box : MonoBehaviour {
     }
 
     private void OnMouseDown() {
-        Tap();
+        Tap(GameManager.instance.GetPlayer(0));
     }
 
 
@@ -61,10 +61,9 @@ public class Box : MonoBehaviour {
         conveyorVelocity = Vector3.zero;
     }
 
-    public void Tap() {
+    public void Tap(Player player) {
         if (!GameManager.Playing || pickedup || deposited) return;
 
-        Player player = GameManager.instance.GetPlayer(0); // TODO must be closest
         Cart cart = player.GetCart();
 
         if (player.CloseEnough(transform)) {//check if close enough
