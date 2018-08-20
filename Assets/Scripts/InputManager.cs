@@ -32,6 +32,7 @@ public class InputManager : MonoBehaviour {
     }
 
     void Update() {
+        if (Input.GetButtonDown("Interact")) Debug.Log("INteract");
     }
 
 

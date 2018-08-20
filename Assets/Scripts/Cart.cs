@@ -98,12 +98,12 @@ public class Cart : MonoBehaviour {
                     Deposit(b, dep);
                 }
                 else {
-                    ComicBubble.instance.Speak(SpeechType.ShelfFull);
+                    Owner.Bubble.Speak(SpeechType.ShelfFull);
                 }
             }
         }
         if (!atLeastOneFits && numBoxes > 0 && Time.time - lastDepositTimestamp > 2f) {
-            ComicBubble.instance.Speak(SpeechType.NotRightFit);
+            Owner.Bubble.Speak(SpeechType.NotRightFit);
         }
         carrying.RemoveAll(b => b.Deposited);
     }
@@ -112,7 +112,7 @@ public class Cart : MonoBehaviour {
         foreach (int p in box.Positions) free[p] = true;
         box.DepositBox(dep);
         lastDepositTimestamp = Time.time;
-        ComicBubble.instance.Speak(SpeechType.BoxDeposit);
+        Owner.Bubble.Speak(SpeechType.BoxDeposit);
         AudioManager.Play("box_drop");
     }
 

@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour {
     public bool Coop = false;
 
     public float timeScale = 1f;
+    public float coopDifficultyMultiplier = 1.5f;
+    public float[] difficultyMultipliers = new float[] { .9f, 1.3f, 1.7f };
 
     const int scoreMaxDifficulty = 100;
 
@@ -49,7 +51,6 @@ public class GameManager : MonoBehaviour {
         instance = this;
         //RuntimePlatform platform = Application.platform;
         FindPlayers();
-        if (!Coop) players[1].gameObject.SetActive(false);
     }
 
     void Start () {
@@ -58,6 +59,11 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	void Update () {
+        if (Menu) {
+            players[1].gameObject.SetActive(Coop);
+
+        }
+
         if (DEBUG) {
             if (Input.GetKeyDown(KeyCode.G)) GameOver();
             Time.timeScale = timeScale;
@@ -97,7 +103,7 @@ public class GameManager : MonoBehaviour {
         if(OnGameover!=null) OnGameover();
         state = State.Gameover;
 
-        ComicBubble.instance.Speak(SpeechType.GameOver);
+        ComicBubble.AllSpeak(SpeechType.GameOver);
         HighScores.instance.SubmitRandomUsername();
         Invoke("GameOverDelay", 3f);
     }
@@ -134,6 +140,9 @@ public class GameManager : MonoBehaviour {
 
     public bool Mobile { get { return platform == Platform.Mobile; } }
 
+    public float DifficultyMult() {
+        return difficultyMultipliers[(int)difficulty] * (Coop ? coopDifficultyMultiplier : 1);
+    }
 
     public static bool Playing { get { return instance.state == State.Playing; } }
     public static bool Menu    { get { return instance.state == State.Menu; } }

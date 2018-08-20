@@ -22,6 +22,8 @@ public class Player : MonoBehaviour {
     Vector3 inp;
     Vector3 inputRotated;
 
+    bool gamestarted;
+
     float animHelloTime;
 
 
@@ -31,6 +33,7 @@ public class Player : MonoBehaviour {
     AudioSource feetSound;
 
     Cart cart;
+    public ComicBubble Bubble { get; private set; }
 
     public Transform pickupCenter;
     //public VirtualJoystick joystick; // move in gamemanger?
@@ -47,13 +50,18 @@ public class Player : MonoBehaviour {
         animHelloTime = Time.time + Random.Range(2f, 4f);
 
         cart = GetComponentInChildren<Cart>();
+        Bubble = GetComponentInChildren<ComicBubble>();
     }
 	
 	void Update () {
         //GetInput();
-        inp = InputManager.instance.GetInput(id).To3();
+        inp = InputManager.instance.GetInput(id).To3().normalized;
 
         if (GameManager.Playing) {
+            if (!gamestarted) {
+                gamestarted = true;
+                AnimStart();
+            }
             Move();
             SetToGround();
         }

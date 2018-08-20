@@ -66,11 +66,11 @@ public class Button : MonoBehaviour {
                 }
             }
             else {
-                ComicBubble.instance.Speak(SpeechType.ButtonNotFull);
+                p.Bubble.Speak(SpeechType.ButtonNotFull);
             }
         }
         else {
-            ComicBubble.instance.Speak(SpeechType.FarAway);
+            p.Bubble.Speak(SpeechType.FarAway);
         }
     }
 

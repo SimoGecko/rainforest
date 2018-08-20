@@ -14,12 +14,10 @@ public class SpawnManager : MonoBehaviour {
     public float spawnRatioMultiplier = .5f; // this is a good ratio, balanced
     public float var = .6f;
     public AnimationCurve spawnRatioCurve; // how many per second
-    public float[] spawnDifficultyMultipliers = new float[] { .65f, 1f, 1.35f };
 
     [Header("Conveyor speed")]
     public float conveyorBaseSpeed = 1f;
     public AnimationCurve conveyorSpeedCurve; // multiplier increase
-    public float[] conveyorDifficultyMultipliers = new float[] { .65f, 1f, 1.35f };
 
     // private
 
@@ -64,7 +62,7 @@ public class SpawnManager : MonoBehaviour {
 
     // queries
     float WaitTime() {
-        float difficultyMultiplier = spawnDifficultyMultipliers[(int)GameManager.instance.difficulty];
+        float difficultyMultiplier = GameManager.instance.DifficultyMult();//spawnDifficultyMultipliers[(int)GameManager.instance.difficulty];
         float avg = spawnRatioCurve.Evaluate(GameManager.instance.ProgressPercent()) * spawnRatioMultiplier * difficultyMultiplier; // how many per second
         float val = Utility.NormalFromTo(1 - var, 1 + var) * avg; // how many per second with some variance
         float result = 1f / val; // how many seconds waittime
@@ -77,7 +75,7 @@ public class SpawnManager : MonoBehaviour {
     }
 
     public float GetConveyorSpeed() {
-        float difficultyMultiplier = conveyorDifficultyMultipliers[(int)GameManager.instance.difficulty];
+        float difficultyMultiplier = GameManager.instance.DifficultyMult();//conveyorDifficultyMultipliers[(int)GameManager.instance.difficulty];
         return  conveyorSpeedCurve.Evaluate(GameManager.instance.ProgressPercent()) * conveyorBaseSpeed * difficultyMultiplier; // how many per second
     }
 

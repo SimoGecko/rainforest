@@ -19722,8 +19722,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb6cd3a3ea8ecc41aca4e0f4dabeef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platform: 2
-  AutoStart: 1
+  platform: 0
+  AutoStart: 0
   DEBUG: 0
   Coop: 1
   timeScale: 1
@@ -19739,7 +19739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e59811f0fbbdd3c4ca2e339a3a7e6936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 0}
+  joystick: {fileID: 1372432961}
 --- !u!114 &1424576733
 MonoBehaviour:
   m_ObjectHideFlags: 0

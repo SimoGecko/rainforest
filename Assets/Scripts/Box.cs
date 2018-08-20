@@ -72,11 +72,11 @@ public class Box : MonoBehaviour {
                 cart.Pickup(this); // TODO refactor
             }
             else {
-                ComicBubble.instance.Speak(SpeechType.CartFull);
+                player.Bubble.Speak(SpeechType.CartFull);
             }
         }
         else {
-            ComicBubble.instance.Speak(SpeechType.FarAway);
+            player.Bubble.Speak(SpeechType.FarAway);
         }
     }
 
@@ -91,7 +91,7 @@ public class Box : MonoBehaviour {
         transform.position = cart.TransfFromPos(positions);
         transform.localRotation = Quaternion.identity;
 
-        ComicBubble.instance.Speak(SpeechType.BoxPickup);
+        cart.Owner.Bubble.Speak(SpeechType.BoxPickup);
         AudioManager.Play("box_drop"); // TODO audio pickup
         cart.Owner.AnimButton();
     }
@@ -106,7 +106,7 @@ public class Box : MonoBehaviour {
     }
 
     void Shatter() {
-        ComicBubble.instance.Speak(SpeechType.BoxLost);
+        ComicBubble.AllSpeak(SpeechType.BoxLost);
         AudioManager.Play("box_crash");
         GameManager.instance.LoseLife();
 
