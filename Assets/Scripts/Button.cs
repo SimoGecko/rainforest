@@ -28,16 +28,17 @@ public class Button : MonoBehaviour {
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
-        //GameManager.instance.OnPlay += PlayEntranceAnimation;
+        GameManager.instance.OnPlay += PlayEntranceAnimation;
 	}
 	
 	void Update () {
         if (GameManager.Playing) {
             CheckBlinking();
+            /*
             if (!GameManagerPlay) { // for some reason action doesn't work
                 GameManagerPlay = true;
                 PlayEntranceAnimation();
-            }
+            }*/
         }
 	}
 

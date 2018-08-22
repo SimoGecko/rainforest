@@ -29,8 +29,8 @@ public class GameManager : MonoBehaviour {
 
     const int scoreMaxDifficulty = 100;
 
-    public System.Action OnPlay;
-    public System.Action OnGameover;
+    public event System.Action OnPlay;
+    public event System.Action OnGameover;
 
     // private
     State state;

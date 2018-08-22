@@ -28,7 +28,8 @@ public class InputManager : MonoBehaviour {
     }
 
     void Start() {
-
+        //string[] jn = Input.GetJoystickNames();
+        //foreach (var j in jn) Debug.Log(j);
     }
 
     void Update() {

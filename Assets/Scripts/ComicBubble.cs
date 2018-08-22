@@ -41,7 +41,7 @@ public class ComicBubble : MonoBehaviour {
     // --------------------- BASE METHODS ------------------
     void Start () {
         if(!createdDic) ParseSpeechText();
-        GameManager.instance.OnPlay = SpeakBegin;
+        GameManager.instance.OnPlay += SpeakBegin;
     }
 	
 	void Update () {
