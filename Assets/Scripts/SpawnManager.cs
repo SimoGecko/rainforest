@@ -20,6 +20,7 @@ public class SpawnManager : MonoBehaviour {
     public AnimationCurve conveyorSpeedCurve; // multiplier increase
 
     // private
+    int[] numPreboxes = new int[] { 4, 6, 8 }; // how many preboxes per difficulty
 
 
     // references
@@ -55,8 +56,12 @@ public class SpawnManager : MonoBehaviour {
     }
 
     void SpawnPreboxes() {
-        for (int i = 0; i < preboxParent.childCount; i++) {
-            Instantiate(GetBoxPrefab(), preboxParent.GetChild(i).position, Quaternion.Euler(0, Random.value * 360, 0));
+        int[] permutation = Utility.RandomPermutation(preboxParent.childCount);
+        int difficultyToSpawn = numPreboxes[(int)GameManager.instance.difficulty];
+        int numToSpawn = Mathf.Min(preboxParent.childCount, difficultyToSpawn);
+
+        for (int i = 0; i < numToSpawn; i++) {
+            Instantiate(GetBoxPrefab(), preboxParent.GetChild(permutation[i]).position, Quaternion.Euler(0, Random.value * 360, 0));
         }
     }
 

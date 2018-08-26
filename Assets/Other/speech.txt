@@ -4,11 +4,18 @@
 	I should get closer!
 	maybe if I get closer...
 	my arms aren't long enough
+	how can I get closer?
+	mhh... let's go closer
+	you really think I can reach it?
 -CARTFULL
 	out of space!
 	my cart is full!
 	no space on the cart!
 	I run out of space on my cart!
+	no space for that box
+	that box doesn't fit right now
+	my cart doesn't have unlimited space!
+	hey, limited space on here!
 	run out of space!
 	that box doesn't fit here!
 -SHELFFULL
@@ -18,16 +25,26 @@
 	I must push that button!
 	push the button!
 	maybe that button should be pushed
+	shelf full!
 -BOXLOST
 	on no! I lost a box!
 	I broke one! :(
 	damn! I will get fired!
 	BOX-DOWN!
+	:(((
+	sad
+	poor customer
+	I hope nobody saw that
+	...let's pretend it didn't happen
+	what will I do?
 -GAMEOVER
 	what a failure...
 	I got fired!
 	next time I will be more careful
 	I didn't last long on this job
+	my wife is gonna kill me!
+	black sheep of the family...
+	I'll go into hiding now...
 -RANDOM
 	what a beautiful day!
 	I will get this done!
@@ -37,11 +54,16 @@
 	let's get this done!
 	let's go!
 	come on!
+	I'll be employee of the month!
+	urray!
+	go go go!
+	come on!
 -BUTTONNOTFULL
 	i should wait until it's full..
 	not the time yet!
 	let's fill it up first!
 	shelf not full yet!
+	button is not blinking yet...
 -BOXPICKUP
 	I got a box!
 	another one!
@@ -49,12 +71,17 @@
 	it fits nicely on my cart!
 	I picked up a box!
 	let's deliver this box!
+	yes!
+	ahahah great!
+	let's deliver this!
 -BOXDEPOSIT
 	yay!
 	more points for me!
 	I'm doing a good job!
 	well done!
 	deposit complete!
+	another satisfied customer!
+	that's great!
 -NOTRIGHTFIT
 	this box doesn't go here...
 	no box fits here
@@ -62,3 +89,5 @@
 	this isn't the right shelf
 	where could this box go?
 	let's look at the numbers
+	boxes are sorted by size
+	maybe read the tutorial first?

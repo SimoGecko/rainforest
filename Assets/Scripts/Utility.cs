@@ -54,6 +54,24 @@ public static class Utility {
         return a + n01 * (b - a);
     }
 
+    public static int[] RandomPermutation(int n) {
+        //returns {0..n-1} permutated randomly
+        int[] array = new int[n];
+        for (int i = 0; i < n; i++) {
+            array[i] = i;
+        }
+
+        while (n > 1) {
+            n--;
+            //int i = random.Next(n + 1);
+            int i = UnityEngine.Random.Range(0, n+1);
+            int temp = array[i];
+            array[i] = array[n];
+            array[n] = temp;
+        }
+        return array;
+    }
+
     public static Vector3 To3(this Vector2 v) {
         return new Vector3(v.x, 0, v.y);
     }

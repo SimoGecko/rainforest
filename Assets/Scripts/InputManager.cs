@@ -16,7 +16,7 @@ public class InputManager : MonoBehaviour {
 
 
     // references
-    public VirtualJoystick joystick; // move in gamemanger?
+    public VirtualJoystick joystick;
 
     public static InputManager instance;
 
@@ -47,7 +47,28 @@ public class InputManager : MonoBehaviour {
 
     // queries
     public Vector2 GetInput(int i=0) {
-        if (GameManager.instance.Coop) {
+        if (GameManager.instance.Mobile) {
+            return joystick.InputValue.To3();
+        } else {
+            if (!GameManager.instance.Coop) {
+                //single
+                return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            } else {
+                //coop
+                Vector2 k,j; //keyboard, joystick
+                if (i == 0) {
+                    k = new Vector2(Input.GetAxis("HorizontalAD"), Input.GetAxis("VerticalWS"));
+                    j = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
+                } else {
+                    k = new Vector2(Input.GetAxis("HorizontalLR"), Input.GetAxis("VerticalUD"));
+                    j = new Vector2(Input.GetAxis("Horizontal2"), Input.GetAxis("Vertical2"));
+                }
+                return k + j;
+            }
+        }
+        /*
+        if (!GameManager.instance.Coop) {
             //single
             switch (GameManager.instance.platform) {
                 case GameManager.Platform.Pc:
@@ -71,10 +92,22 @@ public class InputManager : MonoBehaviour {
             }
 
         }
-        return Vector2.zero;
+        return Vector2.zero;*/
     }
 
     public bool GetInteractInput(int i=0) {
+        if (!GameManager.instance.Coop) {
+            //single
+            return Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetButtonDown("Interact");
+        } else {
+            //coop
+            if(i==0)
+                return Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Interact");
+            else
+                return Input.GetKeyDown(KeyCode.Return) || Input.GetButtonDown("Interact2");
+        }
+
+        /*
         string playerid = (i == 0) ? "" : "2";
         if (!GameManager.instance.Coop) {
             //single
@@ -102,9 +135,8 @@ public class InputManager : MonoBehaviour {
                 default: return false;
             }
         }
-
-        
         return false;
+        */
     }
 
 
