@@ -16,7 +16,7 @@ public class InterfaceManager : MonoBehaviour {
 
 
     // private
-
+    bool inTutorial;
 
     // references
     [Header("TitleUI")]
@@ -42,6 +42,10 @@ public class InterfaceManager : MonoBehaviour {
     public Text leadScoreText;
     public Text leadTimeText;
     public Text submit;
+
+    [Header("TutorialUI")]
+    public GameObject tutorialUI;
+
 
     public static InterfaceManager instance;
 
@@ -85,6 +89,12 @@ public class InterfaceManager : MonoBehaviour {
         }
     }
 
+    public void ToggleTutorial() {
+        inTutorial = !inTutorial;
+        tutorialUI.SetActive(inTutorial);
+        blur.enabled = inTutorial;
+    }
+
     void UpdateLeaderboardUI() {
         leadUserText.text = HighScores.instance.UserString();
         leadScoreText.text = HighScores.instance.ScoreString();
@@ -118,7 +128,7 @@ public class InterfaceManager : MonoBehaviour {
     public int Score { get { return GameManager.instance.Score; } }
     public int Timer { get { return GameManager.instance.Timer; } }
 
-
+    public bool InTutorial { get { return inTutorial; } }
 
     // other
 

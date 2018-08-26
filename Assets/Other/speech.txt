@@ -14,7 +14,7 @@
 	I run out of space on my cart!
 	no space for that box
 	that box doesn't fit right now
-	my cart doesn't have unlimited space!
+	my cart has limited space!
 	hey, limited space on here!
 	run out of space!
 	that box doesn't fit here!

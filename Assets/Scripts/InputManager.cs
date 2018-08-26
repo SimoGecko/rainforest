@@ -50,22 +50,23 @@ public class InputManager : MonoBehaviour {
         if (GameManager.instance.Mobile) {
             return joystick.InputValue.To3();
         } else {
+            Vector2 k,j; //keyboard, joystick
             if (!GameManager.instance.Coop) {
                 //single
-                return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                k = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                j = new Vector2(Input.GetAxis("Horizontal1"), Input.GetAxis("Vertical1"));
             } else {
                 //coop
-                Vector2 k,j; //keyboard, joystick
                 if (i == 0) {
                     k = new Vector2(Input.GetAxis("HorizontalAD"), Input.GetAxis("VerticalWS"));
-                    j = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                    j = new Vector2(Input.GetAxis("Horizontal1"), Input.GetAxis("Vertical1"));
 
                 } else {
                     k = new Vector2(Input.GetAxis("HorizontalLR"), Input.GetAxis("VerticalUD"));
                     j = new Vector2(Input.GetAxis("Horizontal2"), Input.GetAxis("Vertical2"));
                 }
-                return k + j;
             }
+            return k + j;
         }
         /*
         if (!GameManager.instance.Coop) {

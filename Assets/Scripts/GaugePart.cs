@@ -34,7 +34,8 @@ public class GaugePart : MonoBehaviour {
     }
 
     private void OnMouseDown() {
-        gauge.GetClicked(difficulty);
+        if (!InterfaceManager.instance.InTutorial)
+            gauge.GetClicked(difficulty);
     }
 
 
