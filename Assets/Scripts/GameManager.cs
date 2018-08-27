@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour {
 
     // references
     public static GameManager instance;
+    public Material normalMat, highlightMat;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {

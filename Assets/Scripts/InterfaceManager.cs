@@ -89,8 +89,8 @@ public class InterfaceManager : MonoBehaviour {
         }
     }
 
-    public void ToggleTutorial() {
-        inTutorial = !inTutorial;
+    public void ToggleTutorial(bool b) {
+        inTutorial = b;
         tutorialUI.SetActive(inTutorial);
         blur.enabled = inTutorial;
     }

@@ -16,7 +16,7 @@ public class PlayerPickup : MonoBehaviour {
     // private
     List<Box> boxesInRange = new List<Box>();
     List<Button> buttonsInRange = new List<Button>();
-
+    GameObject highlighted;
 
     // references
     Player player;
@@ -29,8 +29,12 @@ public class PlayerPickup : MonoBehaviour {
 	
 	void Update () {
         if (!GameManager.Playing) return;
-        if(InputManager.instance.GetInteractInput(player.id))
-        Tap();
+
+        SetHighlightColor();
+
+        if (InputManager.instance.GetInteractInput(player.id))
+            Tap();
+
 	}
 
     private void OnTriggerEnter(Collider other) {
@@ -57,6 +61,12 @@ public class PlayerPickup : MonoBehaviour {
 
 
     // commands
+    void SetHighlightColor() {
+        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = GameManager.instance.normalMat;
+        highlighted = ClosestInteractable();
+        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = GameManager.instance.highlightMat;
+    }
+
     public void Tap() {//either space or button
         FilterBoxes();
 
@@ -79,6 +89,7 @@ public class PlayerPickup : MonoBehaviour {
         }
     }
 
+
     void FilterBoxes() {
         boxesInRange.RemoveAll(b => b == null);
         boxesInRange.RemoveAll(x => x.OnCart || x.Deposited);
@@ -94,6 +105,27 @@ public class PlayerPickup : MonoBehaviour {
     Box ClosestBox() {
         if (boxesInRange.Count > 0)
             return boxesInRange.Aggregate((x, y) => DistToMe(x.transform) < DistToMe(y.transform) ? x : y);
+        return null;
+    }
+
+    GameObject ClosestInteractable() {//either space or button
+        FilterBoxes();
+
+        Box closestBox = ClosestBox();
+        Button closestButton = ClosestButton();
+
+        //select closest not null to push
+        if (closestBox != null && closestButton == null) {
+            return closestBox.gameObject;
+        } else if (closestBox == null && closestButton != null) {
+            return closestButton.gameObject;
+        } else if (closestBox != null && closestButton != null) {
+            //must chose closest
+            if (DistToMe(closestBox.transform) < DistToMe(closestButton.transform))
+                return closestBox.gameObject;
+            else
+               return closestButton.gameObject;
+        }
         return null;
     }
 

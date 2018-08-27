@@ -13,7 +13,7 @@ public class Toggle : MonoBehaviour {
     public ToggleType type;
 
     // private
-
+    bool canToggle;
 
     // references
 
@@ -26,10 +26,9 @@ public class Toggle : MonoBehaviour {
     void Update() {
         if(type == ToggleType.Tutorial) {
             //escape tutorial with whatever
-            if (InTutorial) {
-
+            if (InTutorial && canToggle) {
                 if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(0)) {
-                    //ToggleTutorial();
+                    ToggleTutorialOff();
                 }
             }
         }
@@ -51,13 +50,23 @@ public class Toggle : MonoBehaviour {
 
     // commands
     void DoToggle() {
-        if (type == ToggleType.Tutorial) ToggleTutorial();
+        if (type == ToggleType.Tutorial) ToggleTutorialOn();
         if (type == ToggleType.Coop) ToggleCoop();
     }
 
-    void ToggleTutorial() {
-        InterfaceManager.instance.ToggleTutorial();
+    void ToggleTutorialOn() {
+        if (!InterfaceManager.instance.InTutorial) {
+            InterfaceManager.instance.ToggleTutorial(true);
+            canToggle = false;
+            Invoke("CanToggle", .1f);
+        }
     }
+    void ToggleTutorialOff() {
+        InterfaceManager.instance.ToggleTutorial(false);
+        canToggle = false;
+    }
+
+    void CanToggle() { canToggle = true; }
 
     void ToggleCoop() {
         if(!InterfaceManager.instance.InTutorial)

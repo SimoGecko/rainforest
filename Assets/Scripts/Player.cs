@@ -13,6 +13,7 @@ public class Player : MonoBehaviour {
 
     // public
     public float speed = 5;
+    public float sprintMultiplier = 1.3f;
     public float angularSpeed = 180;
     public float pickupDist = 8f;
     public int id;
@@ -21,9 +22,10 @@ public class Player : MonoBehaviour {
     // private
     Vector3 inp;
     Vector3 inputRotated;
+    bool rotateInput = true;
 
     bool gamestarted;
-
+    bool sprintInput;
     float animHelloTime;
 
 
@@ -31,12 +33,12 @@ public class Player : MonoBehaviour {
     CharacterController cc;
     Animator anim;
     AudioSource feetSound;
+    public Text controlText;
 
     Cart cart;
     public ComicBubble Bubble { get; private set; }
 
     public Transform pickupCenter;
-    //public VirtualJoystick joystick; // move in gamemanger?
 
     // --------------------- BASE METHODS ------------------
 
@@ -54,8 +56,12 @@ public class Player : MonoBehaviour {
     }
 	
 	void Update () {
+        if (Input.GetKeyDown(KeyCode.Tab))
+            ToggleControlType();
+
         //GetInput();
         inp = InputManager.instance.GetInput(id).To3().normalized;
+        sprintInput = InputManager.instance.GetSprintInput(id);
 
         if (GameManager.Playing) {
             if (!gamestarted) {
@@ -93,10 +99,20 @@ public class Player : MonoBehaviour {
         inp.Normalize(); // sure?
     }*/
 
+    void ToggleControlType() {
+        rotateInput = !rotateInput;
+        string textString = "control: " + (rotateInput ? "camera" : "player") + "-relative\nTAB to change";
+        if(controlText!=null)
+            controlText.text = textString;
+    }
+
 
     void Move() {
         // Overcooked style
-        inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp;
+        if (rotateInput)
+            inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp;
+        else
+            inputRotated = inp;
 
         float signedAngle = Vector3.SignedAngle(transform.forward, inputRotated, Vector3.up);
         float rotAmount = angularSpeed * Time.deltaTime;
@@ -107,7 +123,8 @@ public class Player : MonoBehaviour {
         //project movement onto direction
         if (angle <= 90) {
             float dot = Vector3.Dot(transform.forward, inputRotated); // projection for smooth results
-            cc.Move(transform.forward * speed * inputRotated.magnitude * dot * Time.deltaTime);
+            float runspeed = speed * (sprintInput ? sprintMultiplier : 1);
+            cc.Move(transform.forward * runspeed * inputRotated.magnitude * dot * Time.deltaTime);
         }
     }
 

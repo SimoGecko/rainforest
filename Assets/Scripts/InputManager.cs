@@ -140,6 +140,19 @@ public class InputManager : MonoBehaviour {
         */
     }
 
+    public bool GetSprintInput(int i = 0) {
+        if (!GameManager.instance.Coop) {
+            //single
+            return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || (Input.GetAxis("Sprint1L")!=0) || (Input.GetAxis("Sprint1R") != 0);
+        } else {
+            //coop
+            if (i == 0)
+                return Input.GetKey(KeyCode.LeftShift) || (Input.GetAxis("Sprint1L") != 0) || (Input.GetAxis("Sprint1R") != 0);
+            else
+                return Input.GetKey(KeyCode.RightShift) || (Input.GetAxis("Sprint2L") != 0) || (Input.GetAxis("Sprint2R") != 0);
+        }
+    }
+
 
 
     // other

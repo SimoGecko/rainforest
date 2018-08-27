@@ -5441,6 +5441,21 @@ Prefab:
       propertyPath: id
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 143628070627788512, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: m_Center.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 143628070627788512, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: m_Radius
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114039884438325150, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: sprintMultiplier
+      value: 1.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c643ead60a41f549a502da9ecf792e5, type: 2}
   m_IsPrefabAsset: 0
@@ -12557,7 +12572,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &829151859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12590,7 +12605,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'control: player-relative
+  m_Text: 'control: camera-relative
 
     TAB to change'
 --- !u!114 &829151860
@@ -20079,6 +20094,8 @@ MonoBehaviour:
   - 1.3
   - 1.7
   difficulty: 1
+  normalMat: {fileID: 2100000, guid: e00d42b490b55724b8deaa191e2782e5, type: 2}
+  highlightMat: {fileID: 2100000, guid: eb062967734d48b4bb140784fc57e9b1, type: 2}
 --- !u!114 &1424576732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33673,6 +33690,31 @@ Prefab:
       propertyPath: joystick
       value: 
       objectReference: {fileID: 1372432961}
+    - target: {fileID: 23937449905901320, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e00d42b490b55724b8deaa191e2782e5, type: 2}
+    - target: {fileID: 114039884438325150, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: controlText
+      value: 
+      objectReference: {fileID: 829151859}
+    - target: {fileID: 143628070627788512, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: m_Radius
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 143628070627788512, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: m_Center.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114039884438325150, guid: 7c643ead60a41f549a502da9ecf792e5,
+        type: 2}
+      propertyPath: sprintMultiplier
+      value: 1.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c643ead60a41f549a502da9ecf792e5, type: 2}
   m_IsPrefabAsset: 0
