@@ -10,6 +10,8 @@ public class SpawnManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
+    public bool spawnFromBeginning = false;
+
     [Header("Box Spawn Ratio")]
     public float spawnRatioMultiplier = .5f; // this is a good ratio, balanced
     public float var = .6f;
@@ -90,7 +92,7 @@ public class SpawnManager : MonoBehaviour {
     // other
     IEnumerator SpawnRoutine() {
         while (true) {
-            if (!GameManager.Playing) {
+            if (!GameManager.Playing && !spawnFromBeginning) {
                 yield return new WaitForSeconds(1);
             }
             else {
