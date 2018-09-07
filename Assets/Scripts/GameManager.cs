@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour {
 	void Update () {
         if (Menu) {
             players[1].gameObject.SetActive(Coop);
-
         }
 
         if (DEBUG) {
