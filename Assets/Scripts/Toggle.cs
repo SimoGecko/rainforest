@@ -34,8 +34,8 @@ public class Toggle : MonoBehaviour {
         }
 
 
-        if (GameManager.instance.Console && Input.GetKeyDown("joystick button 0"))
-            ToggleCoop();
+        if (GameManager.instance.Console && Input.GetKeyDown("joystick button 0") && type==ToggleType.Coop)
+            DoToggle();
         
     }
 

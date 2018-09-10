@@ -23,6 +23,7 @@ public class Player : MonoBehaviour {
     Vector3 inp;
     Vector3 inputRotated;
     bool rotateInput = true;
+    int score;
 
     bool gamestarted;
     bool sprintInput;
@@ -154,6 +155,11 @@ public class Player : MonoBehaviour {
     void DealWithSound() {
         feetSound.volume = inp.magnitude / 20;
         feetSound.pitch = Mathf.Lerp(feetSound.pitch, Random.Range(.8f, 1.2f), Time.deltaTime / 2);
+    }
+
+    public void AddScore(int s) {
+        score += s;
+        InterfaceManager.instance.UpdatePlayerScoreUI(id, score);
     }
 
 

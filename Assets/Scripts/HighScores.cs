@@ -59,6 +59,7 @@ public class HighScores : MonoBehaviour {
                 //RemoveHighscore(username);
 
             username = inputUsername.text;
+            if(string.IsNullOrEmpty(username)) username = "user_" + Random.Range(0, 2048); // ATTENTION: if username is empty, then other entries are shifted by one
             PlayerPrefs.SetString("user", username);
 
             UploadHighscore(username, GameManager.instance.Score, GameManager.instance.Timer);

@@ -17,7 +17,6 @@ public class InputManager : MonoBehaviour {
 
     // references
     public VirtualJoystick joystick;
-
     public static InputManager instance;
 
 
@@ -28,12 +27,11 @@ public class InputManager : MonoBehaviour {
     }
 
     void Start() {
-        //string[] jn = Input.GetJoystickNames();
-        //foreach (var j in jn) Debug.Log(j);
+
     }
 
     void Update() {
-        //if (Input.GetButtonDown("Interact")) Debug.Log("INteract");
+
     }
 
 
@@ -46,111 +44,57 @@ public class InputManager : MonoBehaviour {
 
 
     // queries
-    public Vector2 GetInput(int i=0) {
+    public Vector2 GetInput(int i = 0) {
         if (GameManager.instance.Mobile) {
             return joystick.InputValue.To3();
         } else {
-            Vector2 k,j; //keyboard, joystick
-            if (!GameManager.instance.Coop) {
+
+            Vector2 k = Vector2.zero; // keyboard
+            Vector2 j = Vector2.zero; // joystick
+            if (GameManager.instance.Single) {
                 //single
-                k = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                k = new Vector2(Input.GetAxis("Horizontal"),  Input.GetAxis("Vertical"));
                 j = new Vector2(Input.GetAxis("Horizontal1"), Input.GetAxis("Vertical1"));
             } else {
-                //coop
-                if (i == 0) {
-                    k = new Vector2(Input.GetAxis("HorizontalAD"), Input.GetAxis("VerticalWS"));
-                    j = new Vector2(Input.GetAxis("Horizontal1"), Input.GetAxis("Vertical1"));
-
-                } else {
-                    k = new Vector2(Input.GetAxis("HorizontalLR"), Input.GetAxis("VerticalUD"));
-                    j = new Vector2(Input.GetAxis("Horizontal2"), Input.GetAxis("Vertical2"));
-                }
+                //multiple
+                j = new Vector2(Input.GetAxis("Horizontal" + (i + 1)), Input.GetAxis("Vertical" + (i + 1)));
+                if (i == 0) k = new Vector2(Input.GetAxis("HorizontalAD"), Input.GetAxis("VerticalWS"));
+                if (i == 1) k = new Vector2(Input.GetAxis("HorizontalLR"), Input.GetAxis("VerticalUD"));
             }
             return k + j;
         }
-        /*
-        if (!GameManager.instance.Coop) {
-            //single
-            switch (GameManager.instance.platform) {
-                case GameManager.Platform.Pc:
-                    return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-                case GameManager.Platform.Mobile:
-                    return joystick.InputValue.To3();
-                case GameManager.Platform.Console:
-                    return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            }
-        } else {
-            //coop
-            string playerid = (i == 0) ? "" : "2";
-            switch (GameManager.instance.platform) {
-                case GameManager.Platform.Pc:
-                    if(i==0)
-                        return new Vector2(Input.GetAxis("HorizontalAD"), Input.GetAxis("VerticalWS"));
-                    else
-                        return new Vector2(Input.GetAxis("HorizontalLR"), Input.GetAxis("VerticalUD"));
-                case GameManager.Platform.Console:
-                    return new Vector2(Input.GetAxis("Horizontal"+playerid), Input.GetAxis("Vertical"+playerid));
-            }
-
-        }
-        return Vector2.zero;*/
     }
 
-    public bool GetInteractInput(int i=0) {
-        if (!GameManager.instance.Coop) {
+    public bool GetInteractInput(int i = 0) {
+        bool k = false;
+        bool j = false;
+        if (GameManager.instance.Single) {
             //single
-            return Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetButtonDown("Interact");
+            k = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return);
+            j =Input.GetButtonDown("Interact1");
         } else {
-            //coop
-            if(i==0)
-                return Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Interact");
-            else
-                return Input.GetKeyDown(KeyCode.Return) || Input.GetButtonDown("Interact2");
+            //multiple
+            if (i == 0) k = Input.GetKeyDown(KeyCode.Space);
+            if (i == 1) k = Input.GetKeyDown(KeyCode.Return);
+            j = Input.GetButtonDown("Interact" + (i + 1));
         }
-
-        /*
-        string playerid = (i == 0) ? "" : "2";
-        if (!GameManager.instance.Coop) {
-            //single
-            switch (GameManager.instance.platform) {
-                case GameManager.Platform.Pc:
-                    return Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return);
-                case GameManager.Platform.Mobile:
-                    break;
-                case GameManager.Platform.Console:
-                    return Input.GetButtonDown("Interact");
-                default: return false;
-            }
-        } else {
-            //coop
-            switch (GameManager.instance.platform) {
-                case GameManager.Platform.Pc:
-                    if (i == 0)
-                        return Input.GetKeyDown(KeyCode.Space);
-                    else
-                        return Input.GetKeyDown(KeyCode.Return);
-                case GameManager.Platform.Mobile:
-                    break;
-                case GameManager.Platform.Console:
-                    return Input.GetButtonDown("Interact"+playerid);
-                default: return false;
-            }
-        }
-        return false;
-        */
+        return k || j;
     }
 
     public bool GetSprintInput(int i = 0) {
-        if (!GameManager.instance.Coop) {
+        bool k = false;
+        bool j = false;
+        if (GameManager.instance.Single) {
             //single
-            return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) || (Input.GetAxis("Sprint1L")!=0) || (Input.GetAxis("Sprint1R") != 0);
+            k = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            j = (Input.GetAxis("Sprint1L") != 0) || (Input.GetAxis("Sprint1R") != 0);
         } else {
-            //coop
-            if (i == 0)
-                return Input.GetKey(KeyCode.LeftShift) || (Input.GetAxis("Sprint1L") != 0) || (Input.GetAxis("Sprint1R") != 0);
-            else
-                return Input.GetKey(KeyCode.RightShift) || (Input.GetAxis("Sprint2L") != 0) || (Input.GetAxis("Sprint2R") != 0);
+            //multiple
+            if (i == 0) k = Input.GetKey(KeyCode.LeftShift);
+            if (i == 1) k = Input.GetKey(KeyCode.RightShift);
+            j = (Input.GetAxis("Sprint" + (i + 1) + "L") != 0) || (Input.GetAxis("Sprint" + (i + 1) + "R") != 0);
         }
+        return k || j;
     }
 
 

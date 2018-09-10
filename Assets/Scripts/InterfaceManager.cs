@@ -1,5 +1,6 @@
 ﻿// (c) Simone Guggiari 2018
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,9 @@ public class InterfaceManager : MonoBehaviour {
     public GameObject gameUI;
     public GameObject mobileUI;
     public Text scoreText;
+    public GameObject[] playerScore;
+    public Text[] playerScoreText;
+
     //public Text timerText;
     public GameObject[] lifeUI;
     public GameObject[] lifeUIgrey;
@@ -34,6 +38,8 @@ public class InterfaceManager : MonoBehaviour {
     [Header("OverUI")]
     public GameObject gameoverUI;
     public Text scoreOverText;
+    public GameObject[] playerScoreOver;
+    public Text[] playerScoreOverText;
     public Text timerOverText;
     BlurOptimized blur;
 
@@ -79,6 +85,10 @@ public class InterfaceManager : MonoBehaviour {
     public void UpdateScoreUI() {
         scoreText.text = Score.ToString();
         //timerText.text = "timer: " + Utility.ToReadableTime(Timer);
+    }
+
+    public void UpdatePlayerScoreUI(int id, int score) {
+        playerScoreText[id].text = score.ToString();
     }
 
     public void UpdateLifeUI(int lifes) {
@@ -129,6 +139,8 @@ public class InterfaceManager : MonoBehaviour {
     public int Timer { get { return GameManager.instance.Timer; } }
 
     public bool InTutorial { get { return inTutorial; } }
+
+    
 
     // other
 

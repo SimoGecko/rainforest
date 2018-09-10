@@ -10,7 +10,7 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
-    public enum State { Menu, Playing, Gameover }
+    public enum State { Menu, Playing, Pause, Gameover }
     public enum Platform { Pc, Mobile, Console}
     public enum Difficulty { Easy, Medium, Hard }
 
@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour {
     public bool AutoStart = false;
     public bool DEBUG = false;
     public bool Coop = false;
+    public int numPlayers = 1;
 
     public float timeScale = 1f;
     public float coopDifficultyMultiplier = 1.5f;
@@ -61,12 +62,14 @@ public class GameManager : MonoBehaviour {
 	
 	void Update () {
         if (Menu) {
-            players[1].gameObject.SetActive(Coop);
+            UpdateActivePlayers();
         }
+
 
         if (DEBUG) {
             if (Input.GetKeyDown(KeyCode.G)) GameOver();
             Time.timeScale = timeScale;
+            if (Input.GetKeyDown(KeyCode.U)) ScreenCapture.CaptureScreenshot("screenshot.png");
         }
 
         if (Playing) {
@@ -85,7 +88,12 @@ public class GameManager : MonoBehaviour {
         players = p.OrderBy(c => c.id).ToArray();
     }
 
-    void StartDebug() { StartRound(0); }
+    void UpdateActivePlayers() {
+        //players[1].gameObject.SetActive(Coop);
+        for (int i = 0; i < 4; i++) {
+            players[i].gameObject.SetActive(numPlayers > i);
+        }
+    }
 
     public void StartRound(int diff) { // called from gauge
         if(OnPlay!=null) OnPlay();
@@ -139,16 +147,19 @@ public class GameManager : MonoBehaviour {
     }
 
     public bool Mobile { get { return platform == Platform.Mobile; } }
-    public bool Console { get { return platform == Platform.Console; } }
+    public bool Console { get { return platform == Platform.Console || platform==Platform.Pc; } }
     public bool Pc { get { return platform == Platform.Pc; } }
 
     public float DifficultyMult() {
         return difficultyMultipliers[(int)difficulty] * (Coop ? coopDifficultyMultiplier : 1);
     }
 
+    public bool Single { get { return numPlayers == 1; } }
+
     public static bool Playing { get { return instance.state == State.Playing; } }
     public static bool Menu    { get { return instance.state == State.Menu; } }
     public static bool Gameover{ get { return instance.state == State.Gameover; } }
+    public static bool Pause   { get { return instance.state == State.Pause; } }
 
     public int Score { get { return score; } }
     public int Timer { get { return Mathf.RoundToInt(timer); } }

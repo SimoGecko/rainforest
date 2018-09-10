@@ -24,6 +24,7 @@ public class Box : MonoBehaviour {
 
     // references
     Rigidbody rb;
+    Cart carryingCart;
     public GameObject shatterEffect;
 	
 	
@@ -83,7 +84,7 @@ public class Box : MonoBehaviour {
     public void PickupBox(Cart cart) { // TODO add which cart is pickedup to
         pickedup = true;
         StopRB();
-
+        carryingCart = cart;
         //Cart cart = Cart.instance;
 
         positions = cart.FreePosition(packSize);
@@ -102,6 +103,8 @@ public class Box : MonoBehaviour {
         StopRB();
         //add score
         GameManager.instance.AddScore(packSize);
+        //add to individual player
+        carryingCart.Owner.AddScore(packSize);
         dep.PositionBox(this);
     }
 

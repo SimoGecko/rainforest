@@ -28,7 +28,7 @@ public class Cart : MonoBehaviour {
     // --------------------- BASE METHODS ------------------
 
     void Start () {
-        Owner = transform.root.GetComponent<Player>();
+        Owner = transform.parent.GetComponent<Player>();
         SetupPositions();
         carrying = new List<Box>();
         free = Enumerable.Repeat(true, numPos).ToArray(); // 6 times free
