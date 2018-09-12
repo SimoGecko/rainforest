@@ -69,8 +69,9 @@ public class Toggle : MonoBehaviour {
     void CanToggle() { canToggle = true; }
 
     void ToggleCoop() {
-        if(!InterfaceManager.instance.InTutorial)
-            GameManager.instance.Coop = !GameManager.instance.Coop;
+        if (!InterfaceManager.instance.InTutorial)
+            //GameManager.instance.Coop = !GameManager.instance.Coop;
+            GameManager.instance.ToggleNumPlayers();
     }
 
 

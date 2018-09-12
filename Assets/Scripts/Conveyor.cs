@@ -59,7 +59,7 @@ public class Conveyor : MonoBehaviour {
 
     // queries
     public static float GetSpeed() {
-        return SpawnManager.instance.GetConveyorSpeed();
+        return GameManager.Playing? SpawnManager.instance.GetConveyorSpeed() : 0;
     }
     
 

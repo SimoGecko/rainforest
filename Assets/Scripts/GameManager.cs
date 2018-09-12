@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System;
 
 ////////// DESCRIPTION //////////
 
@@ -13,19 +14,20 @@ public class GameManager : MonoBehaviour {
     public enum State { Menu, Playing, Pause, Gameover }
     public enum Platform { Pc, Mobile, Console}
     public enum Difficulty { Easy, Medium, Hard }
-
+    public enum Mode { Coop, Compet }
 
 
     // public
     public Platform platform = Platform.Pc;
+    public Mode mode;
 
     public bool AutoStart = false;
     public bool DEBUG = false;
-    public bool Coop = false;
+    [Range(1, 4)]
     public int numPlayers = 1;
 
     public float timeScale = 1f;
-    public float coopDifficultyMultiplier = 1.5f;
+    public float eachPlayerDifficultyMultiplier = 1.5f; // 1, 1.5, 2.25, 3.375
     public float[] difficultyMultipliers = new float[] { .9f, 1.3f, 1.7f };
 
     const int scoreMaxDifficulty = 100;
@@ -72,10 +74,18 @@ public class GameManager : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.U)) ScreenCapture.CaptureScreenshot("screenshot.png");
         }
 
+        if (Input.GetKeyDown("joystick button 7")) TogglePause();
+
         if (Playing) {
             timer += Time.deltaTime;
         }
 	}
+
+    public void ToggleNumPlayers() {
+        numPlayers++;
+        if (numPlayers == 5) numPlayers = 1;
+        InterfaceManager.instance.UpdatePlayerNumberUI(numPlayers);
+    }
 
 
 
@@ -93,6 +103,11 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < 4; i++) {
             players[i].gameObject.SetActive(numPlayers > i);
         }
+    }
+
+    void TogglePause() {
+        if (state == State.Playing) state = State.Pause;
+        else if (state == State.Pause) state = State.Playing;
     }
 
     public void StartRound(int diff) { // called from gauge
@@ -151,7 +166,8 @@ public class GameManager : MonoBehaviour {
     public bool Pc { get { return platform == Platform.Pc; } }
 
     public float DifficultyMult() {
-        return difficultyMultipliers[(int)difficulty] * (Coop ? coopDifficultyMultiplier : 1);
+        float multiplePlayersMultiplier = Mathf.Pow(eachPlayerDifficultyMultiplier, numPlayers - 1);
+        return difficultyMultipliers[(int)difficulty] * multiplePlayersMultiplier;//(Coop ? coopDifficultyMultiplier : 1);
     }
 
     public bool Single { get { return numPlayers == 1; } }

@@ -86,7 +86,7 @@ public class ComicBubble : MonoBehaviour {
     }
 
     public void Speak(SpeechType speechType) {
-        if (!speaking && Random.value<probOfSpeech[(int)speechType]) { // no override allowed
+        if (!speaking && Random.value<=probOfSpeech[(int)speechType]/GameManager.instance.numPlayers) { // no override allowed
             speaking = true;
             bubbleText.text = GetSpeech(speechType);
             bubble.SetActive(true);

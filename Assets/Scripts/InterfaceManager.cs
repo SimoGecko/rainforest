@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.ImageEffects;
@@ -23,10 +24,12 @@ public class InterfaceManager : MonoBehaviour {
     [Header("TitleUI")]
     public GameObject title;
     public GameObject subtitle;
+    public TextMeshPro playersText;
 
     [Header("GameUI")]
     public GameObject gameUI;
     public GameObject mobileUI;
+    public GameObject score;
     public Text scoreText;
     public GameObject[] playerScore;
     public Text[] playerScoreText;
@@ -37,6 +40,7 @@ public class InterfaceManager : MonoBehaviour {
 
     [Header("OverUI")]
     public GameObject gameoverUI;
+    public GameObject scoreOver;
     public Text scoreOverText;
     public GameObject[] playerScoreOver;
     public Text[] playerScoreOverText;
@@ -65,6 +69,7 @@ public class InterfaceManager : MonoBehaviour {
         AnimateTitle();
         HighScores.instance.OnDownloadedScores += UpdateLeaderboardUI;
         blur = FindObjectOfType<BlurOptimized>();
+        GameManager.instance.OnPlay += SetupNumPlayersUI;
     }
 	
 	void Update () {
@@ -77,6 +82,21 @@ public class InterfaceManager : MonoBehaviour {
 	
 	
 	// commands
+    void SetupNumPlayersUI() {
+        if(GameManager.instance.mode == GameManager.Mode.Compet) {
+            score.SetActive(false);
+            scoreOver.SetActive(false);
+            for (int i = 0; i < GameManager.instance.numPlayers; i++) {
+                playerScore[i].SetActive(true);
+                playerScoreOver[i].SetActive(true);
+            }
+        }
+    }
+
+    public void UpdatePlayerNumberUI(int nump) {
+        playersText.text = "players: " + nump;
+    }
+
     void AnimateTitle() {
         iTween.MoveFrom(title,    iTween.Hash("position", title.transform.position + title.transform.right * 35, "time", animTime, "easeType", iTween.EaseType.easeInOutSine));
         iTween.FadeFrom(subtitle, iTween.Hash("alpha", 0f, "time", animTime, "delay", 2f));
