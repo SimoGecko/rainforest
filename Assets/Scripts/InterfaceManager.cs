@@ -38,6 +38,9 @@ public class InterfaceManager : MonoBehaviour {
     public GameObject[] lifeUI;
     public GameObject[] lifeUIgrey;
 
+    [Header("PauseUI")]
+    public GameObject pauseUI;
+
     [Header("OverUI")]
     public GameObject gameoverUI;
     public GameObject scoreOver;
@@ -109,6 +112,7 @@ public class InterfaceManager : MonoBehaviour {
 
     public void UpdatePlayerScoreUI(int id, int score) {
         playerScoreText[id].text = score.ToString();
+        playerScoreOverText[id].text = score.ToString();
     }
 
     public void UpdateLifeUI(int lifes) {
@@ -117,6 +121,11 @@ public class InterfaceManager : MonoBehaviour {
             lifeUI[i].SetActive(!hasIthLife);
             lifeUIgrey[i].SetActive(hasIthLife);
         }
+    }
+
+    public void SetPauseUI(bool b) {
+        blur.enabled = b;
+        pauseUI.SetActive(b);
     }
 
     public void ToggleTutorial(bool b) {

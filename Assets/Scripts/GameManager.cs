@@ -74,7 +74,10 @@ public class GameManager : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.U)) ScreenCapture.CaptureScreenshot("screenshot.png");
         }
 
-        if (Input.GetKeyDown("joystick button 7")) TogglePause();
+        CheckPause();
+
+        
+
 
         if (Playing) {
             timer += Time.deltaTime;
@@ -104,10 +107,32 @@ public class GameManager : MonoBehaviour {
             players[i].gameObject.SetActive(numPlayers > i);
         }
     }
-
+    /*
     void TogglePause() {
-        if (state == State.Playing) state = State.Pause;
-        else if (state == State.Pause) state = State.Playing;
+        if (state == State.Playing) SetPause(true);
+        else if (state == State.Pause) SetPause(false);
+    }*/
+
+    void CheckPause() {
+        if (Playing) {
+            if (Input.GetKeyDown("joystick button 7") || Input.GetKeyDown(KeyCode.Escape))
+                SetPause(true);
+        }
+        else if (Pause) {
+            //resume
+            if (Input.GetKeyDown("joystick button 7") || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 0")) {
+                SetPause(false);
+            }
+            //restart
+            if (Input.GetKeyDown("joystick button 6") || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick button 1")) {
+                Restart();
+            }
+        }
+    }
+
+    void SetPause(bool b) {
+        state = b ? State.Pause : State.Playing;
+        InterfaceManager.instance.SetPauseUI(b);
     }
 
     public void StartRound(int diff) { // called from gauge

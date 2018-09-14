@@ -20,22 +20,26 @@ public class Toggle : MonoBehaviour {
 
     // --------------------- BASE METHODS ------------------
     void Start() {
-
+        canToggle = true;
     }
 
     void Update() {
         if(type == ToggleType.Tutorial) {
             //escape tutorial with whatever
             if (InTutorial && canToggle) {
-                if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(0)) {
+                if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(0) ||
+                    Input.GetKeyDown("joystick button 0") || Input.GetKeyDown("joystick button 1") || Input.GetKeyDown("joystick button 7")) {
                     ToggleTutorialOff();
                 }
             }
         }
 
 
-        if (GameManager.instance.Console && Input.GetKeyDown("joystick button 0") && type==ToggleType.Coop)
-            DoToggle();
+        if (GameManager.instance.Console) {
+            if (type == ToggleType.Coop && Input.GetKeyDown("joystick button 1")) ToggleCoop();
+            if (type == ToggleType.Tutorial && Input.GetKeyDown("joystick button 0") && canToggle && !InTutorial) ToggleTutorialOn();
+            //DoToggle();
+        }
         
     }
 
@@ -55,15 +59,14 @@ public class Toggle : MonoBehaviour {
     }
 
     void ToggleTutorialOn() {
-        if (!InterfaceManager.instance.InTutorial) {
-            InterfaceManager.instance.ToggleTutorial(true);
-            canToggle = false;
-            Invoke("CanToggle", .1f);
-        }
+        InterfaceManager.instance.ToggleTutorial(true);
+        canToggle = false;
+        Invoke("CanToggle", .1f);
     }
     void ToggleTutorialOff() {
         InterfaceManager.instance.ToggleTutorial(false);
         canToggle = false;
+        Invoke("CanToggle", .1f);
     }
 
     void CanToggle() { canToggle = true; }

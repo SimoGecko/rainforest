@@ -15,6 +15,7 @@ public class Gauge : MonoBehaviour {
     // private
     bool alreadyClicked;
     float needleAngle, needleGoalAngle;
+    int currentD;
 
     // references
     public GameObject needle;
@@ -28,12 +29,14 @@ public class Gauge : MonoBehaviour {
     void Update () {
         ShakeNeedle();
 
+        
         if(GameManager.instance.Console) {
-            if (Input.GetKeyDown("joystick button 2")) GetClicked(0);
-            if (Input.GetKeyDown("joystick button 3")) GetClicked(1);
-            if (Input.GetKeyDown("joystick button 1")) GetClicked(2);
+            if (Input.GetKeyDown("joystick button 3") && !InterfaceManager.instance.InTutorial) GetClicked();
+            //if (Input.GetKeyDown("joystick button 3")) GetClicked(1);
+            //if (Input.GetKeyDown("joystick button 1")) GetClicked(2);
 
         }
+        CheckInputController();
     }
 
 
@@ -41,8 +44,23 @@ public class Gauge : MonoBehaviour {
 
 
     // commands
-    public void GetClicked(int d) {
+    void CheckInputController() {
+        Vector2 inp = new Vector2(Input.GetAxisRaw("Horizontal0"), Input.GetAxisRaw("Vertical0"));
+        if (inp.magnitude > .2f) {
+            inp.Normalize();
+            float angle = Mathf.Atan2(inp.y, inp.x)*Mathf.Rad2Deg;
+
+            if (135 < angle && angle < 225) SetNeedle(0);
+            if (45  < angle && angle < 135) SetNeedle(1);
+            if (-45 < angle && angle <  45) SetNeedle(2);
+        }
+
+    }
+
+
+    public void GetClicked(int d=-1) {
         if (alreadyClicked) return;
+        if (d == -1) d = currentD;
 
         alreadyClicked = true;
         GameManager.instance.StartRound(d);
@@ -52,6 +70,7 @@ public class Gauge : MonoBehaviour {
     }
 
     public void SetNeedle(int d) {
+        currentD = d;
         needleGoalAngle = 70 * (d - 1);
     }
 
