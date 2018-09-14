@@ -27,10 +27,10 @@ public class Gauge : MonoBehaviour {
     }
 
     void Update () {
+        if (!GameManager.Menu) return;
         ShakeNeedle();
 
-        
-        if(GameManager.instance.Console) {
+        if (GameManager.instance.Console) {
             if (Input.GetKeyDown("joystick button 3") && !InterfaceManager.instance.InTutorial) GetClicked();
             //if (Input.GetKeyDown("joystick button 3")) GetClicked(1);
             //if (Input.GetKeyDown("joystick button 1")) GetClicked(2);

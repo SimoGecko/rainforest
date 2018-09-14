@@ -76,12 +76,12 @@ public class GameManager : MonoBehaviour {
 
         CheckPause();
 
-        
-
 
         if (Playing) {
             timer += Time.deltaTime;
         }
+
+        CheckRestart();
 	}
 
     public void ToggleNumPlayers() {
@@ -128,6 +128,10 @@ public class GameManager : MonoBehaviour {
                 Restart();
             }
         }
+    }
+
+    void CheckRestart() {
+        if (Gameover && Input.GetKeyDown("joystick button 7")) Restart();
     }
 
     void SetPause(bool b) {

@@ -24,6 +24,7 @@ public class Toggle : MonoBehaviour {
     }
 
     void Update() {
+        if (!GameManager.Menu) return;
         if(type == ToggleType.Tutorial) {
             //escape tutorial with whatever
             if (InTutorial && canToggle) {

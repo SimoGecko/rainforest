@@ -11,6 +11,7 @@ public class HighScores : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
+    public bool useHighscores = true;
     public int numLeadToDisplay = 20;
 
     const string privateCode = "TYeLGz9gOUy4ejx_Dy7ACA_FHLzK6VyUyMbCRH2ShcZg";
@@ -74,15 +75,18 @@ public class HighScores : MonoBehaviour {
 
     //---------------------------
     void UploadHighscore(string username, int score, int time) {
-        StartCoroutine(UploadNewHighscore(username, score, time));
+        if(useHighscores)
+            StartCoroutine(UploadNewHighscore(username, score, time));
     }
 
     void RemoveHighscore(string username) {
-        StartCoroutine(RemoveSingleHighscore(username));
+        if(useHighscores)
+            StartCoroutine(RemoveSingleHighscore(username));
     }
 
     void DownloadHighscores() {
-        StartCoroutine(DownloadHighscoresFromDatabase());
+        if(useHighscores)
+            StartCoroutine(DownloadHighscoresFromDatabase());
     }
 
     //---------------------------
