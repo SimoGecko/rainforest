@@ -130,6 +130,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public void Resume() {
+        SetPause(false);
+    }
+
     void CheckRestart() {
         if (Gameover && Input.GetKeyDown("joystick button 7")) Restart();
     }

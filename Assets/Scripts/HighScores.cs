@@ -108,6 +108,7 @@ public class HighScores : MonoBehaviour {
 
     // queries
     bool HasRandomUsername() {
+        if (username.Length < 6) return false;
         return username.Substring(0, 5).Equals("user_");
     }
 
