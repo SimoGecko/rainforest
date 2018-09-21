@@ -3,26 +3,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class SpawnManager : MonoBehaviour {
+public class SpawnManager : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public bool spawnFromBeginning = false;
+    public bool spawnFromBeginning = false; // if true ignores game state
 
     [Header("Box Spawn Ratio")]
-    public float spawnRatioMultiplier = .5f; // this is a good ratio, balanced
-    public float var = .6f;
+    public float spawnRatioBase = .5f; // this is a good ratio, balanced
+    const float var = .6f;
     public AnimationCurve spawnRatioCurve; // how many per second
 
     [Header("Conveyor speed")]
-    public float conveyorBaseSpeed = 1f;
+    public float conveyorSpeedBase = 1f;
     public AnimationCurve conveyorSpeedCurve; // multiplier increase
 
     // private
-    int[] numPreboxes = new int[] { 4, 6, 8 }; // how many preboxes per difficulty
+    readonly int[] numPreboxes = new int[] { 4, 6, 8 }; // how many preboxes per difficulty
 
 
     // references
@@ -35,11 +36,14 @@ public class SpawnManager : MonoBehaviour {
     // --------------------- BASE METHODS ------------------
     private void Awake() {
         instance = this;
+        //if (!isServer) Destroy(this);
     }
 
     void Start () {
-        StartCoroutine("SpawnRoutine");
-        GameManager.instance.OnPlay += SpawnPreboxes;
+        if (isServer) {
+            GameManager.instance.OnPlay += SpawnPreboxes;
+            StartCoroutine("SpawnRoutine");
+        }
     }
 
     void Update () {
@@ -52,25 +56,32 @@ public class SpawnManager : MonoBehaviour {
 
 
     // commands
-    void SpawnOne() {
+    [Command]
+    public void CmdSpawnBoxAt(Vector3 p) {
+        Box newBox = Instantiate(GetBoxPrefab(), p, Quaternion.Euler(0, Random.value * 360, 0)) as Box;
+        NetworkServer.Spawn(newBox.gameObject);
+    }
+
+    void TrySpawnOne() {
         int k = Random.Range(0, kappas.Length);
         kappas[k].StartFalling();
     }
 
     void SpawnPreboxes() {
         int[] permutation = Utility.RandomPermutation(preboxParent.childCount);
-        int difficultyToSpawn = numPreboxes[(int)GameManager.instance.difficulty];
+        int difficultyToSpawn = numPreboxes[(int)ScoreManager.instance.difficulty];
         int numToSpawn = Mathf.Min(preboxParent.childCount, difficultyToSpawn);
 
         for (int i = 0; i < numToSpawn; i++) {
-            Instantiate(GetBoxPrefab(), preboxParent.GetChild(permutation[i]).position, Quaternion.Euler(0, Random.value * 360, 0));
+            CmdSpawnBoxAt(preboxParent.GetChild(permutation[i]).position);
+            //Instantiate(GetBoxPrefab(), preboxParent.GetChild(permutation[i]).position, Quaternion.Euler(0, Random.value * 360, 0));
         }
     }
 
     // queries
     float WaitTime() {
-        float difficultyMultiplier = GameManager.instance.DifficultyMult();//spawnDifficultyMultipliers[(int)GameManager.instance.difficulty];
-        float avg = spawnRatioCurve.Evaluate(GameManager.instance.ProgressPercent()) * spawnRatioMultiplier * difficultyMultiplier; // how many per second
+        float difficultyMultiplier = ScoreManager.instance.DifficultyMult(); //spawnDifficultyMultipliers[(int)GameManager.instance.difficulty];
+        float avg = spawnRatioCurve.Evaluate(ScoreManager.instance.ProgressPercent()) * spawnRatioBase * difficultyMultiplier; // how many per second
         float val = Utility.NormalFromTo(1 - var, 1 + var) * avg; // how many per second with some variance
         float result = 1f / val; // how many seconds waittime
         //Debug.Log("waittime=" + result);
@@ -82,8 +93,8 @@ public class SpawnManager : MonoBehaviour {
     }
 
     public float GetConveyorSpeed() {
-        float difficultyMultiplier = GameManager.instance.DifficultyMult();//conveyorDifficultyMultipliers[(int)GameManager.instance.difficulty];
-        return  conveyorSpeedCurve.Evaluate(GameManager.instance.ProgressPercent()) * conveyorBaseSpeed * difficultyMultiplier; // how many per second
+        float difficultyMultiplier = ScoreManager.instance.DifficultyMult();//conveyorDifficultyMultipliers[(int)GameManager.instance.difficulty];
+        return  conveyorSpeedCurve.Evaluate(ScoreManager.instance.ProgressPercent()) * conveyorSpeedBase * difficultyMultiplier; // how many per second
     }
 
     
@@ -96,7 +107,7 @@ public class SpawnManager : MonoBehaviour {
                 yield return new WaitForSeconds(1);
             }
             else {
-                SpawnOne();
+                TrySpawnOne();
                 yield return new WaitForSeconds(WaitTime());
             }
         }

@@ -3,15 +3,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
 [RequireComponent(typeof(Animator))]
-public class Kappa : MonoBehaviour {
+public class Kappa : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public float spawnDelay = .1f;
+    public const float spawnDelay = .1f; // good delay
 
 
     // private
@@ -46,15 +47,18 @@ public class Kappa : MonoBehaviour {
 
     public void SpawnBox() {
         //actual spawn code
-        Box boxPrefab = SpawnManager.instance.GetBoxPrefab();
-        Box box = Instantiate(boxPrefab, transform.position, Quaternion.Euler(0, Random.value * 360, 0)) as Box;
+        //Box boxPrefab = SpawnManager.instance.GetBoxPrefab();
+        //Box box = Instantiate(boxPrefab, transform.position, Quaternion.Euler(0, Random.value * 360, 0)) as Box;
         AudioManager.Play("box_fall");
         spawning = false;
+        //call to spawn
+        SpawnManager.instance.CmdSpawnBoxAt(transform.position);
     }
 
 
 
     // queries
+    //public bool CanSpawn { get { return !spawning; } }
 
 
 

@@ -4,10 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class HighScores : MonoBehaviour {
+public class HighScores : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -63,7 +64,7 @@ public class HighScores : MonoBehaviour {
             if(string.IsNullOrEmpty(username)) username = "user_" + Random.Range(0, 2048); // ATTENTION: if username is empty, then other entries are shifted by one
             PlayerPrefs.SetString("user", username);
 
-            UploadHighscore(username, GameManager.instance.Score, GameManager.instance.Timer);
+            UploadHighscore(username, ScoreManager.instance.Score, ScoreManager.instance.Timer);
             alreadySubmitted = true;
         }
     }

@@ -3,10 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class InputManager : MonoBehaviour {
+public class InputManager : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -45,13 +46,13 @@ public class InputManager : MonoBehaviour {
 
     // queries
     public Vector2 GetInput(int i = 0) {
-        if (GameManager.instance.Mobile) {
+        if (GameManager.Mobile) {
             return joystick.InputValue.To3();
         } else {
 
             Vector2 k = Vector2.zero; // keyboard
             Vector2 j = Vector2.zero; // joystick
-            if (GameManager.instance.Single) {
+            if (ElementManager.Single) {
                 //single
                 k = new Vector2(Input.GetAxis("Horizontal"),  Input.GetAxis("Vertical"));
                 j = new Vector2(Input.GetAxis("Horizontal1"), Input.GetAxis("Vertical1"));
@@ -68,7 +69,7 @@ public class InputManager : MonoBehaviour {
     public bool GetInteractInput(int i = 0) {
         bool k = false;
         bool j = false;
-        if (GameManager.instance.Single) {
+        if (ElementManager.Single) {
             //single
             k = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return);
             j =Input.GetButtonDown("Interact1");
@@ -84,7 +85,7 @@ public class InputManager : MonoBehaviour {
     public bool GetSprintInput(int i = 0) {
         bool k = false;
         bool j = false;
-        if (GameManager.instance.Single) {
+        if (ElementManager.Single) {
             //single
             k = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             j = (Input.GetAxis("Sprint1L") != 0) || (Input.GetAxis("Sprint1R") != 0);
@@ -97,6 +98,19 @@ public class InputManager : MonoBehaviour {
         return k || j;
     }
 
+
+    public bool PauseInput() {
+        return Input.GetKeyDown("joystick button 7") || Input.GetKeyDown(KeyCode.Escape);
+    }
+    public bool ResumeInput() {
+        return Input.GetKeyDown("joystick button 7") || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown("joystick button 0");
+    }
+    public bool RestartInput() {
+        return Input.GetKeyDown("joystick button 6") || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown("joystick button 1");
+    }
+    public bool OverRestartInput() {
+        return Input.GetKeyDown("joystick button 7");
+    }
 
 
     // other

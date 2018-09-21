@@ -4,11 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
 [RequireComponent(typeof(CharacterController))]
-public class Player : MonoBehaviour {
+public class Player : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -43,7 +44,13 @@ public class Player : MonoBehaviour {
 
     // --------------------- BASE METHODS ------------------
 
+    public override void OnStartLocalPlayer() {
+        
+    }
+
     void Start () {
+        if (!isLocalPlayer) Destroy(this);
+
         cc = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
         feetSound = GetComponent<AudioSource>();

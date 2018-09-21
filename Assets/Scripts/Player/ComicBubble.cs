@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
@@ -12,7 +13,7 @@ public enum SpeechType {
     Random, Begin, ButtonNotFull, BoxPickup, BoxDeposit,
     NotRightFit }; // missing: random
 
-public class ComicBubble : MonoBehaviour {
+public class ComicBubble : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -42,6 +43,7 @@ public class ComicBubble : MonoBehaviour {
     void Start () {
         if(!createdDic) ParseSpeechText();
         GameManager.instance.OnPlay += SpeakBegin;
+        GameManager.instance.OnGameover += () => AllSpeak(SpeechType.GameOver);
     }
 	
 	void Update () {
@@ -86,7 +88,7 @@ public class ComicBubble : MonoBehaviour {
     }
 
     public void Speak(SpeechType speechType) {
-        if (!speaking && Random.value<=probOfSpeech[(int)speechType]/GameManager.instance.numPlayers) { // no override allowed
+        if (!speaking && Random.value<=probOfSpeech[(int)speechType]/ ElementManager.NumPlayers) { // no override allowed
             speaking = true;
             bubbleText.text = GetSpeech(speechType);
             bubble.SetActive(true);

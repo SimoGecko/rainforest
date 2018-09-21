@@ -7,10 +7,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.ImageEffects;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class InterfaceManager : MonoBehaviour {
+public class InterfaceManager : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -72,7 +73,12 @@ public class InterfaceManager : MonoBehaviour {
         AnimateTitle();
         HighScores.instance.OnDownloadedScores += UpdateLeaderboardUI;
         blur = FindObjectOfType<BlurOptimized>();
-        GameManager.instance.OnPlay += SetupNumPlayersUI;
+
+
+        GameManager.instance.OnPlay += () => { SetupNumPlayersUI(); ShowGameUI(); } ;
+        GameManager.instance.OnPause += () => SetPauseUI(true);
+        GameManager.instance.OnResume += () => SetPauseUI(false);
+        GameManager.instance.OnResume += () => Invoke("ShowGameoverUI", 3f);
     }
 	
 	void Update () {
@@ -86,10 +92,10 @@ public class InterfaceManager : MonoBehaviour {
 	
 	// commands
     void SetupNumPlayersUI() {
-        if(GameManager.instance.mode == GameManager.Mode.Compet) {
+        if(GameManager.Competitive) {
             score.SetActive(false);
             scoreOver.SetActive(false);
-            for (int i = 0; i < GameManager.instance.numPlayers; i++) {
+            for (int i = 0; i < ElementManager.NumPlayers; i++) {
                 playerScore[i].SetActive(true);
                 playerScoreOver[i].SetActive(true);
             }
@@ -145,7 +151,7 @@ public class InterfaceManager : MonoBehaviour {
         UpdateScoreUI();
         UpdateLifeUI(3);
         gameUI.SetActive(true);
-        if (GameManager.instance.Mobile) mobileUI.SetActive(true);
+        if (GameManager.Mobile) mobileUI.SetActive(true);
     }
 
     public void ShowGameoverUI() {
@@ -164,8 +170,8 @@ public class InterfaceManager : MonoBehaviour {
 
 
     // queries
-    public int Score { get { return GameManager.instance.Score; } }
-    public int Timer { get { return GameManager.instance.Timer; } }
+    public int Score { get { return ScoreManager.instance.Score; } }
+    public int Timer { get { return ScoreManager.instance.Timer; } }
 
     public bool InTutorial { get { return inTutorial; } }
 

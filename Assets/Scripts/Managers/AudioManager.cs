@@ -3,10 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class AudioManager : MonoBehaviour {
+public class AudioManager : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

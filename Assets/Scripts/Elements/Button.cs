@@ -3,22 +3,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class Button : MonoBehaviour {
+public class Button : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public float percentToBeFilled = .75f;
-    public float animTime = 2f;
-    public float animDelay = 1f;
-    public float moveAmount = 10;
+    public float percentToBeFilled = .8f;
+    const float animTime = 2f;
+    const float animDelay = 1f;
+    const float moveAmount = 10;
     public float introDelay;
 
     // private
     bool alreadyPushed;
-    bool GameManagerPlay;
 
 
     // references
@@ -44,7 +44,7 @@ public class Button : MonoBehaviour {
 
     private void OnMouseDown() {
         if(GameManager.Playing)
-            Tap(GameManager.instance.GetPlayer(0));
+            Tap(ElementManager.instance.GetPlayer(0));
     }
 
 

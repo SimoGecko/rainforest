@@ -3,10 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class Toggle : MonoBehaviour {
+public class Toggle : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
     public enum ToggleType { Tutorial, Coop}
     // public
@@ -36,7 +37,7 @@ public class Toggle : MonoBehaviour {
         }
 
 
-        if (GameManager.instance.Console) {
+        if (GameManager.Console) {
             if (type == ToggleType.Coop && Input.GetKeyDown("joystick button 1")) ToggleCoop();
             if (type == ToggleType.Tutorial && Input.GetKeyDown("joystick button 0") && canToggle && !InTutorial) ToggleTutorialOn();
             //DoToggle();
@@ -75,7 +76,7 @@ public class Toggle : MonoBehaviour {
     void ToggleCoop() {
         if (!InterfaceManager.instance.InTutorial)
             //GameManager.instance.Coop = !GameManager.instance.Coop;
-            GameManager.instance.ToggleNumPlayers();
+            ElementManager.instance.ToggleNumPlayers();
     }
 
 

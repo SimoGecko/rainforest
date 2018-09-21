@@ -3,11 +3,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
 [RequireComponent(typeof(Rigidbody))]
-public class Box : MonoBehaviour {
+public class Box : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -44,10 +45,7 @@ public class Box : MonoBehaviour {
             Shatter();
         }
     }
-
-    private void OnMouseDown() {
-        Tap(GameManager.instance.GetPlayer(0));
-    }
+    
 
 
 
@@ -62,7 +60,7 @@ public class Box : MonoBehaviour {
         conveyorVelocity = Vector3.zero;
     }
 
-    public void Tap(Player player) {
+    public void Tap(Player player) { //TODO refactor
         if (!GameManager.Playing || pickedup || deposited) return;
 
         Cart cart = player.GetCart();
@@ -102,7 +100,7 @@ public class Box : MonoBehaviour {
         deposited = true;
         StopRB();
         //add score
-        GameManager.instance.AddScore(packSize);
+        ScoreManager.instance.AddScore(packSize);
         //add to individual player
         carryingCart.Owner.AddScore(packSize);
         dep.PositionBox(this);
@@ -111,7 +109,7 @@ public class Box : MonoBehaviour {
     void Shatter() {
         ComicBubble.AllSpeak(SpeechType.BoxLost);
         AudioManager.Play("box_crash");
-        GameManager.instance.LoseLife();
+        ScoreManager.instance.LoseLife();
 
         shattered = true;
         GameObject shatter = Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));

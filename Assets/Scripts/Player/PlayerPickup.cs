@@ -4,10 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class PlayerPickup : MonoBehaviour {
+
+public class PlayerPickup : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -32,9 +34,9 @@ public class PlayerPickup : MonoBehaviour {
 
         SetHighlightColor();
 
-        if (InputManager.instance.GetInteractInput(player.id))
+        if (InputManager.instance.GetInteractInput(player.id)) {
             Tap();
-
+        }
 	}
 
     private void OnTriggerEnter(Collider other) {
@@ -62,9 +64,9 @@ public class PlayerPickup : MonoBehaviour {
 
     // commands
     void SetHighlightColor() {
-        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = GameManager.instance.normalMat;
+        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = ElementManager.instance.normalMat;
         highlighted = ClosestInteractable();
-        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = GameManager.instance.highlightMat;
+        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = ElementManager.instance.highlightMat;
     }
 
     public void Tap() {//either space or button

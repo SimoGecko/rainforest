@@ -3,10 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class Gauge : MonoBehaviour {
+public class Gauge : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -30,7 +31,7 @@ public class Gauge : MonoBehaviour {
         if (!GameManager.Menu) return;
         ShakeNeedle();
 
-        if (GameManager.instance.Console) {
+        if (GameManager.Console) {
             if (Input.GetKeyDown("joystick button 3") && !InterfaceManager.instance.InTutorial) GetClicked();
             //if (Input.GetKeyDown("joystick button 3")) GetClicked(1);
             //if (Input.GetKeyDown("joystick button 1")) GetClicked(2);
@@ -63,7 +64,8 @@ public class Gauge : MonoBehaviour {
         if (d == -1) d = currentD;
 
         alreadyClicked = true;
-        GameManager.instance.StartRound(d);
+        ScoreManager.instance.SetDifficulty(d);
+        GameManager.instance.Play();
         iTween.ScaleTo(gameObject, iTween.Hash("scale", Vector3.zero, "time", 1f, "easeType", iTween.EaseType.easeInOutSine));
         AudioManager.Play("button_push");
         Destroy(gameObject, 3f);

@@ -3,10 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class CameraManager : MonoBehaviour {
+public class CameraManager : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -29,10 +30,11 @@ public class CameraManager : MonoBehaviour {
     void Start () {
         targets = new Transform[4];
         for (int i = 0; i < 4; i++) {
-            targets[i] = GameManager.instance.GetPlayer(i).transform;
+            if(ElementManager.instance.GetPlayer(i)!=null)
+                targets[i] = ElementManager.instance.GetPlayer(i).transform;
         }
 
-        offset = gameView.position - targets[0].position;
+        offset = gameView.position;// - targets[0].position;
         transform.position = titleView.position;
         transform.rotation = titleView.rotation;
 
@@ -75,9 +77,10 @@ public class CameraManager : MonoBehaviour {
     // queries
     Vector3 TargetPos() {
         Vector3 result = Vector3.zero;
-        int numPlayers = GameManager.instance.numPlayers;
+        int numPlayers = ElementManager.NumPlayers;
         for (int i = 0; i < numPlayers; i++) {
-            result += targets[i].position * followPlayerWeight / numPlayers;
+            if(targets[i]!=null)
+                result += targets[i].position * followPlayerWeight / numPlayers;
         }
         return result;
         /*
