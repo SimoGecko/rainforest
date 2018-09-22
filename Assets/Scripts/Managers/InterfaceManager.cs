@@ -111,9 +111,8 @@ public class InterfaceManager : NetworkBehaviour {
         iTween.FadeFrom(subtitle, iTween.Hash("alpha", 0f, "time", animTime, "delay", 2f));
     }
     
-    public void UpdateScoreUI() {
-        scoreText.text = Score.ToString();
-        //timerText.text = "timer: " + Utility.ToReadableTime(Timer);
+    public void UpdateScoreUI(int score) {
+        scoreText.text = score.ToString();
     }
 
     public void UpdatePlayerScoreUI(int id, int score) {
@@ -148,7 +147,7 @@ public class InterfaceManager : NetworkBehaviour {
 
 
     public void ShowGameUI() {
-        UpdateScoreUI();
+        UpdateScoreUI(0);
         UpdateLifeUI(3);
         gameUI.SetActive(true);
         if (GameManager.Mobile) mobileUI.SetActive(true);
@@ -159,8 +158,8 @@ public class InterfaceManager : NetworkBehaviour {
         gameUI.SetActive(false);
         mobileUI.SetActive(false);
         gameoverUI.SetActive(true);
-        scoreOverText.text = Score.ToString();
-        timerOverText.text = Utility.ToReadableTime(Timer);
+        scoreOverText.text = ScoreManager.instance.Score.ToString();
+        timerOverText.text = Utility.ToReadableTime(ScoreManager.instance.Timer);
     }
 
 
@@ -170,9 +169,6 @@ public class InterfaceManager : NetworkBehaviour {
 
 
     // queries
-    public int Score { get { return ScoreManager.instance.Score; } }
-    public int Timer { get { return ScoreManager.instance.Timer; } }
-
     public bool InTutorial { get { return inTutorial; } }
 
     

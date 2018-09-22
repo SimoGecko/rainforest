@@ -13,20 +13,18 @@ public class Player : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public float speed = 5;
-    public float sprintMultiplier = 1.3f;
-    public float angularSpeed = 180;
+    public float speed = 18;
+    public float sprintMultiplier = 1.4f;
+    public float angularSpeed = 500;
     public float pickupDist = 8f;
-    public int id;
+    public int id; // localid, netid
 
 
     // private
     Vector3 inp;
-    Vector3 inputRotated;
     bool rotateInput = true;
     int score;
 
-    bool gamestarted;
     bool sprintInput;
     float animHelloTime;
 
@@ -34,50 +32,58 @@ public class Player : NetworkBehaviour {
     // references
     CharacterController cc;
     Animator anim;
+    NetworkAnimator netanim;
     AudioSource feetSound;
-    public Text controlText;
 
-    Cart cart;
+    public Text controlText;
+    public Transform pickupCenter;
+
+    public Cart Cart { get; private set; }
     public ComicBubble Bubble { get; private set; }
 
-    public Transform pickupCenter;
 
     // --------------------- BASE METHODS ------------------
 
     public override void OnStartLocalPlayer() {
-        
+        //set id
+        id = ElementManager.NumPlayers;
+        ElementManager.instance.AddPlayer(this);
+
+        //set color
+        Texture2D texcolors = ElementManager.instance.playerTextures[id];
+        GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = texcolors;
+        GetComponentInChildren<MeshRenderer>().material.mainTexture = texcolors;
     }
 
+
     void Start () {
-        if (!isLocalPlayer) Destroy(this);
+        if (!isLocalPlayer) return;//Destroy(this);
 
         cc = GetComponent<CharacterController>();
-        anim = GetComponentInChildren<Animator>();
+        anim = GetComponent<Animator>();
+        netanim = GetComponent<NetworkAnimator>();
         feetSound = GetComponent<AudioSource>();
+        Cart = GetComponentInChildren<Cart>();
+        Bubble = GetComponentInChildren<ComicBubble>();
 
         GameManager.instance.OnPlay += AnimStart;
         GameManager.instance.OnGameover += AnimEnd;
         animHelloTime = Time.time + Random.Range(2f, 4f);
-
-        cart = GetComponentInChildren<Cart>();
-        Bubble = GetComponentInChildren<ComicBubble>();
     }
 	
 	void Update () {
+        if (!isLocalPlayer) return;//Destroy(this);
+
+
         if (Input.GetKeyDown(KeyCode.Tab))
             ToggleControlType();
 
-        //GetInput();
-        inp = InputManager.instance.GetInput(id).To3().normalized;
-        sprintInput = InputManager.instance.GetSprintInput(id);
+        inp = InputManager.instance.GetInput(InputId).To3().normalized;
+        sprintInput = InputManager.instance.GetSprintInput(InputId);
 
         if (GameManager.Playing) {
-            if (!gamestarted) {
-                gamestarted = true;
-                AnimStart();
-            }
             Move();
-            SetToGround();
+            ProjectToArea();
         }
 
         DealWithAnimations();
@@ -94,19 +100,6 @@ public class Player : NetworkBehaviour {
 
 
     // commands
-    /*
-    void GetInput() {
-        if (GameManager.Playing) {
-            Vector3 inpKeyboard = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            Vector3 inpJoystick = joystick.InputValue.To3();
-            inp = inpKeyboard + inpJoystick;
-        }
-        else {
-            inp = Vector3.zero;
-        }
-        inp.Normalize(); // sure?
-    }*/
-
     void ToggleControlType() {
         rotateInput = !rotateInput;
         string textString = "control: " + (rotateInput ? "camera" : "player") + "-relative\nTAB to change";
@@ -117,10 +110,7 @@ public class Player : NetworkBehaviour {
 
     void Move() {
         // Overcooked style
-        if (rotateInput)
-            inputRotated = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp;
-        else
-            inputRotated = inp;
+        Vector3 inputRotated = rotateInput ? (Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0) * inp) : inp;
 
         float signedAngle = Vector3.SignedAngle(transform.forward, inputRotated, Vector3.up);
         float rotAmount = angularSpeed * Time.deltaTime;
@@ -136,16 +126,20 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    void SetToGround() {
+    void ProjectToArea() {
         //to avoid bugs
         Vector3 temp = transform.position;
+        Rect area = ElementManager.instance.playArea;
+        temp.x = Mathf.Clamp(temp.x, area.xMin, area.xMax);
+        temp.z = Mathf.Clamp(temp.z, area.yMin, area.yMax);
         temp.y = 0;
         transform.position = temp;
     }
 
+
     void DealWithAnimations() {
         if (GameManager.Menu && Time.time > animHelloTime) {
-            anim.SetTrigger("hello");
+            netanim.SetTrigger("hello");
             animHelloTime = Time.time + Random.Range(4f, 8f);
         }
         if (GameManager.Playing) {
@@ -154,21 +148,15 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    void AnimStart() { anim.SetTrigger("start"); }
-    void AnimEnd()   { anim.SetTrigger("end"); }
-    public void AnimButton() { anim.SetTrigger("button"); }
+    void AnimStart() { netanim.SetTrigger("start"); }
+    void AnimEnd()   { netanim.SetTrigger("end"); }
+    public void AnimButton() { netanim.SetTrigger("button"); }
 
 
     void DealWithSound() {
         feetSound.volume = inp.magnitude / 20;
         feetSound.pitch = Mathf.Lerp(feetSound.pitch, Random.Range(.8f, 1.2f), Time.deltaTime / 2);
     }
-
-    public void AddScore(int s) {
-        score += s;
-        InterfaceManager.instance.UpdatePlayerScoreUI(id, score);
-    }
-
 
 
     // queries
@@ -177,8 +165,8 @@ public class Player : NetworkBehaviour {
         v.y = 0;
         return Vector3.SqrMagnitude(v) <= pickupDist * pickupDist;
     }
+    public int InputId { get { return 1; } }
 
-    public Cart GetCart() { return cart; }
 
 
     // other

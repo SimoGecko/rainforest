@@ -11,6 +11,7 @@ public class Deposit : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
+    const float percentToBeFilled = .8f;
     public int packSize;
 
     // private
@@ -80,6 +81,10 @@ public class Deposit : NetworkBehaviour {
 
     public float PercentFilled() {
         return (float) boxes.Count / (numRows * NumCols);
+    }
+
+    public bool FilledEnough() {
+        return PercentFilled() >= percentToBeFilled;
     }
 
     Vector3 OffsetH { get { return -transform.right * Increment; } }

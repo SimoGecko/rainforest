@@ -21,6 +21,7 @@ public class ScoreManager : NetworkBehaviour {
 
     // private
     int score;
+    List<int> playerScore;
     int lives;
     float timer;
 
@@ -37,6 +38,7 @@ public class ScoreManager : NetworkBehaviour {
         score = 0;
         timer = 0;
         lives = 3;
+        playerScore = new List<int>() { 0, 0, 0, 0 }; //4p
     }
 
     void Update() {
@@ -52,10 +54,13 @@ public class ScoreManager : NetworkBehaviour {
         difficulty = (Difficulty)d;
     }
 
-    public void AddScore(int s) {
+    public void AddScore(int s, int id) {
         score += s;
-        InterfaceManager.instance.UpdateScoreUI();
+        playerScore[id] += s;
+        InterfaceManager.instance.UpdateScoreUI(score);
+        InterfaceManager.instance.UpdatePlayerScoreUI(id, playerScore[id]);
     }
+
 
     public void LoseLife() {
         if (!GameManager.instance.invincible) {
@@ -70,6 +75,7 @@ public class ScoreManager : NetworkBehaviour {
     public int Score { get { return score; } }
     public int Timer { get { return Mathf.RoundToInt(timer); } }
     public int Lifes { get { return lives; } }
+    public int PlayerScore(int id) { return playerScore[id]; }
 
     public float ProgressPercent() {
         return (float)score / scoreForMaxDifficulty;

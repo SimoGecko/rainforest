@@ -16,8 +16,8 @@ public class Cart : NetworkBehaviour {
 
     // private
     List<List<int>>[] positions; // const
-    bool[] free;
     List<Box> carrying;
+    bool[] free;
     float lastDepositTimestamp;
 
 
@@ -80,11 +80,13 @@ public class Cart : NetworkBehaviour {
     }
 
     public void Pickup(Box box) {
-        box.PickupBox(this);
-        List<int> positions = FreePosition(box.packSize);
-        foreach (int p in positions) free[p] = false;
+        //box.PickupBox(this);
+        //List<int> positions = FreePosition(box.packSize);
+        foreach (int p in box.Positions) free[p] = false;
         carrying.Add(box);
     }
+
+
 
     void TryDepositAll(Deposit dep) {
         //TODO cleanup

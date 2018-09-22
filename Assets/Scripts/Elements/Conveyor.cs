@@ -33,18 +33,20 @@ public class Conveyor : NetworkBehaviour {
         
 	}
 
-    private void OnTriggerStay(Collider other) {
-        Box box = other.GetComponent<Box>();
-        if (box != null) {
-            box.SetConveyorSpeed(Dir); // add the correct direction
-        }
-    }
-
     private void OnTriggerEnter(Collider other) {
         if (isSwitch && CanSwitch && RandomSwitch) {
             SwitchDirection();
         }
     }
+
+    private void OnTriggerStay(Collider other) {
+        Box box = other.GetComponent<Box>();
+        if (box != null) {
+            box.AddConveyorSpeed(Dir); // add the correct direction
+        }
+    }
+
+    
 
 
 

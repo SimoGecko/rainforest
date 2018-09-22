@@ -11,7 +11,6 @@ public class SpawnManager : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public bool spawnFromBeginning = false; // if true ignores game state
 
     [Header("Box Spawn Ratio")]
     public float spawnRatioBase = .5f; // this is a good ratio, balanced
@@ -103,7 +102,7 @@ public class SpawnManager : NetworkBehaviour {
     // other
     IEnumerator SpawnRoutine() {
         while (true) {
-            if (!GameManager.Playing && !spawnFromBeginning) {
+            if (!GameManager.Playing && !GameManager.instance.spawnFromBeginning) {
                 yield return new WaitForSeconds(1);
             }
             else {

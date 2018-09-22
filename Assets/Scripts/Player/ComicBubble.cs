@@ -43,7 +43,7 @@ public class ComicBubble : NetworkBehaviour {
     void Start () {
         if(!createdDic) ParseSpeechText();
         GameManager.instance.OnPlay += SpeakBegin;
-        GameManager.instance.OnGameover += () => AllSpeak(SpeechType.GameOver);
+        GameManager.instance.OnGameover += () => Speak(SpeechType.GameOver);
     }
 	
 	void Update () {

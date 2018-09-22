@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 ////////// DESCRIPTION //////////
 
 [RequireComponent(typeof(Rigidbody))]
-public class Box : NetworkBehaviour {
+public class Box : NetworkBehaviour, IInteractable {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -17,16 +17,15 @@ public class Box : NetworkBehaviour {
     // private
     Vector3 conveyorVelocity;
     Vector3 vel;
-    bool pickedup;
-    bool deposited;
-    bool shattered;
+
+    public bool OnCart { get; private set; }
+    public bool Deposited { get; private set; }
 
     List<int> positions;//which positions it's taking up on the cart
 
     // references
     Rigidbody rb;
     Cart carryingCart;
-    public GameObject shatterEffect;
 	
 	
 	// --------------------- BASE METHODS ------------------
@@ -35,13 +34,15 @@ public class Box : NetworkBehaviour {
 	}
 	
 	void LateUpdate () {
-        if (!pickedup && !deposited) {
-            MoveOnConveyor();
-        }
+        if (!isServer) return;
+
+        if (OnConveyor) MoveOnConveyor();
 	}
 
     private void OnTriggerEnter(Collider other) {
-        if (!pickedup && !shattered && other.tag == "ground") {
+        if (!isServer) return;
+
+        if (OnConveyor && other.tag == "ground") {
             Shatter();
         }
     }
@@ -60,49 +61,49 @@ public class Box : NetworkBehaviour {
         conveyorVelocity = Vector3.zero;
     }
 
-    public void Tap(Player player) { //TODO refactor
-        if (!GameManager.Playing || pickedup || deposited) return;
+    public void Interact(Player player) {
+        if (!GameManager.Playing || !CanInteract()) return;
 
-        Cart cart = player.GetCart();
+        Cart cart = player.Cart;
 
-        if (player.CloseEnough(transform)) {//check if close enough
-            if (cart.HasSpaceFor(packSize)) {
-                //PickupBox();
-                cart.Pickup(this); // TODO refactor
-            }
-            else {
-                player.Bubble.Speak(SpeechType.CartFull);
-            }
-        }
-        else {
+        if (!player.CloseEnough(transform)) {
             player.Bubble.Speak(SpeechType.FarAway);
+            return;
         }
+        if (!cart.HasSpaceFor(packSize)) {
+            player.Bubble.Speak(SpeechType.CartFull);
+            return;
+        }
+
+        //actions (called from client)
+        carryingCart = cart;
+        CmdPickupBox();
+        cart.Pickup(this);
     }
 
-    public void PickupBox(Cart cart) { // TODO add which cart is pickedup to
-        pickedup = true;
-        StopRB();
-        carryingCart = cart;
-        //Cart cart = Cart.instance;
+    [Command]
+    void CmdPickupBox() {
+        OnCart = true;
+        positions = carryingCart.FreePosition(packSize);
 
-        positions = cart.FreePosition(packSize);
-        transform.parent = cart.transform;
-        transform.position = cart.TransfFromPos(positions);
+        StopRB();
+        transform.parent = carryingCart.transform;
+        transform.position = carryingCart.TransfFromPos(positions);
         transform.localRotation = Quaternion.identity;
 
-        cart.Owner.Bubble.Speak(SpeechType.BoxPickup);
+        carryingCart.Owner.Bubble.Speak(SpeechType.BoxPickup);
         AudioManager.Play("box_drop"); // TODO audio pickup
-        cart.Owner.AnimButton();
+        carryingCart.Owner.AnimButton();
     }
 
     public void DepositBox(Deposit dep) {
-        pickedup = false;
-        deposited = true;
+        OnCart = false;
+        Deposited = true;
         StopRB();
         //add score
-        ScoreManager.instance.AddScore(packSize);
+        ScoreManager.instance.AddScore(carryingCart.Owner.id, packSize);
         //add to individual player
-        carryingCart.Owner.AddScore(packSize);
+        //carryingCart.Owner.AddScore(packSize);
         dep.PositionBox(this);
     }
 
@@ -111,8 +112,8 @@ public class Box : NetworkBehaviour {
         AudioManager.Play("box_crash");
         ScoreManager.instance.LoseLife();
 
-        shattered = true;
-        GameObject shatter = Instantiate(shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));
+        GameObject shatter = Instantiate(ElementManager.instance.shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));
+        NetworkServer.Spawn(shatter);
         Destroy(shatter, 30f);
         Destroy(gameObject);
     }
@@ -126,18 +127,21 @@ public class Box : NetworkBehaviour {
         vel = Vector3.zero;
     }
 
-    public void SetConveyorSpeed(Vector3 speed) {
+    public void AddConveyorSpeed(Vector3 speed) {
+        if (!isServer) return;
+
         conveyorVelocity += speed;
     }
 
 
 
 	// queries
-    public bool OnCart { get { return pickedup; } }
-    public bool Deposited { get { return deposited; } }
+
+
     public List<int> Positions { get { return positions; } }
+    public bool CanInteract() { return !OnCart && !Deposited; }
+    public bool OnConveyor { get { return !OnCart && !Deposited; } }
 
+    // other
 
-	// other
-	
 }

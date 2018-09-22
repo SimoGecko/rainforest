@@ -16,9 +16,8 @@ public class PlayerPickup : NetworkBehaviour {
 
 
     // private
-    List<Box> boxesInRange = new List<Box>();
-    List<Button> buttonsInRange = new List<Button>();
-    GameObject highlighted;
+    List<GameObject> interactablesInRange = new List<GameObject>();
+    GameObject closest;
 
     // references
     Player player;
@@ -26,35 +25,36 @@ public class PlayerPickup : NetworkBehaviour {
 
     // --------------------- BASE METHODS ------------------
     void Start () {
+        if (!isLocalPlayer) Destroy(this);
+
         player = GetComponent<Player>();
 	}
 	
 	void Update () {
         if (!GameManager.Playing) return;
 
-        SetHighlightColor();
+        SetHighlightColor(false);
+        closest = ClosestInteractable();
+        SetHighlightColor(true);
 
-        if (InputManager.instance.GetInteractInput(player.id)) {
-            Tap();
+        if (InputManager.instance.GetInteractInput(player.InputId)) {
+            if(closest!=null)
+                closest.GetComponent<IInteractable>().Interact(player);
         }
 	}
 
     private void OnTriggerEnter(Collider other) {
-        if (other.GetComponent<Box>() != null) {
-            Box b = other.GetComponent<Box>();
-            if(!boxesInRange.Contains(b))
-                boxesInRange.Add(b);
-        }
-        else if (other.GetComponent<Button>() != null) {
-            Button b = other.GetComponent<Button>();
-            if (!buttonsInRange.Contains(b))
-                buttonsInRange.Add(b);
+        IInteractable iint = other.GetComponent<IInteractable>();
+        if (iint != null && !interactablesInRange.Contains(other.gameObject)) {
+            interactablesInRange.Add(other.gameObject);
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        if (other.GetComponent<Box>() != null) boxesInRange.Remove(other.GetComponent<Box>());
-        else if (other.GetComponent<Button>() != null) buttonsInRange.Remove(other.GetComponent<Button>());
+        IInteractable iint = other.GetComponent<IInteractable>();
+        if (iint != null && interactablesInRange.Contains(other.gameObject)) {
+            interactablesInRange.Remove(other.gameObject);
+        }
     }
 
 
@@ -63,71 +63,19 @@ public class PlayerPickup : NetworkBehaviour {
 
 
     // commands
-    void SetHighlightColor() {
-        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = ElementManager.instance.normalMat;
-        highlighted = ClosestInteractable();
-        if (highlighted != null) highlighted.GetComponentInChildren<MeshRenderer>().material = ElementManager.instance.highlightMat;
-    }
-
-    public void Tap() {//either space or button
-        FilterBoxes();
-
-        Box closestBox = ClosestBox();
-        Button closestButton = ClosestButton();
-
-        //select closest not null to push
-        if (closestBox != null && closestButton == null) {
-            closestBox.Tap(player);
-        }
-        else if(closestBox == null && closestButton != null) {
-            closestButton.Tap(player);
-        }
-        else if(closestBox != null && closestButton != null) {
-            //must chose closest
-            if (DistToMe(closestBox.transform) < DistToMe(closestButton.transform))
-                closestBox.Tap(player);
-            else
-                closestButton.Tap(player);
-        }
+    void SetHighlightColor(bool highlight) { // works locally
+        if (closest != null) closest.GetComponentInChildren<MeshRenderer>().material = highlight ? ElementManager.instance.highlightMat : ElementManager.instance.normalMat;
     }
 
 
-    void FilterBoxes() {
-        boxesInRange.RemoveAll(b => b == null);
-        boxesInRange.RemoveAll(x => x.OnCart || x.Deposited);
-    }
+    GameObject ClosestInteractable() {
+        interactablesInRange.RemoveAll(g => g == null);// || !g.GetComponent<IInteractable>().CanInteract()));
 
+        //exclude the non interactable temporarily
+        List<GameObject> filtered = interactablesInRange.Where(g => g.GetComponent<IInteractable>().CanInteract()).ToList();
 
-    // queries
-    Button ClosestButton() {
-        if(buttonsInRange.Count>0)
-            return buttonsInRange.Aggregate((x, y) => DistToMe(x.transform) < DistToMe(y.transform) ? x : y);
-        return null;
-    }
-    Box ClosestBox() {
-        if (boxesInRange.Count > 0)
-            return boxesInRange.Aggregate((x, y) => DistToMe(x.transform) < DistToMe(y.transform) ? x : y);
-        return null;
-    }
-
-    GameObject ClosestInteractable() {//either space or button
-        FilterBoxes();
-
-        Box closestBox = ClosestBox();
-        Button closestButton = ClosestButton();
-
-        //select closest not null to push
-        if (closestBox != null && closestButton == null) {
-            return closestBox.gameObject;
-        } else if (closestBox == null && closestButton != null) {
-            return closestButton.gameObject;
-        } else if (closestBox != null && closestButton != null) {
-            //must chose closest
-            if (DistToMe(closestBox.transform) < DistToMe(closestButton.transform))
-                return closestBox.gameObject;
-            else
-               return closestButton.gameObject;
-        }
+        if (filtered.Count > 0)
+            return filtered.Aggregate((x, y) => DistToMe(x.transform) < DistToMe(y.transform) ? x : y);
         return null;
     }
 

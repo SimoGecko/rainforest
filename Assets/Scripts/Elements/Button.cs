@@ -7,11 +7,11 @@ using UnityEngine.Networking;
 
 ////////// DESCRIPTION //////////
 
-public class Button : NetworkBehaviour {
+public class Button : NetworkBehaviour, IInteractable {
     // --------------------- VARIABLES ---------------------
 
     // public
-    public float percentToBeFilled = .8f;
+    //public float percentToBeFilled = .8f;
     const float animTime = 2f;
     const float animDelay = 1f;
     const float moveAmount = 10;
@@ -23,30 +23,21 @@ public class Button : NetworkBehaviour {
 
     // references
     public Deposit deposit;
-    public GameObject slidingDoor;
-    public GameObject buttonLight;
+    public Door door;
+    SpriteRenderer buttonLight;
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
         GameManager.instance.OnPlay += PlayEntranceAnimation;
+        buttonLight = GetComponentInChildren<SpriteRenderer>();
 	}
 	
 	void Update () {
         if (GameManager.Playing) {
             CheckBlinking();
-            /*
-            if (!GameManagerPlay) { // for some reason action doesn't work
-                GameManagerPlay = true;
-                PlayEntranceAnimation();
-            }*/
+            
         }
 	}
-
-    private void OnMouseDown() {
-        if(GameManager.Playing)
-            Tap(ElementManager.instance.GetPlayer(0));
-    }
-
 
     // --------------------- CUSTOM METHODS ----------------
 
@@ -56,9 +47,28 @@ public class Button : NetworkBehaviour {
         Invoke("AnimateEntrance", 2f + introDelay);
     }
 
+    public void Interact(Player p) {
+        if (!p.CloseEnough(transform)) {
+            p.Bubble.Speak(SpeechType.FarAway);
+            return;
+        }
+        if (!deposit.FilledEnough()) {
+            p.Bubble.Speak(SpeechType.ButtonNotFull);
+            return;
+        }
+        
+        if (!alreadyPushed) {
+            EmptyShelfWithAnimation();
+            p.AnimButton();
+            AudioManager.Play("button_push");
+            AudioManager.Play("shelf_moving");
+        }
+    }
+
+    /*
     public void Tap(Player p) {
         if (p.CloseEnough(transform)) {
-            if (FilledEnough() || GameManager.instance.DEBUG) {
+            if (deposit.FilledEnough() || GameManager.instance.DEBUG) {
                 if (!alreadyPushed) {
                     EmptyShelfWithAnimation();
                     p.AnimButton();
@@ -73,7 +83,7 @@ public class Button : NetworkBehaviour {
         else {
             p.Bubble.Speak(SpeechType.FarAway);
         }
-    }
+    }*/
 
     private void EmptyShelfWithAnimation() {
         alreadyPushed = true;
@@ -84,24 +94,20 @@ public class Button : NetworkBehaviour {
     }
 
     void CheckBlinking() {
-        bool blinking = FilledEnough();
-        if (blinking) {
-            bool currentlyOn = Mathf.RoundToInt(Time.time) % 2 == 0;
-            buttonLight.SetActive(currentlyOn);
-        }
-        else {
-            buttonLight.SetActive(false);
-        }
+        bool blinking = deposit.FilledEnough();
+        bool rightTime = Mathf.RoundToInt(Time.time) % 2 == 0;
+        buttonLight.enabled = blinking && rightTime;
     }
 
-    void CleanShelf() {
-        deposit.Clear();
-    }
+    void CleanShelf() { deposit.Clear(); }
+    void AlreadyPushedOff() { alreadyPushed = false; }
+
+
 
     void AnimateEntrance() {
         iTween.MoveBy(deposit.gameObject, iTween.Hash("amount", +moveAmount * Vector3.forward, "time", animTime, "easeType", iTween.EaseType.easeInOutSine));
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime / 2, "easeType", iTween.EaseType.easeInOutSine));
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime / 2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime / 2));
+        iTween.MoveBy(door.gameObject, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime / 2, "easeType", iTween.EaseType.easeInOutSine));
+        iTween.MoveBy(door.gameObject, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime / 2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime / 2));
     }
 
     void AnimateShelf() {
@@ -110,18 +116,19 @@ public class Button : NetworkBehaviour {
     }
 
     void AnimateSlidingDoor() {
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine));
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime/2));
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + animDelay));
-        iTween.MoveBy(slidingDoor, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + animDelay + animTime / 2));
+        iTween.MoveBy(door.gameObject, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine));
+        iTween.MoveBy(door.gameObject, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime/2));
+        iTween.MoveBy(door.gameObject, iTween.Hash("amount", +moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + animDelay));
+        iTween.MoveBy(door.gameObject, iTween.Hash("amount", -moveAmount * Vector3.right, "time", animTime/2, "easeType", iTween.EaseType.easeInOutSine, "delay", animTime + animDelay + animTime / 2));
     }
 
-    void AlreadyPushedOff() { alreadyPushed = false; }
+
+
 
 
     // queries
-    bool FilledEnough() {
-        return deposit.PercentFilled() >= percentToBeFilled;
+    public bool CanInteract() {
+        return !alreadyPushed;
     }
 
 

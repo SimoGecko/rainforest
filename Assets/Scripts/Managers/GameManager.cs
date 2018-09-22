@@ -21,6 +21,7 @@ public class GameManager : NetworkBehaviour {
     public bool DEBUG;
     public bool invincible = false;
     public bool autoStart = false;
+    public bool spawnFromBeginning = false; // if true ignores game state
     public float timeScale = 1f;
 
     
@@ -30,7 +31,7 @@ public class GameManager : NetworkBehaviour {
     public event System.Action OnResume;
 
     // private
-    State state;
+    public State state;
     Platform platform;
     Mode mode;
 
@@ -51,7 +52,10 @@ public class GameManager : NetworkBehaviour {
 	
 	void Update () {
         if (Menu) {
-            if (autoStart) Play();
+            if (autoStart) {
+                autoStart = false;
+                Invoke("Play", .2f);// Play();
+            }
         }
 
         if (Playing) {
