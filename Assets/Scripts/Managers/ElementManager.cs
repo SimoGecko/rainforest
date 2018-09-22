@@ -21,10 +21,14 @@ public class ElementManager : NetworkBehaviour {
     // private
     List<Player> players;
 
+    [SyncVar(hook= "OnNextID")]
+    public int nextID = 0;
+
 
     // references
     public static ElementManager instance;
 
+    //const
     public Material normalMat, highlightMat;
     public GameObject shatterEffect;
     public Texture2D[] playerTextures;
@@ -38,7 +42,7 @@ public class ElementManager : NetworkBehaviour {
     }
 
     void Start() {
-        if (GameManager.Menu) UpdateActivePlayers();
+        //if (GameManager.Menu) UpdateActivePlayers();
     }
 
     void Update() {
@@ -50,7 +54,12 @@ public class ElementManager : NetworkBehaviour {
 
 
     // commands
-    void FindPlayers() {
+    void OnNextID(int id) {
+        FindPlayers();
+    }
+
+
+    public void FindPlayers() {
         Player[] p = FindObjectsOfType<Player>();
         players = p.OrderBy(c => c.id).ToList();
     }

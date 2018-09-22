@@ -68,14 +68,15 @@ public class PlayerPickup : NetworkBehaviour {
     }
 
 
+    //queries
     GameObject ClosestInteractable() {
-        interactablesInRange.RemoveAll(g => g == null);// || !g.GetComponent<IInteractable>().CanInteract()));
-
+        interactablesInRange.RemoveAll(g => g == null);
         //exclude the non interactable temporarily
         List<GameObject> filtered = interactablesInRange.Where(g => g.GetComponent<IInteractable>().CanInteract()).ToList();
 
-        if (filtered.Count > 0)
+        if (filtered.Count > 0) {
             return filtered.Aggregate((x, y) => DistToMe(x.transform) < DistToMe(y.transform) ? x : y);
+        }
         return null;
     }
 

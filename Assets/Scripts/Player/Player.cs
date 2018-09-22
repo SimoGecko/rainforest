@@ -17,7 +17,7 @@ public class Player : NetworkBehaviour {
     public float sprintMultiplier = 1.4f;
     public float angularSpeed = 500;
     public float pickupDist = 8f;
-    public int id; // localid, netid
+    [SyncVar(hook ="SetPlayerColor")] public int id; // localid, netid
 
 
     // private
@@ -46,18 +46,22 @@ public class Player : NetworkBehaviour {
 
     public override void OnStartLocalPlayer() {
         //set id
-        id = ElementManager.NumPlayers;
-        ElementManager.instance.AddPlayer(this);
+        id = ElementManager.instance.nextID;
+        ElementManager.instance.nextID++;
+        //ElementManager.instance.AddPlayer(this);
+    }
 
-        //set color
+    void SetPlayerColor(int _id) {
+        id = _id;
         Texture2D texcolors = ElementManager.instance.playerTextures[id];
         GetComponentInChildren<SkinnedMeshRenderer>().material.mainTexture = texcolors;
         GetComponentInChildren<MeshRenderer>().material.mainTexture = texcolors;
     }
 
 
+
     void Start () {
-        if (!isLocalPlayer) return;//Destroy(this);
+        //if (!isLocalPlayer) return;//Destroy(this);
 
         cc = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();

@@ -34,7 +34,7 @@ public class Box : NetworkBehaviour, IInteractable {
 	}
 	
 	void LateUpdate () {
-        if (!isServer) return;
+        //if (!isServer) return;
 
         if (OnConveyor) MoveOnConveyor();
 	}
@@ -76,13 +76,36 @@ public class Box : NetworkBehaviour, IInteractable {
         }
 
         //actions (called from client)
-        carryingCart = cart;
-        CmdPickupBox();
-        cart.Pickup(this);
+        CmdPickupBox(player.id);
+
+        //carryingCart = cart;
+        //cart.Pickup(this);
     }
 
     [Command]
-    void CmdPickupBox() {
+    void CmdPickupBox(int playerid) {
+        RpcPickupBox(playerid);
+        /*
+        OnCart = true;
+        positions = carryingCart.FreePosition(packSize);
+
+        StopRB();
+        transform.parent = carryingCart.transform;
+        transform.position = carryingCart.TransfFromPos(positions);
+        transform.localRotation = Quaternion.identity;
+
+        carryingCart.Owner.Bubble.Speak(SpeechType.BoxPickup);
+        AudioManager.Play("box_drop"); // TODO audio pickup
+        carryingCart.Owner.AnimButton();*/
+    }
+
+    [ClientRpc]
+    void RpcPickupBox(int playerid) {
+        Debug.Log("received");
+        Cart cart = ElementManager.instance.GetPlayer(playerid).Cart;
+        carryingCart = cart;
+
+        //---copied
         OnCart = true;
         positions = carryingCart.FreePosition(packSize);
 
@@ -94,6 +117,9 @@ public class Box : NetworkBehaviour, IInteractable {
         carryingCart.Owner.Bubble.Speak(SpeechType.BoxPickup);
         AudioManager.Play("box_drop"); // TODO audio pickup
         carryingCart.Owner.AnimButton();
+
+        //----
+        cart.Pickup(this);
     }
 
     public void DepositBox(Deposit dep) {

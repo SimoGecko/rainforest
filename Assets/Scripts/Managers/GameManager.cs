@@ -31,7 +31,8 @@ public class GameManager : NetworkBehaviour {
     public event System.Action OnResume;
 
     // private
-    public State state;
+    [SyncVar]public State state;
+
     Platform platform;
     Mode mode;
 
