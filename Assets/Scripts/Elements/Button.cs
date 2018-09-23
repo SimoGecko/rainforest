@@ -48,7 +48,7 @@ public class Button : NetworkBehaviour, IInteractable {
     }
 
     public void Interact(Player p) {
-        if (!p.CloseEnough(transform)) {
+        if (!p.pI.CloseEnough(transform)) {
             p.Bubble.Speak(SpeechType.FarAway);
             return;
         }

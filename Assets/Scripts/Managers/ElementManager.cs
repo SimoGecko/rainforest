@@ -19,9 +19,9 @@ public class ElementManager : NetworkBehaviour {
 
 
     // private
-    List<Player> players;
+    public List<Player> players;
 
-    [SyncVar(hook= "OnNextID")]
+    //[SyncVar(hook= "OnNextID")]
     public int nextID = 0;
 
 

@@ -21,8 +21,6 @@ public class Box : NetworkBehaviour, IInteractable {
     public bool OnCart { get; private set; }
     public bool Deposited { get; private set; }
 
-    List<int> positions;//which positions it's taking up on the cart
-
     // references
     Rigidbody rb;
     Cart carryingCart;
@@ -34,7 +32,7 @@ public class Box : NetworkBehaviour, IInteractable {
 	}
 	
 	void LateUpdate () {
-        //if (!isServer) return;
+        if (!isServer) return;
 
         if (OnConveyor) MoveOnConveyor();
 	}
@@ -57,16 +55,18 @@ public class Box : NetworkBehaviour, IInteractable {
     void MoveOnConveyor() {
         conveyorVelocity = conveyorVelocity.normalized * Conveyor.GetSpeed();
         vel = Vector3.Lerp(vel, conveyorVelocity, Time.deltaTime * 5);
-        transform.position += vel * Time.deltaTime;
+        rb.MovePosition(transform.position + vel * Time.deltaTime);
+        //transform.position += vel * Time.deltaTime;
         conveyorVelocity = Vector3.zero;
     }
 
     public void Interact(Player player) {
+        //this only happens on server
         if (!GameManager.Playing || !CanInteract()) return;
 
         Cart cart = player.Cart;
 
-        if (!player.CloseEnough(transform)) {
+        if (!player.pI.CloseEnough(transform)) {
             player.Bubble.Speak(SpeechType.FarAway);
             return;
         }
@@ -76,46 +76,31 @@ public class Box : NetworkBehaviour, IInteractable {
         }
 
         //actions (called from client)
-        CmdPickupBox(player.id);
+        PickupBox(player.id); // server
+        RpcPickupBox(player.id); // clients
 
-        //carryingCart = cart;
-        //cart.Pickup(this);
-    }
-
-    [Command]
-    void CmdPickupBox(int playerid) {
-        RpcPickupBox(playerid);
-        /*
-        OnCart = true;
-        positions = carryingCart.FreePosition(packSize);
-
-        StopRB();
-        transform.parent = carryingCart.transform;
-        transform.position = carryingCart.TransfFromPos(positions);
-        transform.localRotation = Quaternion.identity;
-
-        carryingCart.Owner.Bubble.Speak(SpeechType.BoxPickup);
-        AudioManager.Play("box_drop"); // TODO audio pickup
-        carryingCart.Owner.AnimButton();*/
     }
 
     [ClientRpc]
     void RpcPickupBox(int playerid) {
-        Debug.Log("received");
+        PickupBox(playerid);
+    }
+
+    void PickupBox(int playerid) {
         Cart cart = ElementManager.instance.GetPlayer(playerid).Cart;
         carryingCart = cart;
 
         //---copied
         OnCart = true;
-        positions = carryingCart.FreePosition(packSize);
+        Positions = carryingCart.FreePosition(packSize);
 
         StopRB();
         transform.parent = carryingCart.transform;
-        transform.position = carryingCart.TransfFromPos(positions);
+        transform.position = carryingCart.TransfFromPos(Positions);
         transform.localRotation = Quaternion.identity;
 
-        carryingCart.Owner.Bubble.Speak(SpeechType.BoxPickup);
-        AudioManager.Play("box_drop"); // TODO audio pickup
+        //carryingCart.Owner.Bubble.Speak(SpeechType.BoxPickup);
+        //AudioManager.Play("box_drop"); // TODO audio pickup
         carryingCart.Owner.AnimButton();
 
         //----
@@ -151,6 +136,10 @@ public class Box : NetworkBehaviour, IInteractable {
 
         conveyorVelocity = Vector3.zero;
         vel = Vector3.zero;
+
+        //now sync transform simply
+        GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+        GetComponent<NetworkTransform>().sendInterval = 2f;
     }
 
     public void AddConveyorSpeed(Vector3 speed) {
@@ -161,10 +150,10 @@ public class Box : NetworkBehaviour, IInteractable {
 
 
 
-	// queries
+    // queries
 
 
-    public List<int> Positions { get { return positions; } }
+    public List<int> Positions { get; private set; }
     public bool CanInteract() { return !OnCart && !Deposited; }
     public bool OnConveyor { get { return !OnCart && !Deposited; } }
 
