@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class Button : NetworkBehaviour, IInteractable {
+public class Button : MonoBehaviour, IInteractable {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -44,7 +44,6 @@ public class Button : NetworkBehaviour, IInteractable {
 
     // commands
     void PlayEntranceAnimation() {
-        Debug.Log("invoked button animation");
         Invoke("AnimateEntrance", 2f + introDelay);
     }
 

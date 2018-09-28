@@ -3,12 +3,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
 [RequireComponent(typeof(Animator))]
-public class Kappa : NetworkBehaviour {
+public class Kappa : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -52,7 +52,7 @@ public class Kappa : NetworkBehaviour {
         AudioManager.Play("box_fall");
         spawning = false;
         //call to spawn
-        SpawnManager.instance.CmdSpawnBoxAt(transform.position);
+        SpawnManager.instance.SpawnBoxAt(transform.position);
     }
 
 

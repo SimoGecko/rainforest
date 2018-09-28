@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class ScoreManager : NetworkBehaviour {
+public class ScoreManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
     public enum Difficulty { Easy, Medium, Hard }
 
@@ -65,7 +65,7 @@ public class ScoreManager : NetworkBehaviour {
     public void LoseLife() {
         if (!GameManager.instance.invincible) {
             lives--;
-            if (lives == 0) GameManager.instance.CmdGameOver();
+            if (lives == 0) GameManager.instance.GameOver();
             InterfaceManager.instance.UpdateLifeUI(lives);
         }
     }

@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class Deposit : NetworkBehaviour {
+public class Deposit : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

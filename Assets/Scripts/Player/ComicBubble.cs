@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
@@ -13,7 +13,7 @@ public enum SpeechType {
     Random, Begin, ButtonNotFull, BoxPickup, BoxDeposit,
     NotRightFit }; // missing: random
 
-public class ComicBubble : NetworkBehaviour {
+public class ComicBubble : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

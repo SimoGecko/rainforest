@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class GaugePart : NetworkBehaviour {
+public class GaugePart : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

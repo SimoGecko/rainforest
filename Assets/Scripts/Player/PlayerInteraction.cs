@@ -4,12 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
 
-public class PlayerInteraction : NetworkBehaviour {
+public class PlayerInteraction : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -27,8 +27,6 @@ public class PlayerInteraction : NetworkBehaviour {
 
     // --------------------- BASE METHODS ------------------
     void Start () {
-        //if (!isLocalPlayer) Destroy(this);
-
         player = GetComponent<Player>();
 	}
 	
@@ -39,11 +37,9 @@ public class PlayerInteraction : NetworkBehaviour {
         closest = ClosestInteractable(); // must be done everywhere
         SetHighlightColor(true);
 
-        if (isLocalPlayer) {
-            if (InputManager.instance.GetInteractInput(player.InputId)) {
-                if (closest != null)
-                    CmdInteract();
-            }
+        if (InputManager.instance.GetInteractInput(player.InputId)) {
+            if (closest != null)
+                Interact();
         }
 	}
 
@@ -67,14 +63,12 @@ public class PlayerInteraction : NetworkBehaviour {
 
 
     // commands
-    [Command]
-    void CmdInteract() {
+    void Interact() {
         //do I need the reference for this?
         closest.GetComponent<IInteractable>().Interact(player);
     }
 
     void SetHighlightColor(bool highlight) { // works locally
-        if (!isLocalPlayer) return;
         if (closest != null) closest.GetComponentInChildren<MeshRenderer>().material = highlight ? ElementManager.instance.highlightMat : ElementManager.instance.normalMat;
     }
 

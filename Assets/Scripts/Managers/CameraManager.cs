@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class CameraManager : NetworkBehaviour {
+public class CameraManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

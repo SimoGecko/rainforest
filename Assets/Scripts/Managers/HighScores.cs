@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class HighScores : NetworkBehaviour {
+public class HighScores : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

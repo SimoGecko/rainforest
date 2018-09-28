@@ -3,12 +3,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
 [RequireComponent(typeof(Rigidbody))]
-public class Box : NetworkBehaviour, IInteractable {
+public class Box : MonoBehaviour, IInteractable {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -32,13 +32,11 @@ public class Box : NetworkBehaviour, IInteractable {
 	}
 	
 	void LateUpdate () {
-        if (!isServer) return;
 
         if (OnConveyor) MoveOnConveyor();
 	}
 
     private void OnTriggerEnter(Collider other) {
-        if (!isServer) return;
 
         if (OnConveyor && other.tag == "ground") {
             Shatter();
@@ -61,7 +59,6 @@ public class Box : NetworkBehaviour, IInteractable {
     }
 
     public void Interact(Player player) {
-        //this only happens on server
         if (!GameManager.Playing || !CanInteract()) return;
 
         Cart cart = player.Cart;
@@ -75,27 +72,18 @@ public class Box : NetworkBehaviour, IInteractable {
             return;
         }
 
-        //actions (called from client)
-        //PickupBox(player.id); // server // is it duplicated??? YES!!
-        RpcPickupBox(player.id); // clients
+        PickupBox(player.id);
 
     }
 
-    [ClientRpc]
-    void RpcPickupBox(int playerid) {
-        PickupBox(playerid);
-    }
 
     void PickupBox(int playerid) {
         Cart cart = ElementManager.instance.GetPlayer(playerid).Cart;
         carryingCart = cart;
-        //Destroy(GetComponent<NetworkTransform>());
-        GetComponent<NetworkTransform>().sendInterval = 0;
 
         //---copied
         OnCart = true;
         Positions = carryingCart.FreePosition(packSize);
-        if (Positions == null) Debug.Log("pos null2");
 
         StopRB();
         transform.parent = carryingCart.transform;
@@ -133,7 +121,6 @@ public class Box : NetworkBehaviour, IInteractable {
         ScoreManager.instance.LoseLife();
 
         GameObject shatter = Instantiate(ElementManager.instance.shatterEffect, transform.position, Quaternion.Euler(0, Random.value * 360, 0));
-        NetworkServer.Spawn(shatter);
         Destroy(shatter, 30f);
         Destroy(gameObject);
     }
@@ -152,8 +139,6 @@ public class Box : NetworkBehaviour, IInteractable {
     }
 
     public void AddConveyorSpeed(Vector3 speed) {
-        if (!isServer) return;
-
         conveyorVelocity += speed;
     }
 

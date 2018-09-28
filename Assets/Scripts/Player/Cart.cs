@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class Cart : NetworkBehaviour {
+public class Cart : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

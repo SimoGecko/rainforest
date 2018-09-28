@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class SpawnManager : NetworkBehaviour {
+public class SpawnManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -39,10 +39,8 @@ public class SpawnManager : NetworkBehaviour {
     }
 
     void Start () {
-        if (isServer) {
-            GameManager.instance.EventOnPlay += SpawnPreboxes;
-            StartCoroutine("SpawnRoutine");
-        }
+        GameManager.instance.EventOnPlay += SpawnPreboxes;
+        StartCoroutine("SpawnRoutine");
     }
 
     void Update () {
@@ -55,10 +53,8 @@ public class SpawnManager : NetworkBehaviour {
 
 
     // commands
-    [Command]
-    public void CmdSpawnBoxAt(Vector3 p) {
+    public void SpawnBoxAt(Vector3 p) {
         Box newBox = Instantiate(GetBoxPrefab(), p, Quaternion.Euler(0, Random.value * 360, 0)) as Box;
-        NetworkServer.Spawn(newBox.gameObject);
     }
 
     void TrySpawnOne() {
@@ -72,7 +68,7 @@ public class SpawnManager : NetworkBehaviour {
         int numToSpawn = Mathf.Min(preboxParent.childCount, difficultyToSpawn);
 
         for (int i = 0; i < numToSpawn; i++) {
-            CmdSpawnBoxAt(preboxParent.GetChild(permutation[i]).position);
+            SpawnBoxAt(preboxParent.GetChild(permutation[i]).position);
             //Instantiate(GetBoxPrefab(), preboxParent.GetChild(permutation[i]).position, Quaternion.Euler(0, Random.value * 360, 0));
         }
     }

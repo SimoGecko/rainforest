@@ -7,11 +7,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.ImageEffects;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class InterfaceManager : NetworkBehaviour {
+public class InterfaceManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class InputManager : NetworkBehaviour {
+public class InputManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public

@@ -3,12 +3,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// player movement and animation //////////
 
 [RequireComponent(typeof(CharacterController))]
-public class Player : NetworkBehaviour {
+public class Player : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -21,7 +21,6 @@ public class Player : NetworkBehaviour {
 
     // references
     Animator anim;
-    NetworkAnimator netanim;
     AudioSource feetSound;
 
 
@@ -40,8 +39,6 @@ public class Player : NetworkBehaviour {
 
     void Start () {
         //set id
-        id = ElementManager.instance.nextID++;
-        ElementManager.instance.FindPlayers();
         SetPlayerColor(id);
 
         Cart = GetComponentInChildren<Cart>();
@@ -51,11 +48,7 @@ public class Player : NetworkBehaviour {
         pI = GetComponent<PlayerInteraction>();
         feetSound = GetComponent<AudioSource>();
 
-        if (!isLocalPlayer) return;//Destroy(this);
-
         anim = GetComponent<Animator>();
-        netanim = GetComponent<NetworkAnimator>();
-
 
         GameManager.instance.EventOnPlay += AnimStart;
         GameManager.instance.EventOnGameover += AnimEnd;
@@ -63,12 +56,10 @@ public class Player : NetworkBehaviour {
     }
 	
 	void Update () {
-        if (isLocalPlayer) {
-            //get input
-            MoveDir = InputManager.instance.GetInput(InputId).To3().normalized;
-            Running = InputManager.instance.GetSprintInput(InputId);
-            DealWithAnimations();
-        }
+        //get input
+        MoveDir = InputManager.instance.GetInput(InputId).To3().normalized;
+        Running = InputManager.instance.GetSprintInput(InputId);
+        DealWithAnimations();
         
         DealWithSound();
 	}
@@ -88,7 +79,7 @@ public class Player : NetworkBehaviour {
 
     void DealWithAnimations() {
         if (GameManager.Menu && Time.time > animHelloTime) {
-            netanim.SetTrigger("hello");
+            anim.SetTrigger("hello");
             animHelloTime = Time.time + Random.Range(4f, 8f);
         }
         if (GameManager.Playing) {
@@ -97,9 +88,9 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    void AnimStart() { netanim.SetTrigger("start"); }
-    void AnimEnd()   { netanim.SetTrigger("end"); }
-    public void AnimButton() { if(isLocalPlayer) netanim.SetTrigger("button"); }
+    void AnimStart() { anim.SetTrigger("start"); }
+    void AnimEnd()   { anim.SetTrigger("end"); }
+    public void AnimButton() { anim.SetTrigger("button"); }
 
 
     void DealWithSound() {
@@ -109,7 +100,7 @@ public class Player : NetworkBehaviour {
 
 
     // queries
-    public int InputId { get { return 0; } } // standard for now
+    public int InputId { get { return id; } } // standard for now
 
 
 

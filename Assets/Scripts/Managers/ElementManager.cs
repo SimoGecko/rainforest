@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class ElementManager : NetworkBehaviour {
+public class ElementManager : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -17,18 +17,13 @@ public class ElementManager : NetworkBehaviour {
 
     public Rect playArea;
 
-
     // private
     public List<Player> players;
-
-    //[SyncVar(hook= "OnNextID")]
-    public int nextID = 0;
 
 
     // references
     public static ElementManager instance;
 
-    //const
     public Material normalMat, highlightMat;
     public GameObject shatterEffect;
     public Texture2D[] playerTextures;
@@ -37,15 +32,15 @@ public class ElementManager : NetworkBehaviour {
     // --------------------- BASE METHODS ------------------
     private void Awake() {
         instance = this;
-        //FindPlayers();
-
+        FindPlayers();
     }
 
     void Start() {
-        //if (GameManager.Menu) UpdateActivePlayers();
+
     }
 
     void Update() {
+        if (GameManager.Menu) UpdateActivePlayers();
 
     }
 
@@ -54,10 +49,6 @@ public class ElementManager : NetworkBehaviour {
 
 
     // commands
-    void OnNextID(int id) {
-        FindPlayers();
-    }
-
 
     public void FindPlayers() {
         Player[] p = FindObjectsOfType<Player>();
@@ -76,21 +67,16 @@ public class ElementManager : NetworkBehaviour {
         InterfaceManager.instance.UpdatePlayerNumberUI(localNumPlayers);
     }
 
-    public void AddPlayer(Player p) {
-        players.Add(p);
-    }
-
-
     // queries
     public Player GetPlayer(int id) {
-        if (players == null || id >= players.Count)
-            FindPlayers();
+        /*if (players == null || id >= players.Count)
+            FindPlayers();*/
         if (players == null || id >= players.Count)
             return null;
         return players[id];
     }
 
-    public static int NumPlayers { get { return instance.players.Count; } }
+    public static int NumPlayers { get { return /*instance.players.Count*/ instance.localNumPlayers; } }
     public static bool Single { get { return NumPlayers == 1; } }
 
 

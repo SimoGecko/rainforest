@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class Toggle : NetworkBehaviour {
+public class Toggle : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
     public enum ToggleType { Tutorial, Coop}
     // public

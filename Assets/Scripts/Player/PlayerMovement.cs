@@ -3,12 +3,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 using UnityEngine.UI;
 
 ////////// moves character //////////
 
-public class PlayerMovement : NetworkBehaviour {
+public class PlayerMovement : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
@@ -28,8 +28,6 @@ public class PlayerMovement : NetworkBehaviour {
 
     // --------------------- BASE METHODS ------------------
     void Start () {
-        if (!isLocalPlayer) Destroy(this);
-
         player = GetComponent<Player>();
         cc = GetComponent<CharacterController>();
     }

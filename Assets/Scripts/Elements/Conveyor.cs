@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+
 
 ////////// DESCRIPTION //////////
 
-public class Conveyor : NetworkBehaviour {
+public class Conveyor : MonoBehaviour {
     // --------------------- VARIABLES ---------------------
 
     // public
