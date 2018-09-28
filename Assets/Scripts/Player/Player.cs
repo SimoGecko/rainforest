@@ -57,8 +57,8 @@ public class Player : NetworkBehaviour {
         netanim = GetComponent<NetworkAnimator>();
 
 
-        GameManager.instance.OnPlay += AnimStart;
-        GameManager.instance.OnGameover += AnimEnd;
+        GameManager.instance.EventOnPlay += AnimStart;
+        GameManager.instance.EventOnGameover += AnimEnd;
         animHelloTime = Time.time + Random.Range(2f, 4f);
     }
 	

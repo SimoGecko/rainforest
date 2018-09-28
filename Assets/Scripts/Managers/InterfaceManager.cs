@@ -75,10 +75,10 @@ public class InterfaceManager : NetworkBehaviour {
         blur = FindObjectOfType<BlurOptimized>();
 
 
-        GameManager.instance.OnPlay += () => { SetupNumPlayersUI(); ShowGameUI(); } ;
-        GameManager.instance.OnPause += () => SetPauseUI(true);
-        GameManager.instance.OnResume += () => SetPauseUI(false);
-        GameManager.instance.OnResume += () => Invoke("ShowGameoverUI", 3f);
+        GameManager.instance.EventOnPlay += () => { SetupNumPlayersUI(); ShowGameUI(); } ;
+        GameManager.instance.EventOnPause += () => SetPauseUI(true);
+        GameManager.instance.EventOnResume += () => SetPauseUI(false);
+        GameManager.instance.EventOnResume += () => Invoke("ShowGameoverUI", 3f);
     }
 	
 	void Update () {

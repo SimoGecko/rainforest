@@ -65,7 +65,7 @@ public class ScoreManager : NetworkBehaviour {
     public void LoseLife() {
         if (!GameManager.instance.invincible) {
             lives--;
-            if (lives == 0) GameManager.instance.GameOver();
+            if (lives == 0) GameManager.instance.CmdGameOver();
             InterfaceManager.instance.UpdateLifeUI(lives);
         }
     }

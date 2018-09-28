@@ -10,6 +10,8 @@ using UnityEngine.Networking;
 
 public class GameManager : NetworkBehaviour {
     // --------------------- VARIABLES ---------------------
+    public delegate void GameEvent();
+
     public enum State { Menu, Playing, Pause, Gameover }
     public enum Platform { Pc, Mobile, Console}
     public enum Mode { Coop, Compet }
@@ -25,10 +27,10 @@ public class GameManager : NetworkBehaviour {
     public float timeScale = 1f;
 
     
-    public event System.Action OnPlay;
-    public event System.Action OnGameover;
-    public event System.Action OnPause;
-    public event System.Action OnResume;
+    [SyncEvent] public event GameEvent EventOnPlay;
+    [SyncEvent] public event GameEvent EventOnGameover;
+    [SyncEvent] public event GameEvent EventOnPause;
+    [SyncEvent] public event GameEvent EventOnResume;
 
     // private
     [SyncVar]public State state;
@@ -53,29 +55,29 @@ public class GameManager : NetworkBehaviour {
 	
 	void Update () {
         if (Menu) {
-            if (autoStart) {
+            if (autoStart && isServer) {
                 autoStart = false;
-                Invoke("Play", .2f);// Play();
+                Invoke("CmdPlay", .2f);// Play();
             }
         }
 
         if (Playing) {
-            if (InputManager.instance.PauseInput()) Pause();
+            if (InputManager.instance.PauseInput()) CmdPause();
         }
 
         if (Pausing) {
-            if (InputManager.instance.ResumeInput()) Resume();
-            if (InputManager.instance.RestartInput()) Restart();
+            if (InputManager.instance.ResumeInput()) CmdResume();
+            if (InputManager.instance.RestartInput()) CmdRestart();
         }
 
         if (Gameover) {
-            if (InputManager.instance.OverRestartInput()) Restart();
+            if (InputManager.instance.OverRestartInput()) CmdRestart();
         }
 
         //temporary
         if (DEBUG) {
             Time.timeScale = timeScale;
-            if (Input.GetKeyDown(KeyCode.G)) GameOver();
+            if (Input.GetKeyDown(KeyCode.G)) CmdGameOver();
             if (Input.GetKeyDown(KeyCode.U)) ScreenCapture.CaptureScreenshot("screenshot.png");
         }
     }
@@ -88,27 +90,55 @@ public class GameManager : NetworkBehaviour {
 
 
     // commands
-    public void Play() {
-        if (OnPlay != null) OnPlay();
+    [Command]
+    public void CmdPlay() {
+        state = State.Playing;
+        if (EventOnPlay != null) EventOnPlay();
+    }
+    [ClientRpc]
+    void RpcPlay() { Play(); }
+
+    void Play() {
+        if (EventOnPlay != null) EventOnPlay();
         state = State.Playing;
     }
 
-    public void Pause() {
-        if(OnPause!=null) OnPause();
+    [Command]
+    public void CmdPause() { Pause();  RpcPause(); }
+    [ClientRpc]
+    void RpcPause() { Pause(); }
+
+    void Pause() { 
+        if(EventOnPause!=null) EventOnPause();
         state = State.Pause;
     }
 
-    public void Resume() {
-        if (OnResume != null) OnResume();
+    [Command]
+    public void CmdResume() { Resume();  RpcResume(); }
+    [ClientRpc]
+    void RpcResume() { Resume(); }
+
+    void Resume() {
+        if (EventOnResume != null) EventOnResume();
         state = State.Playing;
     }
 
-    public void GameOver() {
-        if (OnGameover != null) OnGameover();
+    [Command]
+    public void CmdGameOver() { GameOver(); RpcGameOver(); }
+    [ClientRpc]
+    void RpcGameOver() { GameOver(); }
+
+    void GameOver() {
+        if (EventOnGameover != null) EventOnGameover();
         state = State.Gameover;
     }
 
-    public void Restart() {
+    [Command]
+    public void CmdRestart() { Restart();  RpcRestart(); }
+    [ClientRpc]
+    void RpcRestart() { Restart(); }
+
+    void Restart() {
         SceneManager.LoadScene("SampleScene");
     }
 

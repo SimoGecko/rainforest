@@ -40,7 +40,7 @@ public class SpawnManager : NetworkBehaviour {
 
     void Start () {
         if (isServer) {
-            GameManager.instance.OnPlay += SpawnPreboxes;
+            GameManager.instance.EventOnPlay += SpawnPreboxes;
             StartCoroutine("SpawnRoutine");
         }
     }

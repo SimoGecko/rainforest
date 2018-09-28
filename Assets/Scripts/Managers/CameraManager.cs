@@ -38,7 +38,7 @@ public class CameraManager : NetworkBehaviour {
         transform.position = titleView.position;
         transform.rotation = titleView.rotation;
 
-        GameManager.instance.OnPlay += TransitionToGameView;
+        GameManager.instance.EventOnPlay += TransitionToGameView;
     }
 
     void Update () {

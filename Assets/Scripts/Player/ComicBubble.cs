@@ -42,8 +42,8 @@ public class ComicBubble : NetworkBehaviour {
     // --------------------- BASE METHODS ------------------
     void Start () {
         if(!createdDic) ParseSpeechText();
-        GameManager.instance.OnPlay += SpeakBegin;
-        GameManager.instance.OnGameover += () => Speak(SpeechType.GameOver);
+        GameManager.instance.EventOnPlay += SpeakBegin;
+        GameManager.instance.EventOnGameover += () => Speak(SpeechType.GameOver);
     }
 	
 	void Update () {

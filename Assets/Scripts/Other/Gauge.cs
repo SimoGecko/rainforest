@@ -65,7 +65,7 @@ public class Gauge : NetworkBehaviour {
 
         alreadyClicked = true;
         ScoreManager.instance.SetDifficulty(d);
-        GameManager.instance.Play();
+        GameManager.instance.CmdPlay();
         iTween.ScaleTo(gameObject, iTween.Hash("scale", Vector3.zero, "time", 1f, "easeType", iTween.EaseType.easeInOutSine));
         AudioManager.Play("button_push");
         Destroy(gameObject, 3f);

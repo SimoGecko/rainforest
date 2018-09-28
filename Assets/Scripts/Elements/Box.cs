@@ -76,7 +76,7 @@ public class Box : NetworkBehaviour, IInteractable {
         }
 
         //actions (called from client)
-        PickupBox(player.id); // server
+        //PickupBox(player.id); // server // is it duplicated??? YES!!
         RpcPickupBox(player.id); // clients
 
     }
@@ -89,10 +89,13 @@ public class Box : NetworkBehaviour, IInteractable {
     void PickupBox(int playerid) {
         Cart cart = ElementManager.instance.GetPlayer(playerid).Cart;
         carryingCart = cart;
+        //Destroy(GetComponent<NetworkTransform>());
+        GetComponent<NetworkTransform>().sendInterval = 0;
 
         //---copied
         OnCart = true;
         Positions = carryingCart.FreePosition(packSize);
+        if (Positions == null) Debug.Log("pos null2");
 
         StopRB();
         transform.parent = carryingCart.transform;
@@ -102,9 +105,15 @@ public class Box : NetworkBehaviour, IInteractable {
         //carryingCart.Owner.Bubble.Speak(SpeechType.BoxPickup);
         //AudioManager.Play("box_drop"); // TODO audio pickup
         carryingCart.Owner.AnimButton();
+        Invoke("ResetTransform", .5f);
 
         //----
         cart.Pickup(this);
+    }
+
+    void ResetTransform() {
+        transform.position = carryingCart.TransfFromPos(Positions);
+        transform.localRotation = Quaternion.identity;
     }
 
     public void DepositBox(Deposit dep) {
@@ -138,8 +147,8 @@ public class Box : NetworkBehaviour, IInteractable {
         vel = Vector3.zero;
 
         //now sync transform simply
-        GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
-        GetComponent<NetworkTransform>().sendInterval = 2f;
+        //GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+        //GetComponent<NetworkTransform>().sendInterval = 2f;
     }
 
     public void AddConveyorSpeed(Vector3 speed) {

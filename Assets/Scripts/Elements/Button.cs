@@ -28,7 +28,7 @@ public class Button : NetworkBehaviour, IInteractable {
 	
 	// --------------------- BASE METHODS ------------------
 	void Start () {
-        GameManager.instance.OnPlay += PlayEntranceAnimation;
+        GameManager.instance.EventOnPlay += PlayEntranceAnimation;
         buttonLight = GetComponentInChildren<SpriteRenderer>();
 	}
 	
@@ -44,6 +44,7 @@ public class Button : NetworkBehaviour, IInteractable {
 
     // commands
     void PlayEntranceAnimation() {
+        Debug.Log("invoked button animation");
         Invoke("AnimateEntrance", 2f + introDelay);
     }
 
@@ -96,7 +97,8 @@ public class Button : NetworkBehaviour, IInteractable {
     void CheckBlinking() {
         bool blinking = deposit.FilledEnough();
         bool rightTime = Mathf.RoundToInt(Time.time) % 2 == 0;
-        buttonLight.enabled = blinking && rightTime;
+        if(buttonLight!=null)
+            buttonLight.enabled = blinking && rightTime;
     }
 
     void CleanShelf() { deposit.Clear(); }
