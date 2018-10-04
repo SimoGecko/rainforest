@@ -13,12 +13,12 @@ public class Conveyor : MonoBehaviour {
     // public
     public bool isSwitch = false;
     public bool flipX, flipZ;
+    public bool goForward = true;
     public float forwardProbability = .5f;
     const float switchCooldown = 1f;
 
     // private
     float changeDirTimer;
-    bool goForward = true;
 
 
     // references
@@ -75,13 +75,16 @@ public class Conveyor : MonoBehaviour {
     // other
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + Dir * 1);
-        Gizmos.DrawCube(transform.position + Dir * 1, Vector3.one*.1f);
+        Gizmos.DrawLine(transform.position+Height, transform.position + Dir * 1 + Height);
+        Gizmos.DrawCube(transform.position + Dir * 1 + Height, Vector3.one*.1f);
         if (isSwitch) {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, transform.position + Dir2 * 1);
-            Gizmos.DrawCube(transform.position + Dir2 * 1, Vector3.one * .1f);
+            Gizmos.DrawLine(transform.position + Height, transform.position + Dir2 * 1 + Height);
+            Gizmos.DrawCube(transform.position + Dir2 * 1 + Height, Vector3.one * .1f);
         }
+    }
+    Vector3 Height {
+        get { return Vector3.up * 2; }
     }
 
     //EDIT mode commands

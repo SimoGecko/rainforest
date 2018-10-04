@@ -95,6 +95,9 @@ ModelImporter:
     100178: medal_bronze
     100180: medal_gold
     100182: medal_silver
+    100184: barrell
+    100186: basket
+    100188: Plane_001
     400000: box1
     400002: box1_size
     400004: box2
@@ -187,6 +190,9 @@ ModelImporter:
     400178: medal_bronze
     400180: medal_gold
     400182: medal_silver
+    400184: barrell
+    400186: basket
+    400188: Plane_001
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png
@@ -250,6 +256,9 @@ ModelImporter:
     2300114: medal_bronze
     2300116: medal_gold
     2300118: medal_silver
+    2300120: barrell
+    2300122: basket
+    2300124: Plane_001
     3300000: box1
     3300002: box1_size
     3300004: box2
@@ -310,6 +319,9 @@ ModelImporter:
     3300114: medal_bronze
     3300116: medal_gold
     3300118: medal_silver
+    3300120: barrell
+    3300122: basket
+    3300124: Plane_001
     4300000: Cylinder
     4300002: conveyor_size_001
     4300004: conveyor_size
@@ -370,6 +382,9 @@ ModelImporter:
     4300114: medal_bronze
     4300116: medal_silver
     4300118: medal_gold
+    4300120: barrell
+    4300122: Plane_001
+    4300124: basket
     7400000: Default Take
     7400002: ArmatureAction
     7400004: fallout

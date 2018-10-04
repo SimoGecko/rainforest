@@ -13,12 +13,13 @@ public class LevelBuilder : MonoBehaviour {
     public MeshPiece[] meshpieces;
     public Texture2D map;
     public float highOffset = 4f;
-    const float threshold = .05f;
+    public float threshold = .05f;
 
     // private
 
 
     // references
+    GameObject level;
 	
 	
 	// --------------------- BASE METHODS ------------------
@@ -36,6 +37,8 @@ public class LevelBuilder : MonoBehaviour {
     // commands
     [ContextMenu("Generate Level")]
     void GenerateLevel() {
+        if (level != null) DestroyImmediate(level);
+        level = new GameObject("Level");
         GeneratePieces();
     }
 
@@ -53,10 +56,10 @@ public class LevelBuilder : MonoBehaviour {
                         if(EqualsImage(pieceTex, map, new Vector2(x,y))) {
                             //instantiate piece with rotation 
                             Vector3 position = new Vector3(x + pieceTex.width/2, 0, y + pieceTex.height/2); // consider center of image
-                            if (mp.high) position.y = highOffset;
-                            Quaternion rotation = Quaternion.Euler(0, rot + mp.rotOffset, 0);
-                            GameObject newPiece = Instantiate(mp.prefab, position/2, rotation); // 2 pixels = 1 unit
-                            newPiece.transform.parent = transform;
+                            if (mp.high) position.y = highOffset*2;
+                            GameObject newPiece = Instantiate(mp.prefab, position/2, Quaternion.identity); // 2 pixels = 1 unit
+                            newPiece.transform.Rotate(Vector3.up * (rot + mp.rotOffset));
+                            newPiece.transform.parent = level.transform;
                         } 
                     }
                 }

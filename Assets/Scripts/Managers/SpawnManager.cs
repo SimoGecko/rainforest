@@ -29,8 +29,8 @@ public class SpawnManager : MonoBehaviour {
     public static SpawnManager instance;
     [Header("Prefabs")]
     public Box[] boxesPrefab;
-    public Kappa[] kappas;
-    public Transform preboxParent;
+    Kappa[] kappas;
+    Transform preboxParent;
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
@@ -39,6 +39,9 @@ public class SpawnManager : MonoBehaviour {
     }
 
     void Start () {
+        kappas = FindObjectsOfType<Kappa>();
+        preboxParent = GameObject.Find("Preboxes").transform;
+
         GameManager.instance.EventOnPlay += SpawnPreboxes;
         StartCoroutine("SpawnRoutine");
     }
