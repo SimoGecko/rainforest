@@ -98,6 +98,8 @@ ModelImporter:
     100184: barrell
     100186: basket
     100188: Plane_001
+    100190: shelf_002
+    100192: conveyor_small_straight
     400000: box1
     400002: box1_size
     400004: box2
@@ -193,6 +195,8 @@ ModelImporter:
     400184: barrell
     400186: basket
     400188: Plane_001
+    400190: shelf_002
+    400192: conveyor_small_straight
     2100000: unnamed
     2100002: None__conveyor_belt_jpg
     2100004: None__gradient_png
@@ -259,6 +263,8 @@ ModelImporter:
     2300120: barrell
     2300122: basket
     2300124: Plane_001
+    2300126: shelf_002
+    2300128: conveyor_small_straight
     3300000: box1
     3300002: box1_size
     3300004: box2
@@ -322,6 +328,8 @@ ModelImporter:
     3300120: barrell
     3300122: basket
     3300124: Plane_001
+    3300126: shelf_002
+    3300128: conveyor_small_straight
     4300000: Cylinder
     4300002: conveyor_size_001
     4300004: conveyor_size
@@ -385,6 +393,8 @@ ModelImporter:
     4300120: barrell
     4300122: Plane_001
     4300124: basket
+    4300126: shelf_002
+    4300128: conveyor_small_straight
     7400000: Default Take
     7400002: ArmatureAction
     7400004: fallout

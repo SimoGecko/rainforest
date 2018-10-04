@@ -14,6 +14,7 @@ public class LevelBuilder : MonoBehaviour {
     public Texture2D map;
     public float highOffset = 4f;
     public float threshold = .05f;
+    
 
     // private
 
@@ -40,6 +41,7 @@ public class LevelBuilder : MonoBehaviour {
         if (level != null) DestroyImmediate(level);
         level = new GameObject("Level");
         GeneratePieces();
+        level.transform.position = new Vector3(-map.width / 4, 0, -map.height / 4);
     }
 
     void GeneratePieces() {

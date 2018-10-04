@@ -109,7 +109,7 @@ public class Box : MonoBehaviour, IInteractable {
         Deposited = true;
         StopRB();
         //add score
-        ScoreManager.instance.AddScore(carryingCart.Owner.id, packSize);
+        ScoreManager.instance.AddScore(packSize, carryingCart.Owner.id);
         //add to individual player
         //carryingCart.Owner.AddScore(packSize);
         dep.PositionBox(this);

@@ -78,7 +78,7 @@ public class InterfaceManager : MonoBehaviour {
         GameManager.instance.EventOnPlay += () => { SetupNumPlayersUI(); ShowGameUI(); } ;
         GameManager.instance.EventOnPause += () => SetPauseUI(true);
         GameManager.instance.EventOnResume += () => SetPauseUI(false);
-        GameManager.instance.EventOnResume += () => Invoke("ShowGameoverUI", 3f);
+        GameManager.instance.EventOnGameover += () => Invoke("ShowGameoverUI", 3f);
     }
 	
 	void Update () {

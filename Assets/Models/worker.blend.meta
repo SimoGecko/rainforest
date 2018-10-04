@@ -43,6 +43,9 @@ ModelImporter:
     100074: cart_othercolors
     100076: worker_othercolors
     100078: worker_pepakura
+    100080: worker_001
+    100082: worker_002
+    100084: worker_003
     400000: arm_L
     400002: arm_R
     400004: Armature
@@ -83,15 +86,22 @@ ModelImporter:
     400074: cart_othercolors
     400076: worker_othercolors
     400078: worker_pepakura
+    400080: worker_001
+    400082: worker_002
+    400084: worker_003
     2100000: None__gradient_png
     2300000: Cube_001
     2300002: cart
     2300004: cart_othercolors
     2300006: worker_pepakura
+    2300008: worker_002
+    2300010: worker_003
     3300000: Cube_001
     3300002: cart
     3300004: cart_othercolors
     3300006: worker_pepakura
+    3300008: worker_002
+    3300010: worker_003
     4300000: Cube_001
     4300002: Cube
     4300004: cart
@@ -99,6 +109,9 @@ ModelImporter:
     4300008: cart_othercolors
     4300010: worker_othercolors
     4300012: worker_pepakura
+    4300014: worker_001
+    4300016: worker_002
+    4300018: worker_003
     7400000: Default Take
     7400002: idle
     7400004: run
@@ -106,6 +119,7 @@ ModelImporter:
     13700000: Cube
     13700002: worker
     13700004: worker_othercolors
+    13700006: worker_001
   externalObjects: {}
   materials:
     importMaterials: 1
