@@ -1,0 +1,211 @@
+fileFormatVersion: 2
+guid: 1e9ded71e26d3044c930b7881b3591b1
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: arm_L
+    100002: arm_R
+    100004: Armature
+    100006: calf_L
+    100008: calf_R
+    100010: cart
+    100012: chest
+    100014: control
+    100016: Cube
+    100018: Cube_001
+    100020: finger1_L
+    100022: finger1_R
+    100024: finger2_L
+    100026: finger2_R
+    100028: foot_L
+    100030: foot_R
+    100032: footIK_L
+    100034: footIK_R
+    100036: forearm_L
+    100038: forearm_R
+    100040: hand_L
+    100042: hand_R
+    100044: handIK_L
+    100046: handIK_R
+    100048: head
+    100050: helmet
+    100052: leg_L
+    100054: leg_R
+    100056: neck
+    100058: pelvis
+    100060: spine
+    100062: thumb_L
+    100064: thumb_R
+    100066: toe_L
+    100068: toe_R
+    100070: worker
+    100072: worker_001
+    100074: worker_002
+    100076: worker_003
+    100078: worker_004
+    100080: //RootNode
+    400000: arm_L
+    400002: arm_R
+    400004: Armature
+    400006: calf_L
+    400008: calf_R
+    400010: cart
+    400012: chest
+    400014: control
+    400016: Cube
+    400018: Cube_001
+    400020: finger1_L
+    400022: finger1_R
+    400024: finger2_L
+    400026: finger2_R
+    400028: foot_L
+    400030: foot_R
+    400032: footIK_L
+    400034: footIK_R
+    400036: forearm_L
+    400038: forearm_R
+    400040: hand_L
+    400042: hand_R
+    400044: handIK_L
+    400046: handIK_R
+    400048: head
+    400050: helmet
+    400052: leg_L
+    400054: leg_R
+    400056: neck
+    400058: pelvis
+    400060: spine
+    400062: thumb_L
+    400064: thumb_R
+    400066: toe_L
+    400068: toe_R
+    400070: worker
+    400072: worker_001
+    400074: worker_002
+    400076: worker_003
+    400078: worker_004
+    400080: //RootNode
+    2100000: unnamed
+    2100002: None__gradient_png
+    2300000: cart
+    2300002: Cube
+    2300004: Cube_001
+    2300006: worker
+    2300008: worker_001
+    2300010: worker_002
+    2300012: worker_003
+    2300014: worker_004
+    3300000: cart
+    3300002: Cube
+    3300004: Cube_001
+    3300006: worker
+    3300008: worker_001
+    3300010: worker_002
+    3300012: worker_003
+    3300014: worker_004
+    4300000: Cube_001
+    4300002: Cube
+    4300004: worker_004
+    4300006: worker_003
+    4300008: worker_002
+    4300010: worker_001
+    4300012: cart
+    4300014: worker
+    7400000: Default Take
+    7400002: default
+    7400004: disappoint
+    7400006: disappoint_001
+    7400008: disappoint_006
+    7400010: disappoint_007
+    7400012: disappoint_idle
+    7400014: disappoint_idle_001
+    7400016: disappoint_idle_002
+    7400018: hello_start
+    7400020: idle
+    7400022: idle_start
+    7400024: push_button
+    7400026: run
+    9500000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

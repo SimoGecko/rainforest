@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour {
 
     // --------------------- BASE METHODS ------------------
     private void Awake() {
+        DontDestroyOnLoad(gameObject);
+
         instance = this;
     }
 
@@ -111,7 +113,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Restart() {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("_Main");
     }
 
 
