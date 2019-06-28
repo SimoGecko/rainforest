@@ -46,6 +46,7 @@ ModelImporter:
     100080: worker_001
     100082: worker_002
     100084: worker_003
+    100086: worker_004
     400000: arm_L
     400002: arm_R
     400004: Armature
@@ -89,19 +90,25 @@ ModelImporter:
     400080: worker_001
     400082: worker_002
     400084: worker_003
+    400086: worker_004
     2100000: None__gradient_png
+    2100002: unnamed
     2300000: Cube_001
     2300002: cart
     2300004: cart_othercolors
     2300006: worker_pepakura
     2300008: worker_002
     2300010: worker_003
+    2300012: Cube
+    2300014: worker_004
     3300000: Cube_001
     3300002: cart
     3300004: cart_othercolors
     3300006: worker_pepakura
     3300008: worker_002
     3300010: worker_003
+    3300012: Cube
+    3300014: worker_004
     4300000: Cube_001
     4300002: Cube
     4300004: cart
@@ -112,6 +119,7 @@ ModelImporter:
     4300014: worker_001
     4300016: worker_002
     4300018: worker_003
+    4300020: worker_004
     7400000: Default Take
     7400002: idle
     7400004: run
@@ -276,7 +284,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
